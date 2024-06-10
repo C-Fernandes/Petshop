@@ -1,31 +1,17 @@
 package br.com.imd.petshop.Entity;
 
-import jakarta.persistence.*;
-
 import java.util.List;
 
-@Entity
 public class Produto {
 
-    @Id
-    @Column(name = "id", nullable = false, unique = true)
-    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @Column(name = "nome")
-
     private String nome;
-    @Column(name = "quantidade")
     private Integer quantidade;
-
-    @Column(name = "ativo")
     private Boolean ativo;
 
-    @ManyToOne
-    @JoinColumn(name = "preco_id", nullable = false)
     private Preco preco;
 
-    @OneToMany(mappedBy = "produto")
     private List<PedidoHasProduto> pedidoHasProdutoList;
 
     public Long getId() {

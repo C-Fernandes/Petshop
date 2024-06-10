@@ -1,6 +1,5 @@
 package br.com.imd.petshop.Entity;
 
-
 public class Cliente {
 
     private Usuario usuario;
@@ -14,13 +13,11 @@ public class Cliente {
         this.usuario = usuario;
     }
 
-    public String getQtdPontos() {
+    public Long getQtdPontos() {
         return this.qtdPontos;
     }
 
-    public void setQtdPontos(String qtdPontos) {
+    public void setQtdPontos(Long qtdPontos) {
         this.qtdPontos = qtdPontos;
     }
-
-  
 }

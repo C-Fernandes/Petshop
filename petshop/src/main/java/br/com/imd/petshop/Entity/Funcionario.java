@@ -1,17 +1,10 @@
 package br.com.imd.petshop.Entity;
 
-import jakarta.persistence.*;
-
-@Entity
 public class Funcionario {
 
-    @Id
-    @OneToOne
-    @JoinColumn(name = "usuario", nullable = false, unique = true)
     private Usuario usuario;
 
-    @Column(name = "qtd_pontos")
-    private Integer qtd_pontos;
+    private String cargo;
 
     public Usuario getUsuario() {
         return usuario;
@@ -21,11 +14,12 @@ public class Funcionario {
         this.usuario = usuario;
     }
 
-    public Integer getQtd_pontos() {
-        return qtd_pontos;
+    public String getCargo() {
+        return this.cargo;
     }
 
-    public void setQtd_pontos(Integer qtd_pontos) {
-        this.qtd_pontos = qtd_pontos;
+    public void setCargo(String cargo) {
+        this.cargo = cargo;
     }
+
 }

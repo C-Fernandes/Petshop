@@ -1,33 +1,18 @@
 package br.com.imd.petshop.Entity;
 
-import jakarta.persistence.*;
-
 import java.util.Date;
 
-@Entity
 public class Usuario {
 
-    @Id
-    @Column(name = "email", nullable = false, unique = true)
     private String email;
-    @Column(name = "senha", nullable = false)
     private String senha;
-    @Column(name = "nome")
     private String nome;
-    @Column(name = "data_de_nascimento")
     private Date dataDeNascimento;
-    @Column(name = "idade")
     private Integer idade;
-    @Column(name = "telefone")
     private String telefone;
-    @Column(name = "logradouro")
     private String logradouro;
-    @Column(name = "numero")
-    private String numero;
-    @Column(name = "bairro")
+    private Long numero;
     private String bairro;
-    @ManyToOne
-    @JoinColumn(name = "cep")
     private Cep cep;
 
     public String getEmail() {
@@ -86,11 +71,11 @@ public class Usuario {
         this.logradouro = logradouro;
     }
 
-    public String getNumero() {
-        return numero;
+    public Long getNumero() {
+        return this.numero;
     }
 
-    public void setNumero(String numero) {
+    public void setNumero(Long numero) {
         this.numero = numero;
     }
 

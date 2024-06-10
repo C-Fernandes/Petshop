@@ -1,27 +1,15 @@
 package br.com.imd.petshop.Entity;
 
-import jakarta.persistence.*;
-import org.hibernate.annotations.ManyToAny;
-
-@Entity
 public class Servico {
 
-    @Id
-    @Column(name = "id", nullable = false, unique = true)
-    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @Column(name = "nome")
     private String nome;
 
-    @Column(name = "descricao")
     private String descricao;
 
-    @Column(name = "pontos_servico")
     private Integer pontosServico;
 
-    @ManyToOne
-    @JoinColumn(name = "preco_id", nullable = false)
     private Preco preco;
 
     public Long getId() {

@@ -1,35 +1,20 @@
 package br.com.imd.petshop.Entity;
 
-import jakarta.persistence.*;
-
 import java.util.Date;
 import java.util.List;
 
-@Entity
 public class Pedido {
 
-    @Id
-    @Column(name = "id", nullable = false, unique = true)
     private Long id;
 
-    @Column(name = "valor")
     private Double valor;
-
-    @Column(name = "data")
     private Date data;
-
-    @Column(name = "status")
     private String status;
 
-    @ManyToOne
-    @JoinColumn(name = "funcionario_email")
     private Funcionario funcionario;
 
-    @ManyToOne
-    @JoinColumn(name = "cliente_email")
     private Cliente cliente;
 
-    @OneToMany(mappedBy = "pedido")
     private List<PedidoHasProduto> pedidoHasProdutoList;
 
     public Long getId() {

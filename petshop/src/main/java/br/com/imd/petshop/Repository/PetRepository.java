@@ -19,6 +19,35 @@ public class PetRepository {
     @Autowired
     private DataSource dataSource;
 
+    private Pet mapeamento(ResultSet resultSet) throws SQLException {
+        Pet pet = new Pet();
+        pet.setId(resultSet.getLong("u.email"));
+        pet.setNome(resultSet.getString("nome"));
+        pet.setDataDeNascimento(resultSet.getDate("data_de_nascimento"));
+
+        Usuario usuario = new Usuario();
+        usuario.setEmail(resultSet.getString("u.email"));
+        usuario.setNome(resultSet.getString("u.nome"));
+        usuario.setDataDeNascimento(resultSet.getDate("u.data_de_nascimento"));
+        usuario.setTelefone(resultSet.getString("u.telefone"));
+        usuario.setLogradouro(resultSet.getString("u.logradouro"));
+        usuario.setNumero(resultSet.getLong("u.numero"));
+        usuario.setBairro(resultSet.getString("u.bairro"));
+
+        Cep cep = new Cep();
+        cep.setCep((int) resultSet.getLong("cep"));
+        cep.setCidade(resultSet.getString("cidade"));
+        cep.setEstado(resultSet.getString("estado"));
+
+        Cliente cliente = new Cliente();
+        cliente.setUsuario(usuario);
+        cliente.setQtdPontos(resultSet.getLong("qtd_pontos"));
+
+        pet.setDono(cliente);
+        return pet;
+
+    }
+
     public void inserirPet(Pet pet) {
         String sql = "INSERT INTO pet (nome, data_de_nascimento, usuario_email, raca_id) VALUES (?, ?, ?, ?)";
 
@@ -28,7 +57,7 @@ public class PetRepository {
             statement.setString(1, pet.getNome());
             statement.setDate(2, new java.sql.Date(pet.getDataDeNascimento().getTime()));
             statement.setString(3, pet.getDono().getUsuario().getEmail());
-            statement.setLong(4, pet.getRaca());
+            statement.setString(4, pet.getRaca().getRaca());
 
             statement.executeUpdate();
 
@@ -52,37 +81,57 @@ public class PetRepository {
                 ResultSet resultSet = statement.executeQuery(sql)) {
 
             while (resultSet.next()) {
-                Pet pet = new Pet();
-                pet.setId(resultSet.getLong("u.email"));
-                pet.setNome(resultSet.getString("nome"));
-                pet.setDataDeNascimento(resultSet.getDate("data_de_nascimento"));
 
-                Usuario usuario = new Usuario();
-                usuario.setEmail(resultSet.getString("u.email"));
-                usuario.setNome(resultSet.getString("u.nome"));
-                usuario.setDataDeNascimento(resultSet.getDate("u.data_de_nascimento"));
-                usuario.setTelefone(resultSet.getString("u.telefone"));
-                usuario.setLogradouro(resultSet.getString("u.logradouro"));
-                usuario.setNumero(resultSet.getLong("u.numero"));
-                usuario.setBairro(resultSet.getString("u.bairro"));
-
-                Cep cep = new Cep();
-                cep.setCep(resultSet.getLong("cep"));
-                cep.setCidade(resultSet.getString("cidade"));
-                cep.setEstado(resultSet.getString("estado"));
-
-                Cliente cliente = new Cliente();
-                cliente.setUsuario(usuario);
-                cliente.setQtdPontos(resultSet.getLong("qtd_pontos"));
-
-                pet.setDono(cliente);
-
-                pets.add(pet);
+                pets.add(mapeamento(resultSet));
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return pets;
+    }
+
+    public List<Pet> procurarPorNome(String name) {
+        List<Pet> pets = new ArrayList<>();
+        try (Connection connection = dataSource.getConnection();
+                PreparedStatement statement = connection.prepareStatement("SELECT * FROM pets WHERE nome = ?")) {
+
+            statement.setString(1, name);
+            ResultSet resultSet = statement.executeQuery();
+
+            while (resultSet.next()) {
+
+                pets.add(mapeamento(resultSet));
+            }
+            return pets;
+        } catch (SQLException e) {
+            e.printStackTrace();
+
+        }
+        return null;
+    }
+
+    public Pet procurarPorId(Long id) {
+        try (Connection connection = dataSource.getConnection();
+                PreparedStatement statement = connection.prepareStatement("SELECT * FROM pets WHERE id = ?")) {
+
+            statement.setLong(1, id);
+            return mapeamento(statement.executeQuery());
+        } catch (SQLException e) {
+            e.printStackTrace();
+
+        }
+        return null;
+    }
+
+    public void deletar(Long id) {
+        try (Connection connection = dataSource.getConnection();
+                PreparedStatement statement = connection.prepareStatement("DELETE FROM pets WHERE id = ?")) {
+            statement.setLong(1, id);
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+
+        }
     }
 
 }
