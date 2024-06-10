@@ -1,32 +1,14 @@
 package br.com.imd.petshop.Entity;
 
-import jakarta.persistence.*;
-
 import java.util.Date;
 
-@Entity
 public class Pet {
 
-    @Id
-    @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-
-    @Column(name = "nome")
     private String nome;
-
-    @Column(name = "data_de_nascimento")
     private Date dataDeNascimento;
-
-    @Column(name = "idade")
     private Integer idade;
-
-    @ManyToOne
-    @JoinColumn(name = "usuario")
-    private Usuario usuario;
-
-    @ManyToOne
-    @JoinColumn(name = "raca")
+    private Cliente dono;
     private Raca raca;
 
     public Long getId() {
@@ -61,8 +43,12 @@ public class Pet {
         this.idade = idade;
     }
 
-    public Usuario getUsuario() {
-        return usuario;
+    public Cliente getDono() {
+        return this.dono;
+    }
+
+    public void setDono(Cliente dono) {
+        this.dono = dono;
     }
 
     public Raca getRaca() {
