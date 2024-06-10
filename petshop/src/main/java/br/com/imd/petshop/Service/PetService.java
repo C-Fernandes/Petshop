@@ -3,6 +3,7 @@ package br.com.imd.petshop.Service;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import br.com.imd.petshop.Entity.Pet;
@@ -11,6 +12,7 @@ import br.com.imd.petshop.Repository.PetRepository;
 @Service
 public class PetService {
 
+    @Autowired
     private PetRepository petRepository;
 
     public Pet createPet(Pet pet) {
@@ -34,7 +36,6 @@ public class PetService {
         pet.setIdade(petDetails.getIdade());
         pet.setNome(petDetails.getNome());
         pet.setRaca(petDetails.getRaca());
-        pet.setUsuario(petDetails.getUsuario()); // Vai ser possivel mudar usuário?
 
         return petRepository.save(pet);
     }
