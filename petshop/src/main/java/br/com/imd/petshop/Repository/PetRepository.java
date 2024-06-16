@@ -16,7 +16,6 @@ import br.com.imd.petshop.Entity.Cliente;
 
 public class PetRepository {
 
-    @Autowired
     private DataSource dataSource;
 
     private Pet mapeamento(ResultSet resultSet) throws SQLException {
