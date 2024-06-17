@@ -16,7 +16,6 @@ import br.com.imd.petshop.Entity.Cliente;
 
 public class PetRepository {
 
-    @Autowired
     private DataSource dataSource;
 
     private Pet mapeamento(ResultSet resultSet) throws SQLException {
@@ -35,7 +34,7 @@ public class PetRepository {
         usuario.setBairro(resultSet.getString("u.bairro"));
 
         Cep cep = new Cep();
-        cep.setCep((int) resultSet.getLong("cep"));
+        cep.setCep(resultSet.getString("cep"));
         cep.setCidade(resultSet.getString("cidade"));
         cep.setEstado(resultSet.getString("estado"));
 
