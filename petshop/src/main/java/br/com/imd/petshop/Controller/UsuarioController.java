@@ -17,9 +17,10 @@ public class UsuarioController {
         this.usuarioService = usuarioService;
     }
 
-    @GetMapping("/login")
-    public String login() {
-        return "login";
+
+    @GetMapping("/cadastro")
+    public String cadastro() {
+        return "cadastrar-usuario";
     }
 
     @PostMapping("/cadastro-usuario")

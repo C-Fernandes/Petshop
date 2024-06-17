@@ -4,17 +4,13 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 
-@Configuration
-public class DataBaseConfig {
-    @Bean
-    public Connection connection() throws SQLException {
-        String url = "jdbc:postgresql://localhost:5432/petshop";
-        String username = "postgres";
-        String password = "postgres";
+public abstract class DataBaseConfig {
+    private static final String URL = "jdbc:mysql://localhost:3306/petshop";
+    private static final String USER = "root";
+    private static final String PASSWORD = "mysql";
 
-        return DriverManager.getConnection(url, username, password);
+    public static Connection getConnection() throws SQLException {
+        return DriverManager.getConnection(URL, USER, PASSWORD);
     }
 }

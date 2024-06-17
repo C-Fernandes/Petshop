@@ -1,10 +1,158 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Cadastro de usuário</title>
+    <link rel="stylesheet" href="/cadastro.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
 </head>
 <body>
+<div class="login-container">
+    <h1 class="titulo">PET SHOP</h1>
+    <form id="cadastroForm">
+        <div class="form-row">
+            <div class="form-group">
+                <label for="nome">Nome:</label>
+                <input type="text" class="form-control rounded-pill px-4" id="nome" name="nome" required>
+                <div>
+                    <div id="mensagemErroNome" class="alerta" role="alert"></div>
+                </div>
+            </div>
 
+            <div class="form-group">
+                <label for="email">E-mail:</label>
+                <input type="email" class="form-control rounded-pill px-4" id="email" name="email" required>
+                <div id="mensagemErroEmail" class="alerta" role="alert"></div>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group">
+                <label for="dataDeNascimento">Data de Nascimento:</label>
+                <input type="date" class="form-control rounded-pill px-4" id="dataDeNascimento" name="dataDeNascimento" required>
+            </div>
+            <div class="form-group">
+                <label for="telefone">Telefone:</label>
+                <input type="text" class="form-control rounded-pill px-4" id="telefone" name="telefone" required>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group">
+                <label for="logradouro">Logradouro:</label>
+                <input type="text" class="form-control rounded-pill px-4" id="logradouro" name="logradouro" required>
+            </div>
+            <div class="form-group">
+                <label for="numero">Número:</label>
+                <input type="number" class="form-control rounded-pill px-4" id="numero" name="numero" required>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group">
+                <label for="bairro">Bairro:</label>
+                <input type="text" class="form-control rounded-pill px-4" id="bairro" name="bairro" required>
+            </div>
+            <div class="form-group">
+                <label for="cep">CEP:</label>
+                <input type="text" class="form-control rounded-pill px-4" id="cep" name="cep" required>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group">
+                <label for="bairro">Cidade:</label>
+                <input type="text" class="form-control rounded-pill px-4" id="cidade" name="cidade" required>
+            </div>
+            <div class="form-group">
+                <label for="cep">Estado:</label>
+                <input type="text" class="form-control rounded-pill px-4" id="estado" name="estado" required>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group">
+                <label for="senha">Senha:</label>
+                <input type="password" class="form-control rounded-pill px-4" id="senha" name="senha" required>
+                <div id="mensagemErroSenha" class="alerta" role="alert"></div>
+            </div>
+        </div>
+        <div class="button">
+            <button type="button" id="cadastrarButton" class="btn-primary">Cadastrar</button>
+        </div>
+    </form>
+    <div class="cadastrar-button">
+        <button type="button" class="cadastrar-button-primary" id="fazerLogin">Voltar</button>
+    </div>
+    <script>
+        document.getElementById("cadastrarButton").onclick = function () {
+            const nome = document.getElementById("nome").value;
+            const email = document.getElementById("email").value;
+            const dataDeNascimento = document.getElementById("dataDeNascimento").value;
+            const telefone = document.getElementById("telefone").value;
+            const logradouro = document.getElementById("logradouro").value;
+            const numero = document.getElementById("numero").value;
+            const bairro = document.getElementById("bairro").value;
+            const cep = document.getElementById("cep").value;
+            const cidade = document.getElementById("cidade").value;
+            const estado = document.getElementById("estado").value;
+            const senha = document.getElementById("senha").value;
+
+            // Limpar mensagens de erro
+            document.getElementById("mensagemErroNome").innerText = "";
+            document.getElementById("mensagemErroEmail").innerText = "";
+            document.getElementById("mensagemErroSenha").innerText = "";
+
+            // Envio dos dados para o servidor
+            fetch('/usuario/cadastro-usuario', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    nome: nome,
+                    email: email,
+                    dataDeNascimento: dataDeNascimento,
+                    telefone: telefone,
+                    logradouro: logradouro,
+                    numero: numero,
+                    bairro: bairro,
+                    cep:{
+                        cep: cep,
+                        cidade: cidade,
+                        estado: estado,
+                    },
+                    senha: senha
+                })
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        return response.json().then(errors => {
+                            errors.forEach(error => {
+                                switch (error) {
+                                    case "Nome é um campo obrigatório.":
+                                        document.getElementById("mensagemErroNome").innerText = error;
+                                        break;
+                                    case "E-mail é um campo obrigatório.":
+                                        document.getElementById("mensagemErroEmail").innerText = error;
+                                        break;
+                                    case "Já existe um usuário com esse e-mail.":
+                                        document.getElementById("mensagemErroEmail").innerText = error;
+                                        break;
+                                    case "Senha é um campo obrigatório.":
+                                        document.getElementById("mensagemErroSenha").innerText = error;
+                                        break;
+                                    default:
+                                        document.getElementById("mensagemErro").innerText = error;
+                                }
+                            });
+                        });
+                    } else{
+                        window.location.href = '/usuario/login';
+                    }
+                })
+        };
+        document.getElementById("fazerLogin").onclick = function () {
+            window.location.href = '/usuario/login';
+        };
+    </script>
+</div>
 </body>
 </html>
+

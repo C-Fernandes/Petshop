@@ -1,5 +1,6 @@
 package br.com.imd.petshop.Entity;
 
+import java.time.OffsetDateTime;
 import java.util.Date;
 
 public class Usuario {
@@ -94,4 +95,6 @@ public class Usuario {
     public void setCep(Cep cep) {
         this.cep = cep;
     }
+
+
 }
