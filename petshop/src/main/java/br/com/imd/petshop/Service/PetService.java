@@ -39,4 +39,9 @@ public class PetService {
     public void deletarPet(Long id) {
         petRepository.deletar(id);
     }
+
+    public List<Pet> findByUser(String emailUser) {
+        return petRepository.findByUser(emailUser);
+
+    }
 }

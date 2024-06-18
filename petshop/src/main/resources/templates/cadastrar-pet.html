@@ -2,39 +2,45 @@
 <html lang="pt-br">
   <head>
     <meta charset="UTF-8" />
+    <link rel="stylesheet" href="styles/cadastroPet.css" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Cadastro de pet</title>
   </head>
   <body>
     <div class="container">
-      <h1>Cadastro Pet</h1>
-      <form>
-        <div>
-          <label for="emailUsuario">Email do usuário:</label>
-          <input type="email" id="emailUsuario" name="emailUsuario" />
-        </div>
-        <div>
-          <label for="nomePet">Nome do pet:</label>
-          <input type="text" id="nomePet" name="nomePet" />
-        </div>
-        <div>
-          <label for="especiePet">Espécie:</label>
-          <input type="text" id="especiePet" name="especiePet" />
-        </div>
-        <div>
-          <label for="racaPet">Raça:</label>
-          <input type="text" id="racaPet" name="racaPet" />
-        </div>
-        <div>
-          <label for="dataDeNascimento">Data de nascimento:</label>
-          <input type="date" id="dataDeNascimento" name="dataDeNascimento" />
-        </div>
-        <div class="button">
-          <button type="button" id="cadastrarButton" class="btn-primary">
-            Cadastrar
-          </button>
-        </div>
-      </form>
+      <div class="box">
+        <h1>Cadastro Pet</h1>
+        <form>
+          <div>
+            <label for="emailUsuario">Email do usuário:</label>
+            <input type="email" id="emailUsuario" name="emailUsuario" />
+          </div>
+          <div>
+            <label for="nomePet">Nome do pet:</label>
+            <input type="text" id="nomePet" name="nomePet" />
+          </div>
+          <div>
+            <label for="especiePet">Espécie:</label>
+            <input type="text" id="especiePet" name="especiePet" />
+          </div>
+          <div>
+            <label for="racaPet">Raça:</label>
+            <input type="text" id="racaPet" name="racaPet" />
+          </div>
+          <div>
+            <label for="dataDeNascimento">Data de nascimento:</label>
+            <input type="date" id="dataDeNascimento" name="dataDeNascimento" />
+          </div>
+          <div class="button">
+            <button type="button" id="cadastrarButton" class="btn-cadastrar">
+              Cadastrar
+            </button>
+            <button type="button" id="voltarButton" class="btn-voltar">
+              Voltar
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
     <script>
       document.getElementById("cadastrarButton").onclick = function () {

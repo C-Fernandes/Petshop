@@ -88,9 +88,9 @@ public class PetRepository {
 
     public List<Pet> procurarPorNome(String name) {
         List<Pet> pets = new ArrayList<>();
-        try (Connection connection = DataBaseConfig.getConnection();
-                PreparedStatement statement = connection.prepareStatement("SELECT * FROM pets WHERE nome = ?")) {
-
+        try {
+            Connection connection = DataBaseConfig.getConnection();
+            PreparedStatement statement = connection.prepareStatement("SELECT * FROM pets WHERE nome = ?");
             statement.setString(1, name);
             ResultSet resultSet = statement.executeQuery();
 
@@ -100,6 +100,27 @@ public class PetRepository {
             }
             return pets;
         } catch (SQLException e) {
+            e.printStackTrace();
+
+        }
+        return null;
+    }
+
+    public List<Pet> findByUser(String emailUser) {
+        List<Pet> pets = new ArrayList<>();
+        try {
+            Connection connection = DataBaseConfig.getConnection();
+            PreparedStatement statement = connection
+                    .prepareStatement("SELECT * FROM pets WHERE cliente_usuario_email = ?");
+            statement.setString(1, emailUser);
+            ResultSet resultSet = statement.executeQuery();
+
+            while (resultSet.next()) {
+                pets.add(mapeamento(resultSet));
+
+            }
+            return pets;
+        } catch (Exception e) {
             e.printStackTrace();
 
         }
