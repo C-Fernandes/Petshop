@@ -28,12 +28,17 @@ public class UsuarioService {
             cepRepository.save(usuario.getCep());
         }
         LocalDate dataAtual = LocalDate.now();
-        LocalDate dataNascimento = usuario.getDataDeNascimento().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        LocalDate dataNascimento = usuario.getDataDeNascimento().toInstant().atZone(ZoneId.systemDefault())
+                .toLocalDate();
 
         Period periodo = Period.between(dataNascimento, dataAtual);
 
         int idade = periodo.getYears();
         usuario.setIdade(idade);
         usuarioRepository.save(usuario);
+    }
+
+    public Usuario findUsuario(String email) {
+        return usuarioRepository.findByEmail(email);
     }
 }
