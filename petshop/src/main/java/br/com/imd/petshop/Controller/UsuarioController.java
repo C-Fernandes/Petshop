@@ -28,4 +28,12 @@ public class UsuarioController {
         usuarioService.cadastrarUsuario(usuario);
         return "redirect:/usuario/login";
     }
+
+    @PostMapping("/login")
+    public String login(@RequestBody Usuario usuario) {
+        if (usuarioService.login(usuario)) {
+            return "redirect:/usuario/home";
+        }
+        return "redirect:/usuario/login";
+    }
 }
