@@ -5,6 +5,7 @@ import br.com.imd.petshop.Service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 @CrossOrigin("*")
@@ -30,10 +31,10 @@ public class UsuarioController {
     }
 
     @PostMapping("/login")
-    public String login(@RequestBody Usuario usuario) {
-        if (usuarioService.login(usuario)) {
-            return "redirect:/usuario/home";
-        }
-        return "redirect:/usuario/login";
+    public ModelAndView login(@RequestParam("email") String email, @RequestParam("senha") String senha) {
+        String redirect = usuarioService.login(email, senha);
+        return new ModelAndView(redirect);
     }
+
+
 }
