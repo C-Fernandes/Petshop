@@ -7,7 +7,7 @@ public class Usuario {
     private String senha;
     private String nome;
     private Date dataDeNascimento;
-    //private Integer idade;
+    private Integer idade;
     private String telefone;
     private String logradouro;
     private Long numero;
@@ -46,13 +46,13 @@ public class Usuario {
         this.dataDeNascimento = dataDeNascimento;
     }
 
-   /* public Integer getIdade() {
+   public Integer getIdade() {
         return idade;
     }
 
     public void setIdade(Integer idade) {
         this.idade = idade;
-    }*/
+    }
 
     public String getTelefone() {
         return telefone;
