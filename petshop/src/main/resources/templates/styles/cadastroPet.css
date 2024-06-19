@@ -1,0 +1,69 @@
+body,
+html {
+  background-color: #f5f5dc;
+  margin: 0px;
+  padding: 0px;
+  font-family: Times new Roman, sans-serif;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  align-text: center;
+}
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: auto;
+  width: auto;
+}
+
+.box {
+  width: 330px;
+  border-radius: 10px;
+  height: auto;
+  padding: 10%;
+  background-color: white;
+  box-shadow: 0 0px 7px black;
+}
+form {
+  width: auto;
+}
+label {
+  display: block;
+  margin-bottom: 10px;
+  font-weight: bold;
+}
+input {
+  width: 100%;
+  padding: 10px;
+  margin: 2px;
+  box-sizing: border-box;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+label {
+  margin: 2px;
+}
+.button {
+  margin-top: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+.button button {
+  border: none;
+  padding: 15px 30px;
+  border-radius: 10px;
+  transition: box-shadow 0.3s ease, border 0.3s ease;
+}
+button:hover {
+  box-shadow: 0 0 5px black;
+}
+.btn-cadastrar {
+  width: 100%;
+}
+.btn-voltar {
+  width: 60%;
+}

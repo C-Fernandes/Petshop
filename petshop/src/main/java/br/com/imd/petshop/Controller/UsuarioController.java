@@ -5,6 +5,7 @@ import br.com.imd.petshop.Service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 @CrossOrigin("*")
@@ -28,4 +29,17 @@ public class UsuarioController {
         usuarioService.cadastrarUsuario(usuario);
         return "redirect:/usuario/login";
     }
+
+    @GetMapping("/login")
+    public String login() {
+        return "tela-login";
+    }
+
+    @PostMapping("/login")
+    public ModelAndView login(@RequestParam("email") String email, @RequestParam("senha") String senha) {
+        String redirect = usuarioService.login(email, senha);
+        return new ModelAndView(redirect);
+    }
+
+
 }

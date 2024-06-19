@@ -8,7 +8,7 @@ public class Pet {
     private String nome;
     private Date dataDeNascimento;
     private Integer idade;
-    private Cliente dono;
+    private Usuario dono;
     private Raca raca;
 
     public Long getId() {
@@ -43,11 +43,11 @@ public class Pet {
         this.idade = idade;
     }
 
-    public Cliente getDono() {
+    public Usuario getDono() {
         return this.dono;
     }
 
-    public void setDono(Cliente dono) {
+    public void setDono(Usuario dono) {
         this.dono = dono;
     }
 

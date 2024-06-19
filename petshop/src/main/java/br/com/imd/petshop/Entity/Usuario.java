@@ -1,10 +1,8 @@
 package br.com.imd.petshop.Entity;
 
-import java.time.OffsetDateTime;
 import java.util.Date;
 
 public class Usuario {
-
     private String email;
     private String senha;
     private String nome;
@@ -95,6 +93,5 @@ public class Usuario {
     public void setCep(Cep cep) {
         this.cep = cep;
     }
-
 
 }

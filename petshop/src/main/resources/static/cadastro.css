@@ -1,0 +1,74 @@
+body{
+    height: 100vh;
+    width: 100vw;
+    align-content: center;
+}
+
+.login-container{
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color:  #fba383;
+    padding-left: 1.5rem;
+    color: #a46c5c;
+}
+.main{
+    width: 55%;
+    background-color: white;
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    position: absolute;
+    z-index: 2;
+    box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.2), -3px -3px 3px rgba(0, 0, 0, 0.2);
+}
+
+#cadastroForm{
+    width: 100%;
+    padding: 2rem;
+
+}
+
+.title{
+    width: 100%;
+    font-size: 2rem;
+    font-weight: bold;
+}
+
+.custom-paw{
+    font-size: 5rem;
+}
+
+.circle{
+    position: absolute;
+    height: 60rem;
+    width: 60rem;
+    border-radius: 50%;
+    z-index: 1;
+    background-color: #742a0f;
+    left: 0;
+}
+
+.btn-cadastro{
+    background-color:#742a0f;
+    padding: .5rem 1rem;
+    color: white;
+    border: none;
+}
+
+input[type="date"]{
+    color: #a46c5c;
+}
+input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(48%) sepia(34%) saturate(1531%) hue-rotate(314deg) brightness(88%) contrast(83%);
+}
+
+.h1-title{
+    color: #742a0f;;
+}

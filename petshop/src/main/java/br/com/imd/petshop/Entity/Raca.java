@@ -6,6 +6,14 @@ public class Raca {
 
     private String especie;
 
+    public Raca() {
+    }
+
+    public Raca(String raca, String especie) {
+        this.raca = raca;
+        this.especie = especie;
+    }
+
     public String getRaca() {
         return raca;
     }

@@ -1,6 +1,6 @@
 package br.com.imd.petshop.Entity;
 
-public class Cliente {
+public class Cliente extends Usuario {
 
     private Usuario usuario;
     private Long qtdPontos;
