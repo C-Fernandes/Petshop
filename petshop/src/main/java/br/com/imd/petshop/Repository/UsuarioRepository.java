@@ -17,7 +17,7 @@ public class UsuarioRepository {
     public void save(Usuario usuario) {
         String sql = "INSERT INTO usuario (email, senha, nome, data_nascimento, idade, telefone, logradouro, numero, bairro, cep) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try (Connection conn = DataBaseConfig.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+                PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, usuario.getEmail());
             ps.setString(2, usuario.getSenha());
             ps.setString(3, usuario.getNome());
@@ -38,8 +38,8 @@ public class UsuarioRepository {
         String sql = "SELECT * FROM usuario";
         List<Usuario> usuarios = new ArrayList<>();
         try (Connection conn = DataBaseConfig.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql);
-             ResultSet rs = ps.executeQuery()) {
+                PreparedStatement ps = conn.prepareStatement(sql);
+                ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
                 Usuario usuario = mapRow(rs);
                 usuarios.add(usuario);
@@ -51,9 +51,9 @@ public class UsuarioRepository {
     }
 
     public Usuario findByEmail(String email) {
-        String sql = "SELECT * FROM usuarios WHERE email = ?";
+        String sql = "SELECT * FROM usuario WHERE email = ?";
         try (Connection conn = DataBaseConfig.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+                PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, email);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {

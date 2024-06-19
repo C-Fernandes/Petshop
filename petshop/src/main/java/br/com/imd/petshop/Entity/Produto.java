@@ -5,11 +5,9 @@ import java.util.List;
 public class Produto {
 
     private Long id;
-
     private String nome;
     private Integer quantidade;
     private Boolean ativo;
-
     private Preco preco;
 
     private List<PedidoHasProduto> pedidoHasProdutoList;

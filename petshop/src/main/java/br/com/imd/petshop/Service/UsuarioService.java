@@ -69,4 +69,8 @@ public class UsuarioService {
         }
         return "redirect:/usuario/login";
     }
+
+    public Usuario findUsuario(String email) {
+        return usuarioRepository.findByEmail(email);
+    }
 }
