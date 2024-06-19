@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.Period;
 import java.time.ZoneId;
+import java.util.List;
 
 @Service
 public class UsuarioService {
@@ -32,8 +33,15 @@ public class UsuarioService {
 
         Period periodo = Period.between(dataNascimento, dataAtual);
 
-        int idade = periodo.getYears();
-        usuario.setIdade(idade);
+
         usuarioRepository.save(usuario);
+    }
+
+    public List<Usuario> findAllClientes() {
+        return usuarioRepository.findAllClientes();
+    }
+
+    public List<Usuario> findAllFuncionarios() {
+        return usuarioRepository.findAllFuncionarios();
     }
 }

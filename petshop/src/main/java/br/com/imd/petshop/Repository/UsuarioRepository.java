@@ -15,19 +15,19 @@ import java.util.List;
 public class UsuarioRepository {
 
     public void save(Usuario usuario) {
-        String sql = "INSERT INTO usuario (email, senha, nome, data_nascimento, idade, telefone, logradouro, numero, bairro, cep) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO usuario (email, senha, nome, data_nascimento,telefone, logradouro, numero, bairro, cep) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try (Connection conn = DataBaseConfig.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, usuario.getEmail());
             ps.setString(2, usuario.getSenha());
             ps.setString(3, usuario.getNome());
             ps.setDate(4, new java.sql.Date(usuario.getDataDeNascimento().getTime()));
-            ps.setInt(5, usuario.getIdade());
-            ps.setString(6, usuario.getTelefone());
-            ps.setString(7, usuario.getLogradouro());
-            ps.setLong(8, usuario.getNumero());
-            ps.setString(9, usuario.getBairro());
-            ps.setString(10, usuario.getCep().getCep());
+            //ps.setInt(5, usuario.getIdade());
+            ps.setString(5, usuario.getTelefone());
+            ps.setString(6, usuario.getLogradouro());
+            ps.setLong(7, usuario.getNumero());
+            ps.setString(8, usuario.getBairro());
+            ps.setString(9, usuario.getCep().getCep());
             ps.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -66,13 +66,44 @@ public class UsuarioRepository {
         return null;
     }
 
+    public List<Usuario> findAllClientes() {
+        String sql = "SELECT u.*  FROM Usuario u JOIN Cliente c ON u.email = c.usuario_email";
+        List<Usuario> usuarios = new ArrayList<>();
+        try (Connection conn = DataBaseConfig.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                Usuario usuario = mapRow(rs);
+                usuarios.add(usuario);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return usuarios;
+    }
+
+    public List<Usuario> findAllFuncionarios() {
+        String sql = "SELECT u.*  FROM Usuario u JOIN Funcionario f ON u.email = f.usuario_email";
+        List<Usuario> usuarios = new ArrayList<>();
+        try (Connection conn = DataBaseConfig.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                Usuario usuario = mapRow(rs);
+                usuarios.add(usuario);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return usuarios;
+    }
     private Usuario mapRow(ResultSet rs) throws SQLException {
         Usuario usuario = new Usuario();
         usuario.setEmail(rs.getString("email"));
         usuario.setSenha(rs.getString("senha"));
         usuario.setNome(rs.getString("nome"));
         usuario.setDataDeNascimento(rs.getDate("data_nascimento"));
-        usuario.setIdade(rs.getInt("idade"));
+        //usuario.setIdade(rs.getInt("idade"));
         usuario.setTelefone(rs.getString("telefone"));
         usuario.setLogradouro(rs.getString("logradouro"));
         usuario.setNumero(rs.getLong("numero"));

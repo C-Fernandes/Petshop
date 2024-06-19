@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Cadastro de pedido</title>
+  <link rel="stylesheet" href="/cadastro.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<div class="login-container">
+  <h1 class="titulo">PET SHOP</h1>
+  <form id="cadastroForm">
+    <div class="form-row">
+      <div class="form-group">
+        <label for="valor">Valor:</label>
+        <input type="number" class="form-control rounded-pill px-4" id="valor" name="valor" required>
+        <div>
+          <div id="mensagemErroNome" class="alerta" role="alert"></div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="data">Data:</label>
+        <input type="date" class="form-control rounded-pill px-4" id="data" name="data" required>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label for="status">Status:</label>
+        <input type="text" class="form-control rounded-pill px-4" id="status" name="status" required>
+      </div>
+      <div class="form-group">
+        <label for="telefone">Telefone:</label>
+        <input type="text" class="form-control rounded-pill px-4" id="telefone" name="telefone" required>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <select id="funcionario" name="funcionario">
+          <option th:each="funcionario : ${funcionarios}" th:value="${funcionario.getEmail()}" th:text="${'funcionario ' + funcionario.email}"></option>
+        </select>
+      </div>
+      <div class="form-group">
+        <select id="cliente" name="cliente">
+          <option th:each="cliente : ${clientes}" th:value="${cliente.getEmail()}" th:text="${'cliente ' + cliente.email}"></option>
+        </select>
+      </div>
+    </div>
+    <div class="button">
+      <button type="button" id="cadastrarButton" class="btn-primary">Cadastrar</button>
+    </div>
+  </form>
+  <div class="cadastrar-button">
+    <button type="button" class="cadastrar-button-primary" id="fazerLogin">Voltar</button>
+  </div>
+  <script>
+    document.getElementById("cadastrarButton").onclick = function () {
+      const valor = document.getElementById("valor").value;
+      const data = document.getElementById("data").value;
+      const status = document.getElementById("status").value;
+      const funcionarioId = document.getElementById("funcionario").value;
+      const clienteId = document.getElementById("cliente").value;
+      console.log(valor, data, status, funcionarioId, clienteId);
+
+      fetch('/pedido/create/${funcionarioId}/${clienteId}', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          valor: valor,
+          data: data,
+          status: status,
+          funcionarioId: funcionarioId,
+          clienteId: clienteId,
+        })
+      })
+              .then(response => {
+                if (!response.ok) {
+                  return response.json().then(errors => {
+                    errors.forEach(error => {
+                      console(error);
+                    });
+                  });
+                } else{
+                  window.location.href = '/pedido/list';
+                }
+              })
+    };
+  </script>
+</div>
+</body>
+</html>
