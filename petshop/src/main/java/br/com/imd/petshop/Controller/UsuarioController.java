@@ -30,6 +30,11 @@ public class UsuarioController {
         return "redirect:/usuario/login";
     }
 
+    @GetMapping("/login")
+    public String login() {
+        return "tela-login";
+    }
+
     @PostMapping("/login")
     public ModelAndView login(@RequestParam("email") String email, @RequestParam("senha") String senha) {
         String redirect = usuarioService.login(email, senha);
