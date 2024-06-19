@@ -1,0 +1,117 @@
+:root {
+  --peru: #ec9474;
+  --coral: #fba383;
+  --maroon: #742a0f;
+  --rosybrown: #a46c5c;
+  --tan: #cda99d;
+}
+
+html,
+body {
+  margin: 0;
+  background-color: white;
+}
+.myContainer {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  flex-direction: row;
+}
+
+/* Estilo para cada card de produto */
+.card {
+  background-color: white;
+  width: 12.5em;
+  height: auto;
+  border: 1px solid #ccc;
+  margin: 0.5em;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 0 4px var(--tan);
+}
+
+.card-body {
+  text-align: center;
+  padding: 1.25rem;
+}
+
+.card-title {
+  text-align: center;
+  font-size: 1.25rem;
+  margin-bottom: 0.75rem;
+}
+
+.card-text {
+  font-size: 1rem;
+  color: #666;
+}
+.card button {
+}
+
+nav {
+  font-size: 1.1em;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  height: auto;
+  width: 100%;
+  background-color: var(--maroon);
+  color: white;
+  box-shadow: 0 0 5px black;
+}
+.navbar {
+  flex-wrap: wrap;
+  padding: 0.5em;
+  margin: 0 0.5em 0 0;
+}
+a {
+  color: white;
+  text-decoration: none;
+  padding: 0.3em 0.5em;
+}
+a:hover {
+  background-color: var(--maroon);
+  border: 1px solid var(--maroon);
+  border-radius: 15px;
+  text-decoration: none;
+  color: white;
+}
+.btn.btn-primary {
+  background-color: var(--peru);
+  border-color: var(--peru);
+}
+.btn.btn-primary:hover {
+  box-shadow: 0 0 5px gray;
+  background-color: white;
+  border-color: var(--peru);
+  color: var(--peru);
+}
+
+.btn-primary,
+.focus.btn-primary:not(:disabled):not(.disabled).active,
+.btn-primary:not(:disabled):not(.disabled):active,
+.show > .btn-primary.dropdown-toggle {
+  color: #fff;
+  background-color: var(--peru);
+  border-color: var(--maroon);
+  box-shadow: 0 0 0 0px gray;
+}
+.myContainer button {
+  background-color: var(--peru);
+  width: auto;
+  color: white;
+  border: 0;
+  border-radius: 10px;
+  padding: 0.2em 0.4em;
+}
+.row {
+  display: flex;
+  justify-content: flex-end;
+  flex-direction: row;
+  margin: 1em 1em;
+}

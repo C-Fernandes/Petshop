@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/styles/produtos.css" />
+
+    <title>Produto</title>
+  </head>
+  <body>
+    <nav>
+      <div class="navbar">
+        <a href="">Inicio</a>
+        <a href="">Pets</a>
+        <a href="">Produtos</a>
+        <a href="">Servicos</a>
+      </div>
+    </nav>
+
+    <div class="row">
+      <button
+        type="button"
+        class="btn btn-primary"
+        data-toggle="modal"
+        data-target="#exampleModal"
+      >
+        Cadastrar Produto
+      </button>
+    </div>
+
+    <div class="myContainer">
+      <div class="card" th:each="produto : ${produtos}">
+        <div class="card-body">
+          <h5 class="card-title" th:text="${produto.nome}">Nome do Produto</h5>
+          <div class="card-text">
+            <p>Quantidade: <span th:text="${produto.quantidade}">10</span></p>
+            <p>
+              Valor: R$ <span th:text="${produto.preco.valor}">100,00</span>
+            </p>
+          </div>
+          <button>Alterar produto</button>
+        </div>
+      </div>
+    </div>
+
+    <div
+      class="modal fade"
+      id="exampleModal"
+      tabindex="-1"
+      role="dialog"
+      aria-labelledby="exampleModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <!-- Cabeçalho do modal -->
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">
+              Cadastro de produto
+            </h5>
+            <button
+              type="button"
+              class="close"
+              data-dismiss="modal"
+              aria-label="Fechar"
+            >
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <!-- Corpo do modal -->
+          <div class="modal-body">
+            <form>
+              <div class="form-group">
+                <label for="nomeProduto" class="col-form-label"
+                  >Nome do produto:</label
+                >
+                <input
+                  type="text"
+                  class="form-control"
+                  id="nomeProduto"
+                  name="nomeProduto"
+                />
+              </div>
+              <div class="form-group">
+                <label for="quantidadeProduto" class="col-form-label"
+                  >Quantidade:</label
+                >
+                <input
+                  class="form-control"
+                  type="number"
+                  id="quantidadeProduto"
+                  name="quantidadeProduto"
+                />
+              </div>
+              <div class="form-group">
+                <label for="ativoProduto" class="col-form-label"
+                  >O produto está disponível para compra?</label
+                >
+                <input type="checkbox" id="ativoProduto" name="ativoProduto" />
+              </div>
+              <div class="form-group">
+                <label for="precoProduto" class="col-form-label">Preço:</label>
+                <input
+                  type="number"
+                  class="form-control"
+                  id="precoProduto"
+                  name="precoProduto"
+                />
+              </div>
+            </form>
+          </div>
+          <!-- Rodapé do modal -->
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-dismiss="modal"
+            >
+              Fechar
+            </button>
+            <button type="button" id="cadastrarButton" class="btn btn-primary">
+              Cadastrar Produto
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@1.16.1/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+      $(document).ready(function () {
+        $("#exampleModal").on("show.bs.modal", function (event) {
+          var button = $(event.relatedTarget); // Botão que acionou o modal
+          var recipient = button.data("whatever"); // Extrair informação dos atributos data-*
+
+          // Atualizar o título do modal com base no valor extraído
+          var modal = $(this);
+          modal.find(".modal-title").text("Nova mensagem para " + recipient);
+          modal.find(".modal-body input").val(recipient);
+        });
+
+        document.getElementById("cadastrarButton").onclick = function () {
+          const nome = document.getElementById("nomeProduto").value;
+          const quantidade = document.getElementById("quantidadeProduto").value;
+          const ativo = document.getElementById("ativoProduto").checked;
+          const preco = parseFloat(
+            document.getElementById("precoProduto").value
+          );
+          const produtoPrecoDTO = {
+            nome,
+            quantidade,
+            ativo,
+            preco,
+          };
+
+          fetch("/produtos/cadastro-produto", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(produtoPrecoDTO),
+          })
+            .then((response) => {
+              if (!response.ok) {
+                throw new Error("Erro ao cadastrar produto e preço.");
+              }
+              return response.json();
+            })
+            .then((data) => {
+              console.log("Produto e Preço cadastrados com sucesso:", data);
+            })
+            .catch((error) => {
+              console.error("Erro ao cadastrar produto e preço:", error);
+            });
+        };
+      });
+    </script>
+  </body>
+</html>

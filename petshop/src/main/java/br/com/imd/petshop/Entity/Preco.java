@@ -9,6 +9,25 @@ public class Preco {
 
     private Date data;
 
+    public Preco(double preco) {
+        this.valor = preco;
+
+    }
+
+    public Preco(Long id, Double valor, Date data) {
+        this.id = id;
+        this.valor = valor;
+        this.data = data;
+    }
+
+    public Preco(Long id, Double valor) {
+        this.id = id;
+        this.valor = valor;
+    }
+
+    public Preco() {
+    }
+
     public Long getId() {
         return id;
     }
@@ -32,4 +51,5 @@ public class Preco {
     public void setData(Date data) {
         this.data = data;
     }
+
 }
