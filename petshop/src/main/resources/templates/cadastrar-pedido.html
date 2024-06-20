@@ -31,7 +31,7 @@
             Valor: R$ <span th:text="${produto.preco.valor}">100,00</span>
           </p>
         </div>
-      <button th:attr="data-produto=${produto}" onclick="addProduto(this.getAttribute('data-produto'))">Adicionar</button>
+        <button th:attr="data-nome=${produto.nome}, data-preco=${produto.preco.valor}, data-id=${produto.id}" onclick="addProduto(this.getAttribute('data-nome'), this.getAttribute('data-preco'), this.getAttribute('data-id'))">Adicionar</button>
       </div>
     </div>
   </div>
