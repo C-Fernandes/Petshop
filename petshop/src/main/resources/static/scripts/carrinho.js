@@ -17,7 +17,6 @@ function addProduto(nome, preco, id, qtd) {
             qtd: qtd
         };
 
-        carrinho.push(produto);
         atualizarCarrinho();
     }
 
@@ -40,8 +39,6 @@ function atualizarCarrinho() {
         elemento.textContent = total;
     });
     document.getElementById('qtd').innerText = totalItens;
-    console.log('Carrinho atualizado:', carrinho);
-    console.log('Total:', total);
 }
 
 function produtoExisteNoCarrinho(id) {
@@ -54,10 +51,20 @@ function produtoExisteNoCarrinho(id) {
 }
 
 function removerProduto(id) {
+    if(carrinho.length == 0) total = 0;
     carrinho = carrinho.filter(produto => Number(produto.id) !== Number(id));
+    atualizarCarrinho();
     mostrarResumoPedido();
 }
 
+function removerItem(id) {
+    var index = carrinho.findIndex(produto => Number(produto.id) === Number(id));
+    if (index !== -1 && carrinho[index].qtd > 1) {
+        carrinho[index].qtd--;
+    }
+    atualizarCarrinho();
+    mostrarResumoPedido();
+}
 
 showCartButton.addEventListener('click', () => {
     mostrarResumoPedido();
@@ -77,12 +84,12 @@ function mostrarResumoPedido() {
           <td>${item.nome}</td>
           <td>${item.preco}</td>
           <td>
-            <button class="btn btn-sm btn-outline-primary" onclick="removerItem(this)">-</button>
+            <button class="btn btn-sm btn-outline-primary" onclick="removerItem(${item.id})">-</button>
             <span>${item.qtd}</span>
-            <button class="btn btn-sm btn-outline-primary" onclick="adicionarItem(this)">+</button>
+            <button class="btn btn-sm btn-outline-primary" onclick="addProduto('${item.nome}', '${item.preco}', '${item.id}', ${item.qtd + 1})">+</button>
           </td>
           <td>
-            <button class="btn btn-sm btn-outline-primary" onclick="removerProduto(${item.id})">-</button>
+            <button class="btn btn-danger" onclick="removerProduto(${item.id})">Remover</button>
            </td>
         `;
         tbody.appendChild(newRow);
