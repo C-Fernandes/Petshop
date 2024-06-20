@@ -63,5 +63,8 @@ public class UsuarioController {
         return new ModelAndView(redirect);
     }
 
+    @GetMapping("/inicial")
+    public String inicial() { return  "tela-inicial"; }
+
 
 }
