@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>Cadastro de pedido</title>
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
@@ -18,10 +19,20 @@
       <a href="">Pets</a>
       <a href="">Produtos</a>
       <a href="">Servicos</a>
+      <a style="position: relative; display: inline-block;" href="#">
+        <i class="ph ph-shopping-cart" style="font-size: 35px;"></i>
+        <span id="qtd" class="badge badge-pill badge-primary" style="position: absolute; top: -1px; right: -1px; background: #ec9474">0</span>
+      </a>
     </div>
   </nav>
 </header>
 <main>
+  <div style="position: relative; text-align: right; margin-top: 20px">
+    <div style="margin-right: 60px;">
+      Total: <span id="total"></span>
+    </div>
+  </div>
+
   <div class="myContainer">
     <div class="card"  th:each="produto : ${produtos}">
       <div class="card-body">

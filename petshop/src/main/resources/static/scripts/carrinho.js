@@ -21,12 +21,16 @@ function addProduto(nome, preco, id, qtd) {
 
 function atualizarCarrinho() {
     total = 0;
+    totalItens = 0;
 
     carrinho.forEach(function(produto) {
        total += Number(produto.preco) * produto.qtd;
+       totalItens += produto.qtd;
     });
 
     //atualizar interface
+    document.getElementById('total').innerText = total;
+    document.getElementById('qtd').innerText = totalItens;
     console.log('Carrinho atualizado:', carrinho);
     console.log('Total:', total);
 }
