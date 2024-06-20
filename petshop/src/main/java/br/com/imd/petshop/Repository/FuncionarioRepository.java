@@ -12,6 +12,18 @@ import java.sql.SQLException;
 
 @Repository
 public class FuncionarioRepository {
+    public void save(Funcionario funcionario) {
+        String sql = "INSERT INTO cliente (usuario, cargo) VALUES (?, ?)";
+        try (Connection conn = DataBaseConfig.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, funcionario.getUsuario().getEmail());
+            ps.setString(2, funcionario.getCargo());
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
     public Funcionario findByUsuario(String usuario) {
         String sql = "SELECT * FROM funcionario WHERE email = ?";
         try (Connection conn = DataBaseConfig.getConnection();

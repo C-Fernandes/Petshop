@@ -12,6 +12,19 @@ import java.sql.SQLException;
 
 @Repository
 public class ClienteRepository {
+
+    public void save(Cliente cliente) {
+        String sql = "INSERT INTO cliente (usuario_email, qtd_pontos) VALUES (?, ?)";
+        try (Connection conn = DataBaseConfig.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, cliente.getUsuario().getEmail());
+            ps.setLong(2, cliente.getQtdPontos());
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
     public Cliente findByUsuario(String usuario) {
         String sql = "SELECT * FROM cliente WHERE email = ?";
         try (Connection conn = DataBaseConfig.getConnection();

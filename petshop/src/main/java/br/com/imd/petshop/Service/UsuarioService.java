@@ -1,5 +1,6 @@
 package br.com.imd.petshop.Service;
 
+import br.com.imd.petshop.DTO.UsuarioDTO;
 import br.com.imd.petshop.Entity.Cliente;
 import br.com.imd.petshop.Entity.Funcionario;
 import br.com.imd.petshop.Entity.Usuario;
@@ -8,17 +9,23 @@ import br.com.imd.petshop.Repository.ClienteRepository;
 import br.com.imd.petshop.Repository.FuncionarioRepository;
 import br.com.imd.petshop.Repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.Period;
 import java.time.ZoneId;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Service
 public class UsuarioService {
 
-    private final UsuarioRepository usuarioRepository;
+    private static final UsuarioRepository usuarioRepository = new UsuarioRepository();
     private final ClienteRepository clienteRepository;
     private final FuncionarioRepository funcionarioRepository;
     private final CepRepository cepRepository;
@@ -27,32 +34,109 @@ public class UsuarioService {
     @Autowired
     public UsuarioService(UsuarioRepository usuarioRepository, CepRepository cepRepository, BCryptPasswordEncoder passwordEncoder,
                           ClienteRepository clienteRepository, FuncionarioRepository funcionarioRepository) {
-        this.usuarioRepository = usuarioRepository;
         this.cepRepository = cepRepository;
         this.passwordEncoder = passwordEncoder;
         this.clienteRepository = clienteRepository;
         this.funcionarioRepository = funcionarioRepository;
     }
 
-    public void cadastrarUsuario(Usuario usuario) {
+    public void cadastrarUsuario(UsuarioDTO usuarioDto) {
+        validarUsuario(usuarioDto);
+
+        Usuario usuario = new Usuario();
+        usuario.setEmail(usuarioDto.getEmail());
+        usuario.setSenha(usuarioDto.getSenha());
+        usuario.setNome(usuarioDto.getNome());
+        usuario.setDataDeNascimento(usuarioDto.getDataDeNascimento());
+        usuario.setTelefone(usuarioDto.getTelefone());
+        usuario.setLogradouro(usuarioDto.getLogradouro());
+        usuario.setNumero(usuarioDto.getNumero());
+        usuario.setBairro(usuarioDto.getBairro());
+        usuario.setCep(usuarioDto.getCep());
+
         String cepValue = usuario.getCep().getCep();
         if (!cepRepository.existsById(cepValue)) {
             cepRepository.save(usuario.getCep());
         }
+
         LocalDate dataAtual = LocalDate.now();
         LocalDate dataNascimento = usuario.getDataDeNascimento().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-
         Period periodo = Period.between(dataNascimento, dataAtual);
-
         int idade = periodo.getYears();
         usuario.setIdade(idade);
 
-        // Criptografar a senha antes de salvar
         String senhaCriptografada = passwordEncoder.encode(usuario.getSenha());
         usuario.setSenha(senhaCriptografada);
 
         usuarioRepository.save(usuario);
+
+        // Salvar Cliente ou Funcionario
+        if (usuarioDto.getCargo() == null) {
+            Cliente cliente = new Cliente();
+            cliente.setUsuario(usuario);
+            cliente.setQtdPontos(0L);
+            clienteRepository.save(cliente);
+        } else {
+            Funcionario funcionario = new Funcionario();
+            funcionario.setUsuario(usuario);
+            funcionario.setCargo(usuarioDto.getCargo());
+            funcionarioRepository.save(funcionario);
+        }
     }
+
+
+    public void validarUsuario(UsuarioDTO usuarioDto) {
+        validarCamposObrigatorios(usuarioDto);
+        validarEmailUnico(usuarioDto.getEmail(), usuarioRepository);
+        validarSenha(usuarioDto.getSenha());
+    }
+
+    private static void validarEmailUnico(String email, UsuarioRepository usuarioRepository) {
+        if(usuarioRepository.findByEmail(email) != null) {
+            throw new IllegalArgumentException("Já existe um usuário cadastrado com esse e-mail.");
+        }
+    }
+    private static void validarSenha(String senha) {
+        if (senha != null) {
+            throw new IllegalArgumentException("A senha deve ter pelo menos 7 caracteres.");
+        }
+    }
+
+    public ResponseEntity<Map<String, Object>> validarCamposObrigatorios(UsuarioDTO usuarioDTO) {
+        Map<String, Object> response = new HashMap<>();
+        List<String> errors = new ArrayList<>();
+
+        if (usuarioDTO.getNome() == null || usuarioDTO.getNome().isEmpty()) {
+            errors.add("Nome é um campo obrigatório.");
+        }
+        if (usuarioDTO.getTelefone() == null || usuarioDTO.getTelefone().isEmpty()) {
+            errors.add("Telefone é um campo obrigatório.");
+        }
+        if (usuarioDTO.getLogradouro() == null || usuarioDTO.getLogradouro().isEmpty()) {
+            errors.add("Logradouro é um campo obrigatório.");
+        }
+        if (usuarioDTO.getEmail() == null || usuarioDTO.getEmail().isEmpty()) {
+            errors.add("E-mail é um campo obrigatório.");
+        }
+        if (usuarioDTO.getBairro() == null || usuarioDTO.getBairro().isEmpty()) {
+            errors.add("Bairro é um campo obrigatório.");
+        }
+        if (usuarioDTO.getSenha() == null || usuarioDTO.getSenha().isEmpty()) {
+            errors.add("Senha é um campo obrigatório.");
+        }
+        if (usuarioDTO.getNumero() == null) {
+            errors.add("Número é um campo obrigatório.");
+        }
+        if (!errors.isEmpty()) {
+            response.put("errors", errors);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        }
+
+        return ResponseEntity.ok().build();
+    }
+
+
+
 
     public String login(String email, String senha) {
         Usuario usuario = usuarioRepository.findByEmail(email);

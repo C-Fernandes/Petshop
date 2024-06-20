@@ -79,4 +79,22 @@ public class UsuarioRepository {
         usuario.setBairro(rs.getString("bairro"));
         return usuario;
     }
+
+    public boolean existsByEmail(String email) {
+        String sql = "SELECT COUNT(*) AS count FROM usuario WHERE email = ?";
+        try (Connection conn = DataBaseConfig.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, email);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    int count = rs.getInt("count");
+                    return count > 0;
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
 }

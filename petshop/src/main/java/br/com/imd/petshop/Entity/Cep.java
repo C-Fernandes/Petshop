@@ -29,4 +29,8 @@ public class Cep {
     public void setEstado(String estado) {
         this.estado = estado;
     }
+
+    public boolean isEmpty() {
+        return cep == null || cidade == null || estado == null;
+    }
 }
