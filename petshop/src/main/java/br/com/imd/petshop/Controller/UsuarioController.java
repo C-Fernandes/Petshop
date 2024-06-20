@@ -57,7 +57,7 @@ public class UsuarioController {
         return "tela-login";
     }
 
-    @PostMapping("/login")
+    @PostMapping("/logar")
     public ModelAndView login(@RequestParam("email") String email, @RequestParam("senha") String senha) {
         String redirect = usuarioService.login(email, senha);
         return new ModelAndView(redirect);
