@@ -3,94 +3,64 @@
 <head>
   <meta charset="UTF-8">
   <title>Cadastro de pedido</title>
-  <link rel="stylesheet" href="/cadastro.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" rel="stylesheet"/>
+  <link rel="stylesheet" href="/styles/produtos.css" />
+  <script async src="/scripts/carrinho.js"></script>
 </head>
 <body>
-
-<div class="login-container">
-  <h1 class="titulo">PET SHOP</h1>
-  <form id="cadastroForm">
-    <div class="form-row">
-      <div class="form-group">
-        <label for="valor">Valor:</label>
-        <input type="number" class="form-control rounded-pill px-4" id="valor" name="valor" required>
-        <div>
-          <div id="mensagemErroNome" class="alerta" role="alert"></div>
+<header>
+  <nav>
+    <div class="navbar">
+      <a href="">Inicio</a>
+      <a href="">Pets</a>
+      <a href="">Produtos</a>
+      <a href="">Servicos</a>
+    </div>
+  </nav>
+</header>
+<main>
+  <div class="myContainer">
+    <div class="card"  th:each="produto : ${produtos}">
+      <div class="card-body">
+        <h5 class="card-title" th:text="${produto.nome}">Nome do Produto</h5>
+        <div class="card-text">
+          <p>
+            Valor: R$ <span th:text="${produto.preco.valor}">100,00</span>
+          </p>
         </div>
-      </div>
-
-      <div class="form-group">
-        <label for="data">Data:</label>
-        <input type="date" class="form-control rounded-pill px-4" id="data" name="data" required>
+      <button th:attr="data-produto=${produto}" onclick="addProduto(this.getAttribute('data-produto'))">Adicionar</button>
       </div>
     </div>
-    <div class="form-row">
-      <div class="form-group">
-        <label for="status">Status:</label>
-        <input type="text" class="form-control rounded-pill px-4" id="status" name="status" required>
-      </div>
-      <div class="form-group">
-        <label for="telefone">Telefone:</label>
-        <input type="text" class="form-control rounded-pill px-4" id="telefone" name="telefone" required>
-      </div>
-    </div>
-    <div class="form-row">
-      <div class="form-group">
-        <select id="funcionario" name="funcionario">
-          <option th:each="funcionario : ${funcionarios}" th:value="${funcionario.getEmail()}" th:text="${'funcionario ' + funcionario.email}"></option>
-        </select>
-      </div>
-      <div class="form-group">
-        <select id="cliente" name="cliente">
-          <option th:each="cliente : ${clientes}" th:value="${cliente.getEmail()}" th:text="${'cliente ' + cliente.email}"></option>
-        </select>
-      </div>
-    </div>
-    <div class="button">
-      <button type="button" id="cadastrarButton" class="btn-primary">Cadastrar</button>
-    </div>
-  </form>
-  <div class="cadastrar-button">
-    <button type="button" class="cadastrar-button-primary" id="fazerLogin">Voltar</button>
   </div>
-  <script>
-    document.getElementById("cadastrarButton").onclick = function () {
-      const valor = document.getElementById("valor").value;
-      const data = document.getElementById("data").value;
-      const status = document.getElementById("status").value;
-      const funcionarioId = document.getElementById("funcionario").value;
-      const clienteId = document.getElementById("cliente").value;
-      console.log(valor, data, status, funcionarioId, clienteId);
+  <div>
+    <h2 style="margin-left: 100px">Carrinho de compras</h2>
+    <table class="table" style="width: 500px; margin-left: 100px">
+      <thead>
+      <tr>
+        <th scope="col">ITEM</th>
+        <th scope="col">PREÇO</th>
+        <th scope="col">QUANTIDADE</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr>
+        <th scope="row">1</th>
+        <td>Mark</td>
+        <td>
+          <button class="btn btn-sm btn-outline-primary" onclick="removerItem(this)">-</button>
+          <span>qtd</span>
+          <button class="btn btn-sm btn-outline-primary" onclick="adicionarItem(this)">+</button>
+        </td>
+      </tr>
 
-      fetch('/pedido/create/${funcionarioId}/${clienteId}', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          valor: valor,
-          data: data,
-          status: status,
-          funcionarioId: funcionarioId,
-          clienteId: clienteId,
-        })
-      })
-              .then(response => {
-                if (!response.ok) {
-                  return response.json().then(errors => {
-                    errors.forEach(error => {
-                      console(error);
-                    });
-                  });
-                } else{
-                  window.location.href = '/pedido/list';
-                }
-              })
-    };
-  </script>
-</div>
+      </tbody>
+    </table>
+    <button type="button" class="btn btn-sm btn-outline-primary">Finalizar Compra</button>
+
+  </div>
+</main>
 </body>
 </html>
