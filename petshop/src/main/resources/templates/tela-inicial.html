@@ -3,8 +3,131 @@
 <head>
     <meta charset="UTF-8">
     <title>Tela Inicial</title>
+    <link rel="stylesheet" href="/tela-inicial.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
 </head>
-<body>
+<body class="body">
+<div>
+    <nav class="row m-0">
+        <div class="col-6">
+            <h1>PETSHOP</h1>
+        </div>
+        <div class="col-6 d-flex align-items-center justify-content-between">
+            <span>Início</span>
+            <span>Sobre</span>
+            <span>Contato</span>
+            <button class="none" id="loginButton"><span>Login</span></button>
+        </div>
+    </nav>
 
+    <main>
+        <div class="row container-1">
+            <div id="circle-1">
+                <i class="ph ph-paw-print"></i>
+            </div>
+            <div id="circle-2">
+                <i class="ph ph-paw-print"></i>
+            </div>
+            <div class="col-2 text-center p-0 patinhas">
+            </div>
+            <div class="initial col-8">
+                <div class="row">
+                    <div class="col-6 d-flex flex-column justify-content-center">
+                        <h1 class="custom-h1">
+                            Cuidamos do seu pequeno amigo com todo carinho
+                        </h1>
+                        <h2>
+                            Nosso profissionais são altamente capacitados
+                            para garantir o melhor cuidado para o seu bichinho.
+                        </h2>
+                    </div>
+                    <div class="col-6">
+                        <img id="cats-dogs-img" width="100%"
+                             src="https://storage.googleapis.com/kaggle-datasets-images/2716794/4691402/5c5db79d547c292a9d41c419aa16192b/dataset-card.jpeg?t=2022-12-08-23-48-33">
+                    </div>
+                </div>
+
+            </div>
+            <div class="col-2 text-center p-0 patinhas">
+            </div>
+        </div>
+
+        <div class="row container-2">
+            <div id="circle-3">
+                <i class="ph ph-paw-print"></i>
+            </div>
+            <div class="about col-8">
+                <div class="row">
+                    <div class="col-6 p-0">
+                        <h1>
+                            Quem somos?
+                        </h1>
+                        <h2>
+                            Somos uma empresa especializada em oferecer o melhor tratamento aos pets
+                            de todo o país. Nascemos em natal - RN, mas com a nossa dedicação e serviço
+                            de qualidade conquistamos o país inteiro, com mais de 70 unidades.
+                        </h2>
+                    </div>
+                    <div class="col-6 p-0">
+                        <img width="100%"
+                             src="https://www.pumpkin.care/wp-content/uploads/2022/09/hero-dog-cat-1024x634.png">
+                    </div>
+                </div>
+
+            </div>
+            <div class="col-2 p-0 patinhas">
+            </div>
+            <div class="col-2 p-0 patinhas">
+            </div>
+        </div>
+
+        <div class="row container-3">
+            <div id="circle-4">
+                <i class="ph ph-paw-print"></i>
+            </div>
+            <div class="col-2 p-0 patinhas">
+            </div>
+            <div class="col-2 p-0 patinhas">
+            </div>
+            <div class="contact col-8">
+                <div class="row text-center">
+                    <div class="col-6 p-0">
+                        <h1>
+                            Contato
+                        </h1>
+                        <h2>
+                            Somos uma empresa especializada em oferecer o melhor tratamento aos pets
+                            de todo o país. Nascemos em natal - RN, mas com a nossa dedicação e serviço
+                            de qualidade conquistamos o país inteiro, com mais de 70 unidades.
+                        </h2>
+                    </div>
+                    <div class="col-6 d-flex flex-column align-items-center justify-content-center">
+                        <div>
+                            <span>Email: </span>
+                            <a href="petshow@email.com">petshow@email.com</a>
+                        </div>
+                        <div>
+                            <span>Telefone: 84 91234-5678</span>
+                        </div>
+                        <div>Whatsapp: 84 98765-4321</div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </main>
+</div>
+<script>
+    document.getElementById("loginButton").addEventListener("click", function () {
+        window.location.href = "/usuario/login";
+    });
+
+</script>
 </body>
 </html>
