@@ -1,7 +1,10 @@
 var total = 0;
 var carrinho = []
+const showCartButton = document.getElementById('carrinho');
+const shoppingCart = document.getElementById('shoppingCart');
 
 function addProduto(nome, preco, id, qtd) {
+
     if (produtoExisteNoCarrinho(id)) {
         atualizarCarrinho()
     } else {
@@ -17,6 +20,10 @@ function addProduto(nome, preco, id, qtd) {
         carrinho.push(produto);
         atualizarCarrinho();
     }
+
+    if (shoppingCart.style.display === 'block') {
+        mostrarResumoPedido();
+    }
 }
 
 function atualizarCarrinho() {
@@ -28,8 +35,10 @@ function atualizarCarrinho() {
        totalItens += produto.qtd;
     });
 
-    //atualizar interface
-    document.getElementById('total').innerText = total;
+    var elementos = document.querySelectorAll('.total');
+    elementos.forEach(function(elemento) {
+        elemento.textContent = total;
+    });
     document.getElementById('qtd').innerText = totalItens;
     console.log('Carrinho atualizado:', carrinho);
     console.log('Total:', total);
@@ -41,10 +50,41 @@ function produtoExisteNoCarrinho(id) {
         produtoEncontrado.qtd++;
         return produtoEncontrado;
     }
-    console.log(carrinho)
     return undefined;
 }
 
-function removerProduto() {
+function removerProduto(id) {
+    carrinho = carrinho.filter(produto => Number(produto.id) !== Number(id));
+    mostrarResumoPedido();
+}
 
+
+showCartButton.addEventListener('click', () => {
+    mostrarResumoPedido();
+    shoppingCart.style.display = 'block';
+});
+
+function mostrarResumoPedido() {
+    var tbody = document.getElementById('cartBody');
+    tbody.innerHTML = '';
+
+    for (var i = 0; i < carrinho.length; i++) {
+        var item = carrinho[i];
+
+        var newRow = document.createElement('tr');
+        newRow.innerHTML = `
+          <th scope="row">${i + 1}</th>
+          <td>${item.nome}</td>
+          <td>${item.preco}</td>
+          <td>
+            <button class="btn btn-sm btn-outline-primary" onclick="removerItem(this)">-</button>
+            <span>${item.qtd}</span>
+            <button class="btn btn-sm btn-outline-primary" onclick="adicionarItem(this)">+</button>
+          </td>
+          <td>
+            <button class="btn btn-sm btn-outline-primary" onclick="removerProduto(${item.id})">-</button>
+           </td>
+        `;
+        tbody.appendChild(newRow);
+    }
 }

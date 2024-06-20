@@ -19,7 +19,7 @@
       <a href="">Pets</a>
       <a href="">Produtos</a>
       <a href="">Servicos</a>
-      <a style="position: relative; display: inline-block;" href="#">
+      <a id="carrinho" style="position: relative; display: inline-block;" href="#">
         <i class="ph ph-shopping-cart" style="font-size: 35px;"></i>
         <span id="qtd" class="badge badge-pill badge-primary" style="position: absolute; top: -1px; right: -1px; background: #ec9474">0</span>
       </a>
@@ -29,7 +29,7 @@
 <main>
   <div style="position: relative; text-align: right; margin-top: 20px">
     <div style="margin-right: 60px;">
-      Total: <span id="total"></span>
+      Total: <span class="total"></span>
     </div>
   </div>
 
@@ -46,31 +46,25 @@
       </div>
     </div>
   </div>
-  <div>
+
+  <div id="shoppingCart" style="display: none;">
     <h2 style="margin-left: 100px">Carrinho de compras</h2>
-    <table class="table" style="width: 500px; margin-left: 100px">
+    <table id="cartTable" class="table" style="width: 500px; margin-left: 100px">
       <thead>
       <tr>
         <th scope="col">ITEM</th>
+        <th scope="col">NOME</th>
         <th scope="col">PREÇO</th>
         <th scope="col">QUANTIDADE</th>
+        <th scope="col">REMOVER</th>
       </tr>
       </thead>
-      <tbody>
-      <tr>
-        <th scope="row">1</th>
-        <td>Mark</td>
-        <td>
-          <button class="btn btn-sm btn-outline-primary" onclick="removerItem(this)">-</button>
-          <span>qtd</span>
-          <button class="btn btn-sm btn-outline-primary" onclick="adicionarItem(this)">+</button>
-        </td>
-      </tr>
-
+      <tbody id="cartBody">
       </tbody>
     </table>
-    <button type="button" class="btn btn-sm btn-outline-primary">Finalizar Compra</button>
+    <p>Total: <span class="total"></span></p>
 
+    <button type="button" class="btn btn-sm btn-outline-primary">Finalizar Compra</button>
   </div>
 </main>
 </body>
