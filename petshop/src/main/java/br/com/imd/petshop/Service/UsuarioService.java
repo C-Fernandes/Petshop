@@ -75,13 +75,14 @@ public class UsuarioService {
             cliente.setQtdPontos(0L);
             clienteRepository.save(cliente);
         }
-        if (usuarioDto.getQtdPontos() == null){
+        if (usuarioDto.getQtdPontos() == null) {
             Funcionario funcionario = new Funcionario();
             funcionario.setUsuario(usuario);
             funcionario.setCargo(usuarioDto.getCargo());
             funcionarioRepository.save(funcionario);
         }
     }
+
     public ResponseEntity<Map<String, Object>> validarCamposObrigatorios(UsuarioDTO usuarioDTO) {
         Map<String, Object> response = new HashMap<>();
         List<String> errors = new ArrayList<>();
@@ -112,10 +113,10 @@ public class UsuarioService {
         }
         if (usuarioDTO.getCep() == null || usuarioDTO.getCep().isEmpty()) {
             errors.add("Cep é um campo obrigatório.");
-            if(usuarioDTO.getCep().getCidade() == null || usuarioDTO.getCep().getCidade().isEmpty()) {
+            if (usuarioDTO.getCep().getCidade() == null || usuarioDTO.getCep().getCidade().isEmpty()) {
                 errors.add("Cidade é um campo obrigatório.");
             }
-            if(usuarioDTO.getCep().getEstado() == null || usuarioDTO.getCep().getEstado().isEmpty()) {
+            if (usuarioDTO.getCep().getEstado() == null || usuarioDTO.getCep().getEstado().isEmpty()) {
                 errors.add("Estado é um campo obrigatório.");
             }
         } else {
@@ -145,7 +146,6 @@ public class UsuarioService {
     }
 
 
-
     private boolean isValidEmail(String email) {
         return email.matches("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$");
     }
@@ -153,17 +153,16 @@ public class UsuarioService {
     public String login(String email, String senha) {
         Usuario usuario = usuarioRepository.findByEmail(email);
         if (usuario != null && passwordEncoder.matches(senha, usuario.getSenha())) {
-            Cliente cliente = clienteRepository.findByUsuario(String.valueOf(usuario));
+            Cliente cliente = clienteRepository.findByUsuario(String.valueOf(usuario.getEmail()));
             if (cliente != null) {
                 return "redirect:/cliente/home";
             } else {
-                Funcionario funcionario = funcionarioRepository.findByUsuario(String.valueOf(usuario));
+                Funcionario funcionario = funcionarioRepository.findByUsuario(String.valueOf(usuario.getEmail()));
                 if (funcionario != null) {
                     return "redirect:/funcionario/home";
                 }
             }
-        }
-        return "redirect:/usuario/login";
+        }            return "redirect:/";
     }
 
     public Usuario findUsuario(String email) {
