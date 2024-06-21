@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/styles/produtos.css" />
+    <title>Produto</title>
+  </head>
+  <body>
+    <!-------------------------- Menu -------------------------------->
+    <nav>
+      <div class="navbar">
+        <a href="">Inicio</a>
+        <a href="">Pets</a>
+        <a href="">Produtos</a>
+        <a href="">Servicos</a>
+      </div>
+    </nav>
+
+    <div class="row">
+      <button
+        type="button"
+        class="btn btn-primary"
+        data-toggle="modal"
+        data-target="#exampleModal"
+      >
+        Cadastrar Produto
+      </button>
+    </div>
+
+    <!-------------------------- Cards -------------------------------->
+    <div class="myContainer" id="product-container">
+      <div
+        class="card div-editar"
+        th:each="produto : ${produtos}"
+        th:data-id="${produto.id}"
+        th:data-nome="${produto.nome}"
+        th:data-quantidade="${produto.quantidade}"
+        th:data-ativo="${produto.ativo}"
+        th:data-preco="${produto.preco.valor}"
+        th:data-id-preco="${produto.preco.id}"
+        th:data-data-preco="${produto.preco.data}"
+      >
+        <div class="card-body">
+          <h5 class="card-title" th:text="${produto.nome}">Nome do Produto</h5>
+          <div class="card-text">
+            <p>Quantidade: <span th:text="${produto.quantidade}">10</span></p>
+            <p>
+              Valor: R$ <span th:text="${produto.preco.valor}">100,00</span>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal de Cadastro -->
+    <div
+      class="modal fade"
+      id="exampleModal"
+      tabindex="-1"
+      role="dialog"
+      aria-labelledby="exampleModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">
+              Cadastro de produto
+            </h5>
+            <button
+              type="button"
+              class="close"
+              data-dismiss="modal"
+              aria-label="Fechar"
+            >
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form id="cadastroForm">
+              <div class="form-group">
+                <label for="nomeProdutoCadastro" class="col-form-label"
+                  >Nome do produto:</label
+                >
+                <input
+                  type="text"
+                  class="form-control"
+                  id="nomeProdutoCadastro"
+                  name="nomeProdutoCadastro"
+                />
+              </div>
+              <div class="form-group">
+                <label for="quantidadeProdutoCadastro" class="col-form-label"
+                  >Quantidade:</label
+                >
+                <input
+                  class="form-control"
+                  type="number"
+                  id="quantidadeProdutoCadastro"
+                  name="quantidadeProdutoCadastro"
+                />
+              </div>
+              <div class="form-group">
+                <label for="ativoProduto" class="col-form-label"
+                  >O produto está disponível para compra?</label
+                >
+                <input type="checkbox" id="ativoProduto" name="ativoProduto" />
+              </div>
+              <div class="form-group">
+                <label for="precoProdutoCadastro" class="col-form-label"
+                  >Preço:</label
+                >
+                <input
+                  type="number"
+                  class="form-control"
+                  id="precoProdutoCadastro"
+                  name="precoProdutoCadastro"
+                />
+              </div>
+              <div
+                id="erroCadastro"
+                class="alert alert-danger"
+                style="display: none"
+                role="alert"
+              >
+                Preencha todos os campos obrigatórios para cadastrar o produto.
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-dismiss="modal"
+            >
+              Fechar
+            </button>
+            <button
+              type="button"
+              id="cadastrarButton"
+              data-dismiss="modal"
+              class="btn btn-primary"
+            >
+              Cadastrar Produto
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal de Atualização -->
+    <div
+      class="modal fade"
+      id="modalAtualizacao"
+      tabindex="-1"
+      role="dialog"
+      aria-labelledby="exampleModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Editar produto</h5>
+            <button
+              type="button"
+              class="close"
+              data-dismiss="modal"
+              aria-label="Fechar"
+            >
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form>
+              <div class="form-group">
+                <label for="nomeProdutoAtualizacao" class="col-form-label"
+                  >Nome do produto:</label
+                >
+                <input
+                  type="text"
+                  class="form-control"
+                  id="nomeProdutoAtualizacao"
+                  name="nomeProdutoAtualizacao"
+                />
+              </div>
+              <div class="form-group">
+                <label for="quantidadeProdutoAtualizacao" class="col-form-label"
+                  >Quantidade:</label
+                >
+                <input
+                  type="number"
+                  class="form-control"
+                  id="quantidadeProdutoAtualizacao"
+                  name="quantidadeProdutoAtualizacao"
+                />
+              </div>
+              <div class="form-group">
+                <label for="ativoProduto" class="col-form-label"
+                  >O produto está disponível para compra?</label
+                >
+                <input
+                  type="checkbox"
+                  id="ativoProdutoAtualizacao"
+                  name="ativoProduto"
+                />
+              </div>
+              <div class="form-group">
+                <label for="precoProdutoAtualizacao" class="col-form-label"
+                  >Preço:</label
+                >
+                <input
+                  type="number"
+                  class="form-control"
+                  id="precoProdutoAtualizacao"
+                  name="precoProdutoAtualizacao"
+                />
+              </div>
+              <input type="hidden" id="idPreco" name="idPreco" />
+              <input type="hidden" id="dataPreco" name="dataPreco" />
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-dismiss="modal"
+            >
+              Fechar</button
+            ><button
+              type="button"
+              id="deleteButtonModal"
+              class="btn btn-primary btn-delete"
+            >
+              Deletar
+            </button>
+            <button type="button" id="atualizarButton" class="btn btn-primary">
+              Atualizar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Confirmação de exclusão -->
+    <div
+      class="modal fade"
+      id="modalDelete"
+      tabindex="-1"
+      role="dialog"
+      aria-labelledby="exampleModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title" id="exampleModalLabel">Deletar produto</h4>
+            <button
+              type="button"
+              class="close"
+              data-dismiss="modal"
+              aria-label="Fechar"
+            >
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <p>
+              Você tem certeza que deseja deletar esse produto? Esta ação é
+              irreversivel.
+            </p>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-dismiss="modal"
+            >
+              Cancelar</button
+            ><button
+              type="button"
+              id="deleteButton"
+              data-dismiss="modal"
+              class="btn btn-primary btn-delete"
+            >
+              Deletar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-------------------------- SCRIPTS -------------------------------->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@1.16.1/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sockjs-client/dist/sockjs.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/stompjs/lib/stomp.min.js"></script>
+
+    <script src="/js/produtos.js"></script>
+  </body>
+</html>

@@ -12,6 +12,16 @@ public class Produto {
 
     private List<PedidoHasProduto> pedidoHasProdutoList;
 
+    public Produto() {
+    }
+
+    public Produto(String nome, Integer quantidade, Boolean ativo) {
+
+        this.nome = nome;
+        this.quantidade = quantidade;
+        this.ativo = ativo;
+    }
+
     public Long getId() {
         return id;
     }

@@ -68,9 +68,10 @@ public class RacaRepository {
     public List<Raca> findAll() {
         List<Raca> racas = new ArrayList<>();
         String sql = "SELECT * FROM raca";
-        try (Connection conn = DataBaseConfig.getConnection();
-                PreparedStatement ps = conn.prepareStatement(sql);
-                ResultSet rs = ps.executeQuery()) {
+        try {
+            Connection conn = DataBaseConfig.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 racas.add(mapRow(rs));
             }
@@ -82,8 +83,9 @@ public class RacaRepository {
 
     public void save(Raca raca) {
         String sql = "INSERT INTO raca (raca, especie) VALUES (?, ?)";
-        try (Connection conn = DataBaseConfig.getConnection();
-                PreparedStatement ps = conn.prepareStatement(sql)) {
+        try {
+            Connection conn = DataBaseConfig.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, raca.getRaca());
             ps.setString(2, raca.getEspecie());
             ps.executeUpdate();

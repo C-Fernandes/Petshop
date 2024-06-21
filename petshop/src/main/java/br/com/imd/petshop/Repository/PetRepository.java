@@ -47,9 +47,9 @@ public class PetRepository {
     public void inserirPet(Pet pet) {
         String sql = "INSERT INTO pet (nome, data_de_nascimento, cliente_usuario_email, raca_especie) VALUES (?, ?, ?, ?)";
 
-        try (Connection connection = DataBaseConfig.getConnection();
-                PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-
+        try {
+            Connection connection = DataBaseConfig.getConnection();
+            PreparedStatement statement = connection.prepareStatement(sql);
             statement.setString(1, pet.getNome());
             statement.setDate(2, new java.sql.Date(pet.getDataDeNascimento().getTime()));
             statement.setString(3, pet.getDono().getEmail());
@@ -57,13 +57,9 @@ public class PetRepository {
 
             statement.executeUpdate();
 
-            ResultSet generatedKeys = statement.getGeneratedKeys();
-            if (generatedKeys.next()) {
-                pet.setId(generatedKeys.getLong(1));
-            } else {
-                throw new SQLException("Falha ao inserir pet, nenhum ID gerado.");
-            }
-        } catch (SQLException e) {
+        } catch (
+
+        SQLException e) {
             e.printStackTrace();
         }
     }
