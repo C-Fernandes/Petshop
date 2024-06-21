@@ -4,7 +4,6 @@ import br.com.imd.petshop.Config.DataBaseConfig;
 import br.com.imd.petshop.Entity.Cliente;
 import br.com.imd.petshop.Entity.Funcionario;
 import br.com.imd.petshop.Entity.Pedido;
-import br.com.imd.petshop.Entity.Usuario;
 import org.springframework.stereotype.Repository;
 
 import java.sql.Connection;
@@ -17,20 +16,34 @@ import java.util.List;
 @Repository
 public class PedidoRepository {
 
-    public void save(Pedido pedido) {
-        String sql = "INSERT INTO pedido () VALUES (valor, data, status, funcionario_usuario_email, cliente_usuario_email)";
+    public Pedido save(Pedido pedido, String func, String cliente) {
+        String sql = "INSERT INTO pedido (valor, data, status, funcionario_usuario_email, cliente_usuario_email) VALUES (?, ?, ?, ?, ?) ";
 
         try (Connection conn = DataBaseConfig.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+             PreparedStatement ps = conn.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS)) {
             ps.setDouble(1, pedido.getValor());
             ps.setDate(2, new java.sql.Date(pedido.getData().getTime()));
             ps.setString(3, pedido.getStatus());
-            ps.setObject(4, pedido.getFuncionario().getUsuario().getEmail());
-            ps.setObject(5, pedido.getCliente().getUsuario().getEmail());
-            ps.executeUpdate();
+            ps.setString(4, func);
+            ps.setString(5, cliente);
+            int affectedRows = ps.executeUpdate();
+
+            if (affectedRows == 0) {
+                throw new SQLException("A inserção do pedido falhou, nenhuma linha foi afetada.");
+            }
+
+            try (ResultSet generatedKeys = ps.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    pedido.setId(generatedKeys.getLong(1));
+                    return pedido;
+                } else {
+                    throw new SQLException("A inserção do pedido falhou, nenhum ID foi gerado.");
+                }
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        return null;
     }
 
     public List<Pedido> findAll() {
@@ -51,26 +64,6 @@ public class PedidoRepository {
         return pedidos;
     }
 
-    public Pedido findByParams(Pedido pedido) {
-        String sql = "SELECT * FROM pedido WHERE valor = ? and data = ? and status = ? and funcionario_usuario_email = ? and cliente_usuario_email = ?";
-        try (Connection conn = DataBaseConfig.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setString(1, pedido.getValor().toString());
-            ps.setDate(2, new java.sql.Date(pedido.getData().getTime()));
-            ps.setString(3, pedido.getStatus());
-            ps.setObject(4, pedido.getFuncionario().getEmail());
-            ps.setObject(5, pedido.getCliente().getEmail());
-            try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) {
-                    return mapRow(rs);
-                }
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
     public void delete(Long id) {
         String sql = "DELETE FROM pedido WHERE id = ?";
 
@@ -85,6 +78,7 @@ public class PedidoRepository {
 
     private Pedido mapRow(ResultSet rs) throws SQLException {
         Pedido pedido = new Pedido();
+        pedido.setId(rs.getLong("id"));
         pedido.setValor(rs.getDouble("valor"));
         pedido.setData(rs.getDate("data"));
         pedido.setStatus(rs.getString("status"));

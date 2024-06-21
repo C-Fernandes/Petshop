@@ -6,7 +6,6 @@ import br.com.imd.petshop.Entity.*;
 import br.com.imd.petshop.Repository.ClienteRepository;
 import br.com.imd.petshop.Repository.FuncionarioRepository;
 import br.com.imd.petshop.Repository.PedidoRepository;
-import br.com.imd.petshop.Repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,7 +19,10 @@ public class PedidoService {
     private PedidoRepository pedidoRepository;
 
     @Autowired
-    private UsuarioRepository usuarioRepository;
+    private ClienteRepository clienteRepository;
+
+    @Autowired
+    private FuncionarioRepository funcionarioRepository;
 
     @Autowired
     private PedidoHasProdutoService pedidoHasProdutoService;
@@ -38,38 +40,17 @@ public class PedidoService {
         pedidoSave.setData(pedido.getData());
         pedidoSave.setStatus(pedido.getStatus());
 
-        List<Usuario> funcionarios = usuarioRepository.findAllFuncionarios();
-        List<Usuario> clientes = usuarioRepository.findAllClientes();
-        Usuario cliente = new Usuario();
-        Usuario funcionario = new Usuario();
+        Cliente cliente = clienteRepository.findByEmail(pedido.getFuncionarioId());
+        Funcionario funcionario = funcionarioRepository.findByEmail(pedido.getClienteId());
 
-        for(Usuario usuario : funcionarios) {
-            if(usuario.getEmail().equals(pedido.getFuncionarioId())) {
-                funcionario = usuario;
-            }
-        }
+        pedidoSave.setCliente(cliente);
+        pedidoSave.setFuncionario(funcionario);
 
-        for(Usuario usuario : clientes) {
-            if(usuario.getEmail().equals(pedido.getClienteId())) {
-                cliente = usuario;
-            }
-        }
-
-        if(funcionario != null) {
-            pedidoSave.setFuncionario((Funcionario) funcionario);
-            System.out.println(pedidoSave.getFuncionario());
-        }
-
-        if(cliente != null) {
-            pedidoSave.setCliente((Cliente) cliente);
-        }
-
-        pedidoRepository.save(pedidoSave);
+        Pedido prod = pedidoRepository.save(pedidoSave, pedido.getFuncionarioId(), pedido.getClienteId());
 
         List<Produto> produtos = produtoService.findAll();
         List<CarrinhoDTO> carrinho = pedido.getCarrinhoDTO();
         List<PedidoHasProduto> pedidoHasProdutos = new ArrayList<>();
-        Pedido prod = findByParams(pedidoSave);
 
         for(CarrinhoDTO carrinhoDTO : carrinho) {
             for (Produto p : produtos) {
@@ -84,19 +65,15 @@ public class PedidoService {
         }
 
         for(PedidoHasProduto p : pedidoHasProdutos) {
-            pedidoHasProdutoService.save(p);
+            pedidoHasProdutoService.save(p, pedido.getFuncionarioId(), pedido.getClienteId());
         }
     }
 
-    public Pedido findByParams(Pedido pedido) {
-        return pedidoRepository.findByParams(pedido);
-    }
-
     public void update(Pedido pedido) {
-        pedidoRepository.save(pedido);
+       // pedidoRepository.save(pedido);
     }
 
-    public void delete(Long id) {
+    public void delete (Long id){
         pedidoRepository.delete(id);
     }
 }

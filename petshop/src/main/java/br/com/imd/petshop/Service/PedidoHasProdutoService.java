@@ -11,7 +11,7 @@ public class PedidoHasProdutoService {
     @Autowired
     private PedidoHasProdutoRepository pedidoHasProdutoRepository;
     
-    public void save(PedidoHasProduto pedidoHasProduto) {
-        pedidoHasProdutoRepository.save(pedidoHasProduto);
+    public void save(PedidoHasProduto pedidoHasProduto, String func, String cliente) {
+        pedidoHasProdutoRepository.save(pedidoHasProduto, func, cliente);
     }
 }

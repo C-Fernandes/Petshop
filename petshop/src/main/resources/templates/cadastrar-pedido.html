@@ -73,6 +73,7 @@
         <select id="cliente" name="cliente">
           <option th:each="cliente : ${clientes}" th:value="${cliente.getEmail()}" th:text="${'cliente ' + cliente.email}"></option>
         </select>
+
       </div>
     </div>
     <button id="finalizarCompra" type="button" class="btn btn-sm btn-outline-primary">Finalizar Compra</button>
