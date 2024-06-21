@@ -2,6 +2,7 @@ var total = 0;
 var carrinho = []
 const showCartButton = document.getElementById('carrinho');
 const shoppingCart = document.getElementById('shoppingCart');
+const finalizarCompra = document.getElementById('finalizarCompra');
 
 function addProduto(nome, preco, id, qtd) {
 
@@ -16,6 +17,8 @@ function addProduto(nome, preco, id, qtd) {
             id: id,
             qtd: qtd
         };
+
+        carrinho.push(produto);
 
         atualizarCarrinho();
     }
@@ -95,3 +98,43 @@ function mostrarResumoPedido() {
         tbody.appendChild(newRow);
     }
 }
+
+
+finalizarCompra.addEventListener('click', () => {
+    const funcionarioId = document.getElementById("funcionario").value;
+    const clienteId = document.getElementById("cliente").value;
+    console.log(funcionarioId, clienteId)
+    const carrinhoDTO = carrinho.map(item => ({
+        nome: item.nome,
+        quantidade: item.qtd,
+        id: item.id,
+        preco: item.preco
+    }));
+
+
+    fetch('/pedido/create/${funcionarioId}/${clienteId}', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            valor: total,
+            data: new Date(),
+            status: "ativo",
+            carrinhoDTO: carrinhoDTO,
+            funcionarioId: funcionarioId,
+            clienteId: clienteId
+        })
+    })
+        .then(response => {
+            if (!response.ok) {
+                return response.json().then(errors => {
+                    errors.forEach(error => {
+                        console(error);
+                    });
+                });
+            } else{
+                window.location.href = '/pedido/list';
+            }
+        })
+})

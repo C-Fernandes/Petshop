@@ -1,5 +1,7 @@
 package br.com.imd.petshop.Controller;
 
+import br.com.imd.petshop.DTO.CarrinhoDTO;
+import br.com.imd.petshop.DTO.PedidoDTO;
 import br.com.imd.petshop.Entity.Pedido;
 import br.com.imd.petshop.Entity.Produto;
 import br.com.imd.petshop.Service.PedidoService;
@@ -40,8 +42,7 @@ public class PedidoController {
     }
 
     @PostMapping("/create/{funcionarioId}/{clienteId}")
-    public String create(@RequestBody Pedido pedido, @PathVariable String funcionarioId, @PathVariable String clienteId) {
-
+    public String create(@RequestBody PedidoDTO pedido, @PathVariable String funcionarioId, @PathVariable String clienteId) {
         pedidoService.save(pedido);
         return "redirect:/pedido/list";
     }

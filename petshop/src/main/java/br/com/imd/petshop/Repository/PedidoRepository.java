@@ -4,6 +4,7 @@ import br.com.imd.petshop.Config.DataBaseConfig;
 import br.com.imd.petshop.Entity.Cliente;
 import br.com.imd.petshop.Entity.Funcionario;
 import br.com.imd.petshop.Entity.Pedido;
+import br.com.imd.petshop.Entity.Usuario;
 import org.springframework.stereotype.Repository;
 
 import java.sql.Connection;
@@ -48,6 +49,26 @@ public class PedidoRepository {
             e.printStackTrace();
         }
         return pedidos;
+    }
+
+    public Pedido findByParams(Pedido pedido) {
+        String sql = "SELECT * FROM pedido WHERE valor = ? and data = ? and status = ? and funcionario_usuario_email = ? and cliente_usuario_email = ?";
+        try (Connection conn = DataBaseConfig.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, pedido.getValor().toString());
+            ps.setDate(2, new java.sql.Date(pedido.getData().getTime()));
+            ps.setString(3, pedido.getStatus());
+            ps.setObject(4, pedido.getFuncionario().getEmail());
+            ps.setObject(5, pedido.getCliente().getEmail());
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return mapRow(rs);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     public void delete(Long id) {
