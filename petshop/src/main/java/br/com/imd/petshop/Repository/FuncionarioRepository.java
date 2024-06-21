@@ -23,12 +23,11 @@ public class FuncionarioRepository {
             e.printStackTrace();
         }
     }
-
-    public Funcionario findByUsuario(String usuario) {
-        String sql = "SELECT * FROM funcionario WHERE email = ?";
+    public Funcionario findByUsuario(String usuario_email) {
+        String sql = "SELECT * FROM funcionario WHERE usuario_email = ?";
         try (Connection conn = DataBaseConfig.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setString(1, usuario);
+            ps.setString(1, usuario_email);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
                     return mapRow(rs);
@@ -43,7 +42,7 @@ public class FuncionarioRepository {
     public Funcionario mapRow(ResultSet rs) throws SQLException {
         Funcionario funcionario = new Funcionario();
         Usuario usuario = new Usuario();
-        usuario.setEmail(rs.getString("email"));
+        usuario.setEmail(rs.getString("usuario_email"));
         funcionario.setUsuario(usuario);
         funcionario.setCargo(rs.getString("cargo"));
         return funcionario;
