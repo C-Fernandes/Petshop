@@ -21,8 +21,23 @@ public class ProdutoRepository {
         produto.setId(resultSet.getLong("id"));
         produto.setNome(resultSet.getString("nome"));
         produto.setQuantidade(Integer.parseInt(resultSet.getString("quantidade")));
+        produto.setAtivo(resultSet.getBoolean("ativo"));
 
         return produto;
+    }
+
+    public void deleteProduto(Long idProduto) {
+        String deleteProdutoSql = "DELETE FROM produto WHERE id = ?";
+        try (Connection conn = DataBaseConfig.getConnection();
+                PreparedStatement ps = conn.prepareStatement(deleteProdutoSql)) {
+            ps.setLong(1, idProduto);
+            int rowsDeleted = ps.executeUpdate();
+            if (rowsDeleted == 0) {
+                throw new SQLException("Nenhum produto foi deletado. Produto não encontrado.");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     public Produto saveProdutoEPreco(Produto produto) {
@@ -88,9 +103,10 @@ public class ProdutoRepository {
         return null;
     }
 
-    public List<Produto> findbyId(Long id) {
-        List<Produto> produtos = new ArrayList<>();
+    public Produto findbyId(Long id) {
+        Produto p = new Produto();
         String sql = "SELECT * FROM produto WHERE id = ?";
+
         try {
             Connection conn = DataBaseConfig.getConnection();
             PreparedStatement ps = conn.prepareStatement(sql);
@@ -98,13 +114,38 @@ public class ProdutoRepository {
             ResultSet rs = ps.executeQuery();
 
             while (rs.next()) {
-                produtos.add(mapeamento(rs));
+                Produto prod = (mapeamento(rs));
+                p.setAtivo(prod.getAtivo());
+                p.setId(prod.getId());
+                p.setNome(prod.getNome());
+                p.setQuantidade(prod.getQuantidade());
+                p.setPreco(prod.getPreco());
             }
 
-            return produtos;
+            return p;
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public void atualizarProduto(Produto produto) {
+        String sql = "UPDATE produto SET nome = ?, quantidade = ?, ativo = ? WHERE id = ?";
+        try {
+            Connection conn = DataBaseConfig.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+
+            ps.setString(1, produto.getNome());
+            ps.setInt(2, produto.getQuantidade());
+            ps.setBoolean(3, produto.getAtivo());
+            ps.setLong(4, produto.getId());
+
+            int rowsUpdated = ps.executeUpdate();
+            if (rowsUpdated == 0) {
+                throw new SQLException("Falha ao atualizar o produto. Nenhum registro foi modificado.");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }

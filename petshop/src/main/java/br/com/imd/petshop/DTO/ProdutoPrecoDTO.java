@@ -1,51 +1,25 @@
 package br.com.imd.petshop.DTO;
 
+import br.com.imd.petshop.Entity.Preco;
 import br.com.imd.petshop.Entity.Produto;
 
 public class ProdutoPrecoDTO {
-    private String nome;
-    private int quantidade;
-    private Boolean ativo;
-
-    private double preco;
+    private Produto produto;
+    private Preco preco;
 
     public Produto getProduto() {
-        return new Produto(nome, quantidade, ativo);
+        return this.produto;
     }
 
-    public String getNome() {
-        return this.nome;
+    public void setProduto(Produto produto) {
+        this.produto = produto;
     }
 
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
-
-    public int getQuantidade() {
-        return this.quantidade;
-    }
-
-    public void setQuantidade(int quantidade) {
-        this.quantidade = quantidade;
-    }
-
-    public Boolean isAtivo() {
-        return this.ativo;
-    }
-
-    public Boolean getAtivo() {
-        return this.ativo;
-    }
-
-    public void setAtivo(Boolean ativo) {
-        this.ativo = ativo;
-    }
-
-    public double getPreco() {
+    public Preco getPreco() {
         return this.preco;
     }
 
-    public void setPreco(double preco) {
+    public void setPreco(Preco preco) {
         this.preco = preco;
     }
 

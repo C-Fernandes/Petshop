@@ -38,7 +38,6 @@ public class PrecoRepository {
                 if (generatedKeys.next()) {
                     preco.setId(generatedKeys.getLong(1));
                     preco.setData(currentTimestamp);
-                    System.out.println(preco.getId());
                     return preco;
                 } else {
                     throw new SQLException("A inserção do preço falhou, nenhum ID foi gerado.");
@@ -77,7 +76,6 @@ public class PrecoRepository {
 
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
-                    System.out.println("Entrou no while");
                     return mapeamento(rs);
                 } else {
                     return null;
@@ -101,7 +99,6 @@ public class PrecoRepository {
             while (rs.next()) {
                 idPrecos.add(rs.getLong("preco_id"));
             }
-            System.out.println("id produto " + id);
             String sqlAtt = "SELECT * FROM preco WHERE id = ?";
             for (Long ids : idPrecos) {
                 ps = conn.prepareStatement(sqlAtt);
@@ -109,7 +106,6 @@ public class PrecoRepository {
                 rs = ps.executeQuery();
                 while (rs.next()) {
                     precos.add(mapeamento(rs));
-                    System.out.println("id preco: " + rs.getLong("valor"));
                 }
             }
             return precos;
@@ -117,5 +113,50 @@ public class PrecoRepository {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public boolean verificarProdutoHasPreco(Long idPreco) {
+        String sql = "SELECT COUNT(*) AS total FROM produto_has_preco WHERE preco_id = ?";
+
+        try (Connection conn = DataBaseConfig.getConnection();
+                PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setLong(1, idPreco);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    int total = rs.getInt("total");
+                    if (total > 0) {
+                        return true;
+                    }
+                    // Retorna true se o preço tiver pelo menos um produto associado
+                }
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return false; // Retorna false por padrão em caso de erro ou nenhum preço associado ao produto
+    }
+
+    public void deletarPreco(Long idPreco) {
+        String sql = "DELETE FROM preco WHERE id = ?";
+
+        try (Connection conn = DataBaseConfig.getConnection();
+                PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setLong(1, idPreco);
+
+            int rowsDeleted = ps.executeUpdate();
+            if (rowsDeleted > 0) {
+                System.out.println("Preço deletado com sucesso.");
+            } else {
+                System.out.println("Nenhum preço foi deletado.");
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }
