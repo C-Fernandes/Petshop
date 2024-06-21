@@ -41,7 +41,6 @@ public class UsuarioService {
     }
 
     public void cadastrarUsuario(UsuarioDTO usuarioDto) {
-        validarUsuario(usuarioDto);
 
         Usuario usuario = new Usuario();
         usuario.setEmail(usuarioDto.getEmail());
@@ -70,38 +69,19 @@ public class UsuarioService {
 
         usuarioRepository.save(usuario);
 
-        // Salvar Cliente ou Funcionario
         if (usuarioDto.getCargo() == null) {
             Cliente cliente = new Cliente();
             cliente.setUsuario(usuario);
             cliente.setQtdPontos(0L);
             clienteRepository.save(cliente);
-        } else {
+        }
+        if (usuarioDto.getQtdPontos() == null){
             Funcionario funcionario = new Funcionario();
             funcionario.setUsuario(usuario);
             funcionario.setCargo(usuarioDto.getCargo());
             funcionarioRepository.save(funcionario);
         }
     }
-
-
-    public void validarUsuario(UsuarioDTO usuarioDto) {
-        validarCamposObrigatorios(usuarioDto);
-        validarEmailUnico(usuarioDto.getEmail(), usuarioRepository);
-        validarSenha(usuarioDto.getSenha());
-    }
-
-    private static void validarEmailUnico(String email, UsuarioRepository usuarioRepository) {
-        if(usuarioRepository.findByEmail(email) != null) {
-            throw new IllegalArgumentException("Já existe um usuário cadastrado com esse e-mail.");
-        }
-    }
-    private static void validarSenha(String senha) {
-        if (senha != null) {
-            throw new IllegalArgumentException("A senha deve ter pelo menos 7 caracteres.");
-        }
-    }
-
     public ResponseEntity<Map<String, Object>> validarCamposObrigatorios(UsuarioDTO usuarioDTO) {
         Map<String, Object> response = new HashMap<>();
         List<String> errors = new ArrayList<>();
@@ -127,16 +107,48 @@ public class UsuarioService {
         if (usuarioDTO.getNumero() == null) {
             errors.add("Número é um campo obrigatório.");
         }
+        if (usuarioDTO.getDataDeNascimento() == null) {
+            errors.add("Data de nascimento é um campo obrigatório.");
+        }
+        if (usuarioDTO.getCep() == null || usuarioDTO.getCep().isEmpty()) {
+            errors.add("Cep é um campo obrigatório.");
+            if(usuarioDTO.getCep().getCidade() == null || usuarioDTO.getCep().getCidade().isEmpty()) {
+                errors.add("Cidade é um campo obrigatório.");
+            }
+            if(usuarioDTO.getCep().getEstado() == null || usuarioDTO.getCep().getEstado().isEmpty()) {
+                errors.add("Estado é um campo obrigatório.");
+            }
+        } else {
+            if (usuarioDTO.getCep().getCidade() == null || usuarioDTO.getCep().getCidade().isEmpty()) {
+                errors.add("Cidade é um campo obrigatório.");
+            }
+            if (usuarioDTO.getCep().getEstado() == null || usuarioDTO.getCep().getEstado().isEmpty()) {
+                errors.add("Estado é um campo obrigatório.");
+            }
+        }
+        if (usuarioDTO.getEmail() != null && usuarioRepository.findByEmail(usuarioDTO.getEmail()) != null) {
+            errors.add("Este e-mail já está cadastrado em nosso site.");
+        }
+        if (usuarioDTO.getEmail() != null && !isValidEmail(usuarioDTO.getEmail())) {
+            errors.add("E-mail inválido.");
+        }
+        if (usuarioDTO.getSenha() != null && usuarioDTO.getSenha().length() <= 7) {
+            errors.add("A senha deve ter no mínimo 7 caracteres.");
+        }
         if (!errors.isEmpty()) {
             response.put("errors", errors);
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         }
+
 
         return ResponseEntity.ok().build();
     }
 
 
 
+    private boolean isValidEmail(String email) {
+        return email.matches("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$");
+    }
 
     public String login(String email, String senha) {
         Usuario usuario = usuarioRepository.findByEmail(email);

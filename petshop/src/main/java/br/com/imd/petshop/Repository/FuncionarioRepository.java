@@ -13,7 +13,7 @@ import java.sql.SQLException;
 @Repository
 public class FuncionarioRepository {
     public void save(Funcionario funcionario) {
-        String sql = "INSERT INTO cliente (usuario, cargo) VALUES (?, ?)";
+        String sql = "INSERT INTO funcionario (usuario_email, cargo) VALUES (?, ?)";
         try (Connection conn = DataBaseConfig.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, funcionario.getUsuario().getEmail());

@@ -202,6 +202,21 @@
                     <div id="mensagemErroSenha" class="alerta" role="alert"></div>
                 </div>
             </div>
+            <div class="row">
+                <div class="form-group col-6">
+                    <label for="cargo">Cargo:</label>
+                    <select class="form-control rounded-pill px-4" id="cargo" name="cargo" required>
+                        <option value="" disabled selected>Selecione o cargo</option>
+                        <option value="VETERINARIO">Veterinário</option>
+                        <option value="AUXILIAR_VETERINARIO">Auxiliar de Veterinário</option>
+                        <option value="RECEPCIONISTA">Recepcionista</option>
+                        <option value="GROOMER">Groomer</option>
+                        <option value="GERENTE">Gerente</option>
+                    </select>
+                    <div id="mensagemErroCargo" class="alerta" role="alert"></div>
+                </div>
+            </div>
+
             <div class="row pt-2">
                 <div class="col-6"></div>
                 <div class="col-6">
@@ -251,8 +266,12 @@
             const estado = document.getElementById("estado").value || null;
             const senha = document.getElementById("senha").value || null;
 
+            const cargoElement = document.getElementById("cargo");
+            const cargo = cargoElement.options[cargoElement.selectedIndex].value;
+
 
             // Limpar mensagens de erro
+
             document.getElementById("mensagemErroNome").innerText = "";
             document.getElementById("mensagemErroEmail").innerText = "";
             document.getElementById("mensagemErroSenha").innerText = "";
@@ -265,13 +284,6 @@
             document.getElementById("mensagemErroLogradouro").innerText = "";
             document.getElementById("mensagemErroTelefone").innerText = "";
 
-
-
-
-
-
-
-
             console.log({
                 nome: nome,
                 email: email,
@@ -280,11 +292,11 @@
                 logradouro: logradouro,
                 numero: numero,
                 bairro: bairro,
-                qtdPontos: 0,
                 cep: cep,
                 cidade: cidade,
                 estado: estado,
                 senha: senha,
+                cargo: cargo,
             });
 
             fetch('/usuario/cadastro-usuario', {
@@ -306,7 +318,7 @@
                         estado: estado,
                     },
                     senha: senha,
-                    qtdPontos: 0,
+                    cargo: cargo,
 
                 })
             })
