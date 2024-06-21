@@ -30,9 +30,13 @@ public class UsuarioController {
     public String cadastro() {
         return "cadastrar-usuario-cliente";
     }
+    @GetMapping("/cadastro/funcionario")
+    public String cadastroFuncionario() {
+        return "cadastrar-usuario-funcionario";
+    }
 
     @PostMapping("/cadastro-usuario")
-    public ResponseEntity<Map<String, Object>> cadastrarUsuario(UsuarioDTO usuarioDto) {
+    public ResponseEntity<Map<String, Object>> cadastrarUsuario(@RequestBody UsuarioDTO usuarioDto) {
         ResponseEntity<Map<String, Object>> validationResponse = usuarioService.validarCamposObrigatorios(usuarioDto);
 
         if (validationResponse.getStatusCode() != HttpStatus.OK) {
@@ -40,9 +44,8 @@ public class UsuarioController {
         }
 
         try {
-            usuarioService.validarUsuario(usuarioDto);
+            usuarioService.cadastrarUsuario(usuarioDto);
         } catch (IllegalArgumentException e) {
-            // Tratar a exceção aqui, por exemplo, retornando um ResponseEntity com os erros
             Map<String, Object> response = new HashMap<>();
             response.put("errors", Collections.singletonList(e.getMessage()));
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
