@@ -1,5 +1,7 @@
 package br.com.imd.petshop.Service;
 
+import br.com.imd.petshop.DTO.ClienteDTO;
+import br.com.imd.petshop.DTO.FuncionarioDTO;
 import br.com.imd.petshop.DTO.UsuarioDTO;
 import br.com.imd.petshop.Entity.Cliente;
 import br.com.imd.petshop.Entity.Funcionario;
@@ -21,6 +23,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class UsuarioService {
@@ -168,4 +171,24 @@ public class UsuarioService {
     public Usuario findUsuario(String email) {
         return usuarioRepository.findByEmail(email);
     }
+    private UsuarioDTO convertToDTO(Usuario usuario) {
+        UsuarioDTO usuarioDTO = new UsuarioDTO();
+        usuarioDTO.setEmail(usuario.getEmail());
+        usuarioDTO.setNome(usuario.getNome());
+        usuarioDTO.setDataDeNascimento(usuario.getDataDeNascimento());
+        usuarioDTO.setTelefone(usuario.getTelefone());
+        usuarioDTO.setLogradouro(usuario.getLogradouro());
+        usuarioDTO.setNumero(usuario.getNumero());
+        usuarioDTO.setBairro(usuario.getBairro());
+        usuarioDTO.setCep(usuario.getCep());
+        return usuarioDTO;
+    }
+    public List<ClienteDTO> listarClientesComUsuarios() {
+        return clienteRepository.listarClientesComUsuarios();
+    }
+    public List<FuncionarioDTO> listarFuncionariosComUsuarios() {
+        return funcionarioRepository.listarFuncionariosComUsuarios();
+    }
+
+
 }

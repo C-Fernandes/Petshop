@@ -1,11 +1,16 @@
 package br.com.imd.petshop.Controller;
 
+import br.com.imd.petshop.DTO.ClienteDTO;
+import br.com.imd.petshop.DTO.FuncionarioDTO;
 import br.com.imd.petshop.DTO.UsuarioDTO;
+import br.com.imd.petshop.Entity.Pet;
+import br.com.imd.petshop.Entity.Usuario;
 import br.com.imd.petshop.Service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -15,7 +20,6 @@ import java.util.List;
 import java.util.Map;
 
 @Controller
-@CrossOrigin("*")
 @RequestMapping("/usuario")
 public class UsuarioController {
     private final UsuarioService usuarioService;
@@ -25,11 +29,11 @@ public class UsuarioController {
         this.usuarioService = usuarioService;
     }
 
-
     @GetMapping("/cadastro")
     public String cadastro() {
         return "cadastrar-usuario-cliente";
     }
+
     @GetMapping("/cadastro/funcionario")
     public String cadastroFuncionario() {
         return "cadastrar-usuario-funcionario";
@@ -54,7 +58,6 @@ public class UsuarioController {
         return null;
     }
 
-
     @GetMapping("/login")
     public String login() {
         return "tela-login";
@@ -67,7 +70,20 @@ public class UsuarioController {
     }
 
     @GetMapping("/inicial")
-    public String inicial() { return  "tela-inicial"; }
+    public String inicial() {
+        return "tela-inicial";
+    }
+
+    @GetMapping("/listagem")
+    public String listarUsuarios(Model model) {
+        List<ClienteDTO> clientes = usuarioService.listarClientesComUsuarios();
+        List<FuncionarioDTO> funcionarios = usuarioService.listarFuncionariosComUsuarios();
+        model.addAttribute("clientes", clientes);
+        model.addAttribute("funcionarios", funcionarios);
+        return "listagem-usuario";
+    }
+
+
 
 
 }
