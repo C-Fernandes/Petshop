@@ -1,11 +1,16 @@
 package br.com.imd.petshop.Controller;
 
+import br.com.imd.petshop.DTO.ClienteDTO;
+import br.com.imd.petshop.DTO.FuncionarioDTO;
 import br.com.imd.petshop.DTO.UsuarioDTO;
+import br.com.imd.petshop.Entity.Pet;
+import br.com.imd.petshop.Entity.Usuario;
 import br.com.imd.petshop.Service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -24,6 +29,7 @@ public class UsuarioController {
     public UsuarioController(UsuarioService usuarioService) {
         this.usuarioService = usuarioService;
     }
+
 
     @GetMapping("/cadastro")
     public String cadastro() {
@@ -69,5 +75,17 @@ public class UsuarioController {
     public String inicial() {
         return "tela-inicial";
     }
+
+    @GetMapping("/listagem")
+    public String listarUsuarios(Model model) {
+        List<ClienteDTO> clientes = usuarioService.listarClientesComUsuarios();
+        List<FuncionarioDTO> funcionarios = usuarioService.listarFuncionariosComUsuarios();
+        model.addAttribute("clientes", clientes);
+        model.addAttribute("funcionarios", funcionarios);
+        return "listagem-usuario";
+    }
+
+
+
 
 }
