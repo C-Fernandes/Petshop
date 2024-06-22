@@ -1,8 +1,8 @@
 package br.com.imd.petshop.DTO;
 
-import br.com.imd.petshop.Entity.Cep;
-
 import java.util.Date;
+
+import br.com.imd.petshop.Entity.Cep;
 
 public class UsuarioDTO {
     private String email;

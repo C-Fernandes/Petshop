@@ -2,14 +2,20 @@ package br.com.imd.petshop.Service;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
-import java.time.temporal.Temporal;
 
 import java.util.List;
+import java.util.UUID;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.sql.Date;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import org.springframework.util.StringUtils;
 import br.com.imd.petshop.Entity.Preco;
 import br.com.imd.petshop.Entity.Produto;
 import br.com.imd.petshop.Repository.PrecoRepository;
@@ -43,11 +49,12 @@ public class ProdutoService {
     }
 
     public List<Produto> atualizarPreco(List<Produto> produtos) {
+        if (produtos != null) {
+            for (Produto produto : produtos) {
 
-        for (Produto produto : produtos) {
-
-            List<Preco> precosProduto = precoRepository.findByProduto(produto.getId());
-            produto.setPreco(precoMaisRecente(precosProduto));
+                List<Preco> precosProduto = precoRepository.findByProduto(produto.getId());
+                produto.setPreco(precoMaisRecente(precosProduto));
+            }
         }
         return produtos;
 
@@ -101,5 +108,34 @@ public class ProdutoService {
             produtoRepository.salvarRelacionamento(produto, precoRepository.save(preco));
         }
         produtoRepository.atualizarProduto(produto);
+    }
+
+    public Produto findById(Long id) {
+        return produtoRepository.findbyId(id);
+    }
+
+    public void removerImagem(String nomeImagem, String UPLOAD_DIR) {
+        System.out.println("Nome imagem : " + nomeImagem);
+        if (!nomeImagem.equals("padrao.jpeg")) {
+            Path pathImagemAntiga = Paths.get(UPLOAD_DIR + nomeImagem);
+
+            System.out.println("Entrou aqui");
+            try {
+                Files.deleteIfExists(pathImagemAntiga);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        }
+    }
+
+    public String salvarNovaImagem(MultipartFile file, String UPLOAD_DIR) throws IOException {
+        String nomeImagem = UUID.randomUUID().toString() + "_" + file.getOriginalFilename();
+        byte[] bytesImagem = file.getBytes();
+        Path path = Paths.get(UPLOAD_DIR + nomeImagem);
+        Files.write(path, bytesImagem);
+
+        // Retorna apenas o caminho relativo da imagem, sem o prefixo do domínio
+        return nomeImagem;
     }
 }

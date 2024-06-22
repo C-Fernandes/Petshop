@@ -20,9 +20,9 @@ public class ProdutoRepository {
         Produto produto = new Produto();
         produto.setId(resultSet.getLong("id"));
         produto.setNome(resultSet.getString("nome"));
-        produto.setQuantidade(Integer.parseInt(resultSet.getString("quantidade")));
+        produto.setQuantidade(resultSet.getInt("quantidade"));
         produto.setAtivo(resultSet.getBoolean("ativo"));
-
+        produto.setImagem(resultSet.getString("imagem"));
         return produto;
     }
 
@@ -41,7 +41,7 @@ public class ProdutoRepository {
     }
 
     public Produto saveProdutoEPreco(Produto produto) {
-        String sql = "INSERT INTO produto (nome, quantidade, ativo) VALUES (?, ?, ?)";
+        String sql = "INSERT INTO produto (nome, quantidade, ativo, imagem) VALUES (?, ?, ?, ?)";
         try {
             Connection conn = DataBaseConfig.getConnection();
             PreparedStatement ps = conn.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
@@ -49,6 +49,7 @@ public class ProdutoRepository {
             ps.setString(1, produto.getNome());
             ps.setInt(2, produto.getQuantidade());
             ps.setBoolean(3, produto.getAtivo());
+            ps.setString(4, produto.getImagem());
 
             int affectedRows = ps.executeUpdate();
 
@@ -104,25 +105,16 @@ public class ProdutoRepository {
     }
 
     public Produto findbyId(Long id) {
-        Produto p = new Produto();
         String sql = "SELECT * FROM produto WHERE id = ?";
-
         try {
             Connection conn = DataBaseConfig.getConnection();
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setLong(1, id);
             ResultSet rs = ps.executeQuery();
 
-            while (rs.next()) {
-                Produto prod = (mapeamento(rs));
-                p.setAtivo(prod.getAtivo());
-                p.setId(prod.getId());
-                p.setNome(prod.getNome());
-                p.setQuantidade(prod.getQuantidade());
-                p.setPreco(prod.getPreco());
+            if (rs.next()) {
+                return mapeamento(rs);
             }
-
-            return p;
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -130,7 +122,7 @@ public class ProdutoRepository {
     }
 
     public void atualizarProduto(Produto produto) {
-        String sql = "UPDATE produto SET nome = ?, quantidade = ?, ativo = ? WHERE id = ?";
+        String sql = "UPDATE produto SET nome = ?, quantidade = ?, ativo = ?, imagem = ? WHERE id = ?";
         try {
             Connection conn = DataBaseConfig.getConnection();
             PreparedStatement ps = conn.prepareStatement(sql);
@@ -138,7 +130,8 @@ public class ProdutoRepository {
             ps.setString(1, produto.getNome());
             ps.setInt(2, produto.getQuantidade());
             ps.setBoolean(3, produto.getAtivo());
-            ps.setLong(4, produto.getId());
+            ps.setString(4, produto.getImagem());
+            ps.setLong(5, produto.getId());
 
             int rowsUpdated = ps.executeUpdate();
             if (rowsUpdated == 0) {

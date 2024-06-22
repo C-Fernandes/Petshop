@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Map;
 
 @Controller
+
 @RequestMapping("/usuario")
 public class UsuarioController {
     private final UsuarioService usuarioService;
@@ -28,6 +29,7 @@ public class UsuarioController {
     public UsuarioController(UsuarioService usuarioService) {
         this.usuarioService = usuarioService;
     }
+
 
     @GetMapping("/cadastro")
     public String cadastro() {
