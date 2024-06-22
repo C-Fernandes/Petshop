@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Map;
 
 @Controller
-@CrossOrigin("*")
+
 @RequestMapping("/usuario")
 public class UsuarioController {
     private final UsuarioService usuarioService;
@@ -25,11 +25,11 @@ public class UsuarioController {
         this.usuarioService = usuarioService;
     }
 
-
     @GetMapping("/cadastro")
     public String cadastro() {
         return "cadastrar-usuario-cliente";
     }
+
     @GetMapping("/cadastro/funcionario")
     public String cadastroFuncionario() {
         return "cadastrar-usuario-funcionario";
@@ -54,7 +54,6 @@ public class UsuarioController {
         return null;
     }
 
-
     @GetMapping("/login")
     public String login() {
         return "tela-login";
@@ -67,7 +66,8 @@ public class UsuarioController {
     }
 
     @GetMapping("/inicial")
-    public String inicial() { return  "tela-inicial"; }
-
+    public String inicial() {
+        return "tela-inicial";
+    }
 
 }

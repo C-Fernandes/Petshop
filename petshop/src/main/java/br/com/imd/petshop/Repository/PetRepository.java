@@ -11,10 +11,10 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
+import br.com.imd.petshop.Entity.Cep;
 import br.com.imd.petshop.Entity.Pet;
 import br.com.imd.petshop.Entity.Usuario;
 import br.com.imd.petshop.Config.DataBaseConfig;
-import br.com.imd.petshop.Entity.Cep;
 
 @Repository
 public class PetRepository {

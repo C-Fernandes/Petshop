@@ -9,6 +9,7 @@ public class Produto {
     private Integer quantidade;
     private Boolean ativo;
     private Preco preco;
+    private String imagem;
 
     private List<PedidoHasProduto> pedidoHasProdutoList;
 
@@ -69,4 +70,17 @@ public class Produto {
     public void setPedidoHasProdutoList(List<PedidoHasProduto> pedidoHasProdutoList) {
         this.pedidoHasProdutoList = pedidoHasProdutoList;
     }
+
+    public Boolean isAtivo() {
+        return this.ativo;
+    }
+
+    public String getImagem() {
+        return this.imagem;
+    }
+
+    public void setImagem(String imagem) {
+        this.imagem = imagem;
+    }
+
 }

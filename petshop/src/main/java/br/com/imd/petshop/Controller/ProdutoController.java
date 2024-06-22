@@ -1,61 +1,126 @@
 package br.com.imd.petshop.Controller;
 
-import java.util.Collections;
+import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
-import br.com.imd.petshop.DTO.ProdutoPrecoDTO;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import br.com.imd.petshop.Entity.Preco;
 import br.com.imd.petshop.Entity.Produto;
 import br.com.imd.petshop.Service.ProdutoService;
-import org.springframework.ui.Model;
 
 @Controller
 @RequestMapping("/produtos")
 public class ProdutoController {
+
     @Autowired
     ProdutoService produtoService;
 
-    @GetMapping("/cadastro")
+    private static final String UPLOAD_DIR = "src/main/resources/static/images/uploads/produtos/";
+
+    @GetMapping("/")
     public String cadastro(Model model) {
         List<Produto> produtos = produtoService.findAll();
         model.addAttribute("produtos", produtos);
-        return "cadastrar-produto";
+        return "produtos-gerenciamento";
     }
 
     @PostMapping("/cadastro-produto")
-    public ResponseEntity<String> cadastrarProduto(@RequestBody ProdutoPrecoDTO dados) {
+    public ResponseEntity<?> cadastrarProduto(@RequestParam("file") MultipartFile file,
+            @RequestParam("produto") String produtoJson,
+            @RequestParam("preco") String precoJson) {
         try {
-            Produto produto = dados.getProduto();
-            Preco preco = dados.getPreco();
+            ObjectMapper objectMapper = new ObjectMapper();
+            Produto produto = objectMapper.readValue(produtoJson, Produto.class);
+            Preco preco = objectMapper.readValue(precoJson, Preco.class);
+
+            // Verificar se a imagem recebida é a imagem padrão
+            String nomeImagem = file.getOriginalFilename();
+            String nomeImagemPadrao = "padrao.jpeg"; // Nome da imagem padrão
+
+            String urlImagem = "";
+
+            if (nomeImagem != null && nomeImagem.equals(nomeImagemPadrao)) {
+                // Utilizar a URL da imagem padrão sem salvar no disco novamente
+                urlImagem = nomeImagemPadrao;
+                produto.setImagem(nomeImagemPadrao);
+            } else {
+                // Salvar a imagem no disco
+                urlImagem = produtoService.salvarNovaImagem(file, UPLOAD_DIR);
+                System.out.println("urlImagem cadastro:" + urlImagem);
+                produto.setImagem(urlImagem);
+            }
+
             produtoService.cadastrarProduto(preco, produto);
-            return ResponseEntity.ok("Produto cadastrado com sucesso!");
-        } catch (Exception e) {
+
+            // Construir o objeto JSON de resposta com a mensagem e a URL da imagem
+            Map<String, Object> response = new HashMap<>();
+            response.put("mensagem", "Produto cadastrado com sucesso!");
+            response.put("imagem", urlImagem);
+
+            return ResponseEntity.ok(response);
+        } catch (IOException e) {
             e.printStackTrace();
             return ResponseEntity.badRequest().body("Não foi possível cadastrar o produto");
         }
     }
 
     @PutMapping("/atualizar")
-    public ResponseEntity<String> atualizarProduto(@RequestBody ProdutoPrecoDTO dados) {
+    public ResponseEntity<?> atualizarProduto(
+            @RequestParam(value = "file", required = false) MultipartFile file,
+            @RequestParam("produto") String produtoJson,
+            @RequestParam("preco") String precoJson) {
         try {
-            Produto p = dados.getProduto();
-            produtoService.atualizarProduto(dados.getProduto(), dados.getPreco());
-            return ResponseEntity.noContent().build();
-        } catch (Exception e) {
+            ObjectMapper objectMapper = new ObjectMapper();
+            Produto produto = objectMapper.readValue(produtoJson, Produto.class);
+            Preco preco = objectMapper.readValue(precoJson, Preco.class);
+
+            Long idProduto = produto.getId(); // Obtém o ID do produto do objeto Produto
+
+            // Verifica se o ID do produto no corpo da requisição é válido
+            if (idProduto == null) {
+                return ResponseEntity.badRequest().body("ID do produto não especificado");
+            }
+
+            // Se uma nova imagem foi enviada, processa e salva como no cadastro
+            if (file != null && !file.isEmpty()) {
+
+                // Salva a nova imagem
+                String urlImagem = produtoService.salvarNovaImagem(file, UPLOAD_DIR);
+                System.out.println(urlImagem);
+
+                produtoService.removerImagem(produto.getImagem(), UPLOAD_DIR);
+                produto.setImagem(urlImagem);
+
+            } else {
+                // Se nenhum novo arquivo de imagem foi enviado, mantém a imagem existente
+                Produto produtoExistente = produtoService.findById(idProduto);
+                if (produtoExistente != null) {
+                    produto.setImagem(produtoExistente.getImagem());
+                }
+            }
+
+            // Atualiza o produto
+            produtoService.atualizarProduto(produto, preco);
+
+            // Prepara a resposta com a URL da imagem atualizada, se disponível
+            Map<String, Object> response = new HashMap<>();
+            response.put("mensagem", "Produto atualizado com sucesso!");
+            response.put("imagem", produto.getImagem()); // Adiciona a URL da imagem ao objeto de resposta
+
+            return ResponseEntity.ok(response);
+        } catch (IOException e) {
             e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            return ResponseEntity.badRequest().body("Erro ao atualizar o produto");
         }
     }
 
@@ -74,12 +139,20 @@ public class ProdutoController {
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deletarProduto(@PathVariable Long id) {
         try {
-            System.out.println("Entrou em deletar produto");
-            produtoService.deletarProduto(id); // Chama o serviço para deletar o produto
+            Produto produto = produtoService.findById(id);
+
+            if (produto != null && produto.getImagem() != null) {
+                produtoService.removerImagem(produto.getImagem(), UPLOAD_DIR); // Remove a imagem associada
+            }
+
+            // Deletar o produto do banco de dados (incluindo relações dependentes, se
+            // houver)
+            produtoService.deletarProduto(id);
+
             return ResponseEntity.noContent().build();
         } catch (Exception e) {
             e.printStackTrace();
-            return ResponseEntity.badRequest().build();
+            return ResponseEntity.badRequest().body("Erro ao deletar o produto");
         }
     }
 }
