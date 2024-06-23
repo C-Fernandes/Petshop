@@ -121,6 +121,23 @@ public class ProdutoRepository {
         return null;
     }
 
+    public List<Produto> findByNomeContainingIgnoreCase(String nome) {
+        String sql = "SELECT * FROM produto WHERE LOWER(nome) LIKE LOWER(?)";
+        List<Produto> produtos = new ArrayList<>();
+        try (Connection conn = DataBaseConfig.getConnection();
+                PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, "%" + nome + "%");
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                produtos.add(mapeamento(rs));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return produtos;
+    }
+
     public void atualizarProduto(Produto produto) {
         String sql = "UPDATE produto SET nome = ?, quantidade = ?, ativo = ?, imagem = ? WHERE id = ?";
         try {

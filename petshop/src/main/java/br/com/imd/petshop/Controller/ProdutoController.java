@@ -1,11 +1,13 @@
 package br.com.imd.petshop.Controller;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import br.com.imd.petshop.DTO.ProdutoDTO;
 import br.com.imd.petshop.Entity.Preco;
 import br.com.imd.petshop.Entity.Produto;
 import br.com.imd.petshop.Service.ProdutoService;
@@ -36,17 +39,24 @@ public class ProdutoController {
 
     @PostMapping("/cadastro-produto")
     public ResponseEntity<?> cadastrarProduto(@RequestParam("file") MultipartFile file,
-            @RequestParam("produto") String produtoJson,
-            @RequestParam("preco") String precoJson) {
-        try {
+            @RequestParam("produtoDTO") String produtoJson) {
+
+        try {// Convertendo o JSON recebido em objeto ProdutoDTO
             ObjectMapper objectMapper = new ObjectMapper();
-            Produto produto = objectMapper.readValue(produtoJson, Produto.class);
-            Preco preco = objectMapper.readValue(precoJson, Preco.class);
+            ProdutoDTO produtoDTO = objectMapper.readValue(produtoJson, ProdutoDTO.class);
+
+            // Obtendo os objetos Produto e Preco do ProdutoDTO
+            Produto produto = produtoDTO.getProduto();
+            Preco preco = produtoDTO.getPreco();
+            ResponseEntity<Map<String, Object>> validationResponse = produtoService.validarProduto(produtoDTO);
+
+            if (validationResponse.getStatusCode() != HttpStatus.OK) {
+                return ResponseEntity.badRequest().body(validationResponse.getBody());
+            }
 
             // Verificar se a imagem recebida é a imagem padrão
             String nomeImagem = file.getOriginalFilename();
             String nomeImagemPadrao = "padrao.jpeg"; // Nome da imagem padrão
-
             String urlImagem = "";
 
             if (nomeImagem != null && nomeImagem.equals(nomeImagemPadrao)) {
@@ -56,10 +66,10 @@ public class ProdutoController {
             } else {
                 // Salvar a imagem no disco
                 urlImagem = produtoService.salvarNovaImagem(file, UPLOAD_DIR);
-                System.out.println("urlImagem cadastro:" + urlImagem);
                 produto.setImagem(urlImagem);
             }
 
+            // Chamar o serviço para cadastrar o produto e o preço
             produtoService.cadastrarProduto(preco, produto);
 
             // Construir o objeto JSON de resposta com a mensagem e a URL da imagem
@@ -69,27 +79,27 @@ public class ProdutoController {
 
             return ResponseEntity.ok(response);
         } catch (IOException e) {
-            e.printStackTrace();
-            return ResponseEntity.badRequest().body("Não foi possível cadastrar o produto");
+            Map<String, Object> response = new HashMap<>();
+            response.put("errors", Collections.singletonList(e.getMessage()));
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         }
     }
 
     @PutMapping("/atualizar")
-    public ResponseEntity<?> atualizarProduto(
+    public ResponseEntity<Map<String, Object>> atualizarProduto(
             @RequestParam(value = "file", required = false) MultipartFile file,
-            @RequestParam("produto") String produtoJson,
-            @RequestParam("preco") String precoJson) {
+            @RequestParam("produtoDTO") String produtoJson) {
         try {
             ObjectMapper objectMapper = new ObjectMapper();
-            Produto produto = objectMapper.readValue(produtoJson, Produto.class);
-            Preco preco = objectMapper.readValue(precoJson, Preco.class);
+            ProdutoDTO produtoDTO = objectMapper.readValue(produtoJson, ProdutoDTO.class);
+            System.out.println("nome dto:" + produtoDTO.getProduto().getNome());
+            ResponseEntity<Map<String, Object>> validationResponse = produtoService.validarProduto(produtoDTO);
 
-            Long idProduto = produto.getId(); // Obtém o ID do produto do objeto Produto
-
-            // Verifica se o ID do produto no corpo da requisição é válido
-            if (idProduto == null) {
-                return ResponseEntity.badRequest().body("ID do produto não especificado");
+            if (validationResponse.getStatusCode() != HttpStatus.OK) {
+                return ResponseEntity.badRequest().body(validationResponse.getBody());
             }
+            Produto produto = produtoDTO.getProduto();
+            Preco preco = produtoDTO.getPreco();
 
             // Se uma nova imagem foi enviada, processa e salva como no cadastro
             if (file != null && !file.isEmpty()) {
@@ -103,7 +113,7 @@ public class ProdutoController {
 
             } else {
                 // Se nenhum novo arquivo de imagem foi enviado, mantém a imagem existente
-                Produto produtoExistente = produtoService.findById(idProduto);
+                Produto produtoExistente = produtoService.findById(produto.getId());
                 if (produtoExistente != null) {
                     produto.setImagem(produtoExistente.getImagem());
                 }
@@ -119,9 +129,11 @@ public class ProdutoController {
 
             return ResponseEntity.ok(response);
         } catch (IOException e) {
-            e.printStackTrace();
-            return ResponseEntity.badRequest().body("Erro ao atualizar o produto");
+            Map<String, Object> response = new HashMap<>();
+            response.put("errors", Collections.singletonList(e.getMessage()));
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         }
+
     }
 
     @GetMapping("/listar")
@@ -153,6 +165,18 @@ public class ProdutoController {
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.badRequest().body("Erro ao deletar o produto");
+        }
+    }
+
+    @GetMapping("/buscar")
+    @ResponseBody
+    public ResponseEntity<List<Produto>> buscarProdutos(@RequestParam("nome") String nome) {
+        try {
+            List<Produto> produtos = produtoService.atualizarPreco(produtoService.buscarPorNome(nome));
+            return ResponseEntity.ok(produtos);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.badRequest().build();
         }
     }
 }
