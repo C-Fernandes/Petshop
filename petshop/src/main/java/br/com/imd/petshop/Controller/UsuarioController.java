@@ -67,10 +67,15 @@ public class UsuarioController {
     }
 
     @PostMapping("/logar")
-    public ModelAndView login(@RequestParam("email") String email, @RequestParam("senha") String senha) {
+    public String login(@RequestParam("email") String email, @RequestParam("senha") String senha, Model model) {
         String redirect = usuarioService.login(email, senha);
-        return new ModelAndView(redirect);
+        if (redirect.equals("redirect:/")) {
+            model.addAttribute("erro", "Usuário ou senha inválidos");
+            return "tela-login";
+        }
+        return redirect;
     }
+
 
     @GetMapping("/inicial")
     public String inicial() {
@@ -86,16 +91,7 @@ public class UsuarioController {
         model.addAttribute("email", usuarioLogado.getEmail());
         return "listagem-usuario";
     }
-    /*
-    @GetMapping("/{email}")
-    public ResponseEntity<Usuario> obterUsuarioPorEmail(@PathVariable String email) {
-        Usuario usuario = usuarioService.findUsuario(email);
-        if (usuario != null) {
-            return ResponseEntity.ok(usuario);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
-    }*/
+
     @GetMapping("/{email}")
     public ResponseEntity<?> obterUsuarioPorEmail(@PathVariable String email) {
         ClienteDTO clienteDTO = usuarioService.obterClienteDTO(email);

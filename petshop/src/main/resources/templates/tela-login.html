@@ -158,7 +158,7 @@
                     <div class="form-group">
                         <label for="senha">Senha:</label>
                         <input type="password" class="form-control rounded-pill px-4" id="senha" name="senha" required>
-                        <div id="mensagemErroSenha" class="alerta" role="alert"></div>
+                        <div th:if="${erro != null}" th:text="${erro}" class="alerta" role="alert">
                     </div>
                     <div class="row buttons-div">
                         <div class=" col-6">
