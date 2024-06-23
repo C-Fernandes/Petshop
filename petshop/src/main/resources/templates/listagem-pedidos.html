@@ -58,17 +58,13 @@
                     if (!response.ok) {
                         return response.json().then(errors => {
                             errors.forEach(error => {
-                                console.error(error);
+                                console(error);
                             });
                         });
-                    } else {
-                        alert("Pedido cancelado com sucesso");
+                    } else{
                         window.location.href = '/pedido/list';
                     }
                 })
-                .catch(error => {
-                    console.error('Erro ao cancelar pedido:', error);
-                });
         });
     });
 </script>

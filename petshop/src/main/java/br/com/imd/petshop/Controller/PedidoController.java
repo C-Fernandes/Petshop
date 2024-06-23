@@ -11,6 +11,8 @@ import br.com.imd.petshop.Service.PedidoService;
 import br.com.imd.petshop.Service.ProdutoService;
 import br.com.imd.petshop.Service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -61,14 +63,16 @@ public class PedidoController {
     }
 
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable String id, Model model) {
-        Long idPedido = Long.parseLong(id);
+    public ResponseEntity<?> delete(@PathVariable String id, Model model) {
         try {
+            Long idPedido = Long.parseLong(id);
             pedidoService.delete(idPedido);
-            model.addAttribute("msg", "Pedido deletado com sucesso");
+            return ResponseEntity.ok("Pedido deletado com sucesso");
+        } catch (NumberFormatException e) {
+            return ResponseEntity.badRequest().body("ID de pedido inválido: " + id);
         } catch (Exception e) {
             e.printStackTrace();
-            model.addAttribute("msg", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao excluir pedido: " + e.getMessage());
         }
     }
 }

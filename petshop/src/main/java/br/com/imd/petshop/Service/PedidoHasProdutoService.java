@@ -24,4 +24,8 @@ public class PedidoHasProdutoService {
    public List<PedidoHasProdutoDTO> listarPedidoHasProdutos(String email){
         return pedidoHasProdutoRepository.listarProdutosPorPedido(email);
    }
+
+   public void deletarPedidoHasProduto(Long id) {
+        pedidoHasProdutoRepository.deletarPedidoHasProduto(id);
+   }
 }

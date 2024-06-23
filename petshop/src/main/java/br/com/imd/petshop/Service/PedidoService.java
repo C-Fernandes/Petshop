@@ -75,7 +75,7 @@ public class PedidoService {
     }
 
     public void delete (Long id){
-        pedidoRepository.delete(id);
+        pedidoHasProdutoService.deletarPedidoHasProduto(id);
         pedidoRepository.delete(id);
     }
 }

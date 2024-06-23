@@ -70,6 +70,17 @@ public class PedidoHasProdutoRepository {
       return  pedidos;
     }
 
+    public void deletarPedidoHasProduto(Long id) {
+        String sql = "DELETE php FROM pedido_has_produto php JOIN pedido p ON php.pedido_id = p.id WHERE p.id = ?";
+        try (Connection conn = DataBaseConfig.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setLong(1, id);
+            int rowsAffected = ps.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     public PedidoHasProdutoDTO mapToPedido(ResultSet rs) throws SQLException {
         PedidoHasProdutoDTO pedido = new PedidoHasProdutoDTO();
         pedido.setData(rs.getDate("data"));
