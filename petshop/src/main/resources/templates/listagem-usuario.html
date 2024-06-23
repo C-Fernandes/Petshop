@@ -8,17 +8,82 @@
     <!-- Font Awesome CSS -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
     <style>
+        :root {
+            --peru: #ec9474;
+            --coral: #fba383;
+            --maroon: #742a0f;
+            --rosybrown: #a46c5c;
+            --tan: #cda99d;
+        }
+
+        body {
+            background-color: var(--peru);
+        }
+
         .edit-icon,
         .delete-icon {
             cursor: pointer;
             margin-right: 10px;
         }
+
+        nav {
+            font-size: 1.1em;
+            display: flex;
+            flex-direction: row;
+            justify-content: flex-end;
+            height: auto;
+            width: 100%;
+            background-color: var(--maroon);
+            color: white;
+            box-shadow: 0 0 5px black;
+        }
+
+        .navbar {
+            flex-wrap: wrap;
+            padding: 0.5em;
+            margin: 0 0.5em 0 0;
+        }
+
+        a {
+            color: white;
+            text-decoration: none;
+            padding: 0.3em 0.5em;
+        }
+
+        a:hover {
+            background-color: var(--maroon);
+            border: 1px solid var(--maroon);
+            border-radius: 15px;
+            text-decoration: none;
+            color: white;
+        }
+
+        .table {
+            width: 60%;
+        }
+
+        .main {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
     </style>
 </head>
 <body>
-<h2>Seja bem-vindo, <span th:text="${email}"></span>!</h2>
-<h1>Listagem de Usuários</h1>
-<table class="table">
+<nav>
+    <div class="navbar">
+        <a id="inicio">Inicio</a>
+        <a id="pets">Pets</a>
+        <a id="produtos">Produtos</a>
+        <a id="servicos">Servicos</a>
+        <a id="listagem">Listagem</a>
+        <a id="cadastrarFuncionario">Cadastrar funcionário</a>
+    </div>
+</nav>
+
+<div class="main">
+    <table class="table">
     <thead class="bg-light">
     <tr class="rounded-top">
         <th scope="col">Nome</th>
@@ -31,32 +96,36 @@
     </thead>
     <tbody>
     <!-- Linhas para clientes -->
-    <tr th:each="cliente : ${clientes}">
+    <tr th:id="${cliente.email}" th:each="cliente : ${clientes}">
         <td th:text="${cliente.nome}"></td>
         <td th:text="${cliente.email}"></td>
         <td th:text="${cliente.dataNascimento}"></td>
         <td th:text="${cliente.telefone}"></td>
         <td>Cliente</td>
         <td>
-            <i class="fas fa-edit edit-icon" onclick="editarUsuario('${cliente.nome}', '${cliente.email}', '${cliente.dataNascimento}', '${cliente.telefone}')"></i>
+            <i class="fas fa-edit edit-icon" onclick="editarUsuario(this.parentElement.parentElement.id)"></i>
             <i class="fas fa-trash-alt delete-icon"></i>
         </td>
     </tr>
     <!-- Linhas para funcionários -->
-    <tr th:each="funcionario : ${funcionarios}">
+    <tr th:id="${funcionario.email}" th:each="funcionario : ${funcionarios}" data-email="${funcionario.email}">
         <td th:text="${funcionario.nome}"></td>
-        <td th:text="${funcionario.email}"></td>
+        <td id="funcionarioEmail" th:text="${funcionario.email}"></td>
         <td th:text="${funcionario.dataNascimento}"></td>
         <td th:text="${funcionario.telefone}"></td>
         <td>Funcionário</td>
         <td>
-            <i class="fas fa-edit edit-icon" onclick="editarUsuario('${funcionario.nome}', '${funcionario.email}', '${funcionario.dataNascimento}', '${funcionario.telefone}')"></i>
+            <i class="fas fa-edit edit-icon" onclick="editarUsuario(this.parentElement.parentElement.id)"
+               data-email="${funcionario.email}"></i>
             <i class="fas fa-trash-alt delete-icon"></i>
         </td>
     </tr>
     </tbody>
 </table>
-<div class="modal fade" id="editarUsuarioModal" tabindex="-1" role="dialog" aria-labelledby="editarUsuarioModalLabel" aria-hidden="true">
+</div>
+
+<div class="modal fade" id="editarUsuarioModal" tabindex="-1" role="dialog" aria-labelledby="editarUsuarioModalLabel"
+     aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -97,15 +166,41 @@
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 <script>
-    function editarUsuario(nome, email, dataNascimento, telefone) {
-        // Atualizar os campos do modal com os dados do usuário selecionado
-        document.getElementById('nome').value = nome;
-        document.getElementById('email').value = email;
-        document.getElementById('dataNascimento').value = dataNascimento;
-        document.getElementById('telefone').value = telefone;
 
-        // Exibir o modal
-        $('#editarUsuarioModal').modal('show');
+    document.getElementById("inicio").addEventListener("click", function () {
+        window.location.href = "/usuario/inicial";
+    });
+
+    document.getElementById("listagem").addEventListener("click", function () {
+        window.location.href = "/usuario/listagem";
+    });
+
+    document.getElementById("cadastrarFuncionario").addEventListener("click", function () {
+        window.location.href = "/usuario/cadastro-funcionario";
+    });
+
+    function editarUsuario(element) {
+        var email = element;
+        console.log('Editar usuário com e-mail: ', element);
+        // Continuação da sua lógica...
+        // Enviar solicitação AJAX para buscar os dados do usuário
+        $.ajax({
+            url: '/usuario/' + email,
+            type: 'GET',
+            success: function (usuario) {
+                // Atualizar os campos do modal com os dados recebidos
+                document.getElementById('nome').value = usuario.nome;
+                document.getElementById('email').value = usuario.email;
+                document.getElementById('dataNascimento').value = usuario.dataNascimento;
+                document.getElementById('telefone').value = usuario.telefone;
+
+                // Exibir o modal
+                $('#editarUsuarioModal').modal('show');
+            },
+            error: function () {
+                alert('Erro ao buscar os dados do usuário. Por favor, tente novamente.');
+            }
+        });
     }
 
     function salvarMudancas() {
@@ -123,11 +218,11 @@
             type: 'PUT',
             contentType: 'application/json',
             data: JSON.stringify(usuario),
-            success: function(response) {
+            success: function (response) {
                 alert('Usuário atualizado com sucesso!');
                 location.reload();
             },
-            error: function(error) {
+            error: function (error) {
                 alert('Erro ao atualizar o usuário. Por favor, tente novamente.');
             }
         });

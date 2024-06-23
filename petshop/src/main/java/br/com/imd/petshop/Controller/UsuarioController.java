@@ -3,6 +3,7 @@ package br.com.imd.petshop.Controller;
 import br.com.imd.petshop.DTO.ClienteDTO;
 import br.com.imd.petshop.DTO.FuncionarioDTO;
 import br.com.imd.petshop.DTO.UsuarioDTO;
+import br.com.imd.petshop.Entity.Usuario;
 import br.com.imd.petshop.Entity.UsuarioLogado;
 import br.com.imd.petshop.Service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +37,7 @@ public class UsuarioController {
         return "cadastrar-usuario-cliente";
     }
 
-    @GetMapping("/cadastro/funcionario")
+    @GetMapping("/cadastro-funcionario")
     public String cadastroFuncionario() {
         return "cadastrar-usuario-funcionario";
     }
@@ -66,10 +67,15 @@ public class UsuarioController {
     }
 
     @PostMapping("/logar")
-    public ModelAndView login(@RequestParam("email") String email, @RequestParam("senha") String senha) {
+    public String login(@RequestParam("email") String email, @RequestParam("senha") String senha, Model model) {
         String redirect = usuarioService.login(email, senha);
-        return new ModelAndView(redirect);
+        if (redirect.equals("redirect:/")) {
+            model.addAttribute("erro", "Usuário ou senha inválidos");
+            return "tela-login";
+        }
+        return redirect;
     }
+
 
     @GetMapping("/inicial")
     public String inicial() {
@@ -84,6 +90,21 @@ public class UsuarioController {
         model.addAttribute("funcionarios", funcionarios);
         model.addAttribute("email", usuarioLogado.getEmail());
         return "listagem-usuario";
+    }
+
+    @GetMapping("/{email}")
+    public ResponseEntity<?> obterUsuarioPorEmail(@PathVariable String email) {
+        ClienteDTO clienteDTO = usuarioService.obterClienteDTO(email);
+        if (clienteDTO != null) {
+            return ResponseEntity.ok(clienteDTO);
+        }
+
+        FuncionarioDTO funcionarioDTO = usuarioService.obterFuncionarioDTO(email);
+        if (funcionarioDTO != null) {
+            return ResponseEntity.ok(funcionarioDTO);
+        }
+
+        return ResponseEntity.notFound().build();
     }
 
 

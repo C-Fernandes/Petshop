@@ -1,6 +1,7 @@
 package br.com.imd.petshop.DTO;
 
 import br.com.imd.petshop.Entity.Cep;
+import br.com.imd.petshop.Entity.Usuario;
 
 import java.util.Date;
 
@@ -104,4 +105,5 @@ public class FuncionarioDTO {
     public void setDataNascimento(Date dataNascimento) {
         this.dataNascimento = dataNascimento;
     }
+
 }

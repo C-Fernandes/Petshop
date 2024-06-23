@@ -196,5 +196,32 @@ public class UsuarioService {
         return funcionarioRepository.listarFuncionariosComUsuarios();
     }
 
+    public ClienteDTO convertToClienteDTO(Usuario usuario) {
+        ClienteDTO clienteDto = new ClienteDTO();
+        // Preencha os campos do DTO com as informações do cliente
+        return clienteDto;
+    }
+
+    public FuncionarioDTO convertToFuncionarioDTO(Usuario usuario) {
+        FuncionarioDTO funcionarioDto = new FuncionarioDTO();
+        // Preencha os campos do DTO com as informações do funcionário
+        return funcionarioDto;
+    }
+
+    public ClienteDTO obterClienteDTO(String email) {
+        ClienteDTO cliente = clienteRepository.findClienteDTOByEmail(email);
+        if (cliente != null) {
+            return cliente;
+        }
+        return null; // Ou lançar uma exceção, dependendo da lógica de negócios
+    }
+
+    public FuncionarioDTO obterFuncionarioDTO(String email) {
+        FuncionarioDTO funcionario = funcionarioRepository.findFuncionarioDTOByEmail(email);
+        if (funcionario != null) {
+            return funcionario;
+        }
+        return null; // Ou lançar uma exceção, dependendo da lógica de negócios
+    }
 
 }
