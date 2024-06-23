@@ -6,6 +6,7 @@ import br.com.imd.petshop.DTO.UsuarioDTO;
 import br.com.imd.petshop.Entity.Cliente;
 import br.com.imd.petshop.Entity.Funcionario;
 import br.com.imd.petshop.Entity.Usuario;
+import br.com.imd.petshop.Entity.UsuarioLogado;
 import br.com.imd.petshop.Repository.CepRepository;
 import br.com.imd.petshop.Repository.ClienteRepository;
 import br.com.imd.petshop.Repository.FuncionarioRepository;
@@ -33,14 +34,16 @@ public class UsuarioService {
     private final FuncionarioRepository funcionarioRepository;
     private final CepRepository cepRepository;
     private final BCryptPasswordEncoder passwordEncoder;
+    private final UsuarioLogado usuarioLogado;
 
     @Autowired
     public UsuarioService(UsuarioRepository usuarioRepository, CepRepository cepRepository, BCryptPasswordEncoder passwordEncoder,
-                          ClienteRepository clienteRepository, FuncionarioRepository funcionarioRepository) {
+                          ClienteRepository clienteRepository, FuncionarioRepository funcionarioRepository, UsuarioLogado usuarioLogado) {
         this.cepRepository = cepRepository;
         this.passwordEncoder = passwordEncoder;
         this.clienteRepository = clienteRepository;
         this.funcionarioRepository = funcionarioRepository;
+        this.usuarioLogado = usuarioLogado;
     }
 
     public void cadastrarUsuario(UsuarioDTO usuarioDto) {
@@ -157,12 +160,15 @@ public class UsuarioService {
         Usuario usuario = usuarioRepository.findByEmail(email);
         if (usuario != null && passwordEncoder.matches(senha, usuario.getSenha())) {
             Cliente cliente = clienteRepository.findByUsuario(String.valueOf(usuario.getEmail()));
+            usuarioLogado.setEmail(email);
+
             if (cliente != null) {
-                return "redirect:/cliente/home";
+                return "redirect:/pets/cadastro";
             } else {
                 Funcionario funcionario = funcionarioRepository.findByUsuario(String.valueOf(usuario.getEmail()));
+                usuarioLogado.setEmail(email);
                 if (funcionario != null) {
-                    return "redirect:/funcionario/home";
+                    return "redirect:/usuario/listagem";
                 }
             }
         }            return "redirect:/";

@@ -3,8 +3,7 @@ package br.com.imd.petshop.Controller;
 import br.com.imd.petshop.DTO.ClienteDTO;
 import br.com.imd.petshop.DTO.FuncionarioDTO;
 import br.com.imd.petshop.DTO.UsuarioDTO;
-import br.com.imd.petshop.Entity.Pet;
-import br.com.imd.petshop.Entity.Usuario;
+import br.com.imd.petshop.Entity.UsuarioLogado;
 import br.com.imd.petshop.Service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,14 +19,15 @@ import java.util.List;
 import java.util.Map;
 
 @Controller
-
 @RequestMapping("/usuario")
 public class UsuarioController {
     private final UsuarioService usuarioService;
+    private final UsuarioLogado usuarioLogado;
 
     @Autowired
-    public UsuarioController(UsuarioService usuarioService) {
+    public UsuarioController(UsuarioService usuarioService, UsuarioLogado usuarioLogado) {
         this.usuarioService = usuarioService;
+        this.usuarioLogado = usuarioLogado;
     }
 
 
@@ -82,6 +82,7 @@ public class UsuarioController {
         List<FuncionarioDTO> funcionarios = usuarioService.listarFuncionariosComUsuarios();
         model.addAttribute("clientes", clientes);
         model.addAttribute("funcionarios", funcionarios);
+        model.addAttribute("email", usuarioLogado.getEmail());
         return "listagem-usuario";
     }
 
