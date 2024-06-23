@@ -24,13 +24,14 @@ public class PedidoController {
     private final PedidoService pedidoService;
     private final UsuarioService usuarioService;
     private final ProdutoService produtoService;
-    private final PedidoHasProdutoService pedidoHasProdutoService;
 
-    public PedidoController(PedidoService pedidoService, UsuarioService usuarioService, ProdutoService produtoService, PedidoHasProdutoService pedidoHasProdutoService) {
+    @Autowired
+    private PedidoHasProdutoService pedidoHasProdutoService;
+
+    public PedidoController(PedidoService pedidoService, UsuarioService usuarioService, ProdutoService produtoService) {
         this.pedidoService = pedidoService;
         this.usuarioService = usuarioService;
         this.produtoService = produtoService;
-        this.pedidoHasProdutoService = pedidoHasProdutoService;
     }
 
     @GetMapping("/")
@@ -43,8 +44,8 @@ public class PedidoController {
     }
 
     @GetMapping("/list")
-    public String findAll(Model model) {
-        model.addAttribute("pedidos", pedidoHasProdutoService.listarPedidoHasProdutos());
+    public String findAll(Model model, @RequestParam(required = false) String email) {
+        model.addAttribute("pedidos", pedidoHasProdutoService.listarPedidoHasProdutos(email));
         return "listagem-pedidos";
     }
 

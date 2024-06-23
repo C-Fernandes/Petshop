@@ -21,7 +21,7 @@ public class PedidoHasProdutoService {
         pedidoHasProdutoRepository.save(pedidoHasProduto, func, cliente);
     }
 
-   public List<PedidoHasProdutoDTO> listarPedidoHasProdutos(){
-        return pedidoHasProdutoRepository.listarProdutosPorPedido();
+   public List<PedidoHasProdutoDTO> listarPedidoHasProdutos(String email){
+        return pedidoHasProdutoRepository.listarProdutosPorPedido(email);
    }
 }
