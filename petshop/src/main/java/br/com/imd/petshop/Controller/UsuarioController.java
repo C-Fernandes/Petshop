@@ -123,5 +123,9 @@ public class UsuarioController {
         }
         return ResponseEntity.ok().build();
     }
-
+    @PutMapping("/desativar")
+    public ResponseEntity<?> desativarUsuario(@RequestBody UsuarioDTO usuarioDTO) {
+        usuarioService.desativarUsuario(usuarioDTO.getEmail());
+        return ResponseEntity.ok().build();
+    }
 }

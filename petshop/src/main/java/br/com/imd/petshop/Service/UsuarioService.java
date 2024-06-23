@@ -296,4 +296,13 @@ public class UsuarioService {
         return ResponseEntity.ok().build();
     }
 
+    public void desativarUsuario(String email) {
+        Usuario usuario = usuarioRepository.findByEmail(email);
+        if (usuario != null) {
+            usuarioRepository.desativarUsuario(email);
+            // Desativar os pets associados ao usuário
+        }
+    }
+
+
 }

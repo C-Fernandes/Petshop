@@ -14,6 +14,8 @@ public class Solicitacao {
 
     private Servico servico;
 
+    private Boolean active;
+
     public Long getId() {
         return id;
     }
@@ -52,5 +54,13 @@ public class Solicitacao {
 
     public void setServico(Servico servico) {
         this.servico = servico;
+    }
+
+    public Boolean getActive() {
+        return active;
+    }
+
+    public void setActive(Boolean active) {
+        this.active = active;
     }
 }

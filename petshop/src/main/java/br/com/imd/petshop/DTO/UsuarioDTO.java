@@ -17,6 +17,7 @@ public class UsuarioDTO {
     private Cep cep;
     private Long qtdPontos;
     private String cargo;
+    private Boolean active;
 
     public String getEmail() {
         return email;
@@ -112,5 +113,13 @@ public class UsuarioDTO {
 
     public void setCargo(String cargo) {
         this.cargo = cargo;
+    }
+
+    public Boolean getActive() {
+        return active;
+    }
+
+    public void setActive(Boolean active) {
+        this.active = active;
     }
 }

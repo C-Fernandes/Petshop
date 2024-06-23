@@ -16,6 +16,7 @@ public class ClienteDTO {
     private String bairro;
     private Cep cep;
     private Long qtdPontos;
+    private Boolean active;
     public String getEmail() {
         return email;
     }
@@ -102,5 +103,13 @@ public class ClienteDTO {
 
     public void setQtdPontos(Long qtdPontos) {
         this.qtdPontos = qtdPontos;
+    }
+
+    public Boolean getActive() {
+        return active;
+    }
+
+    public void setActive(Boolean active) {
+        this.active = active;
     }
 }

@@ -58,7 +58,7 @@ public class ClienteRepository {
     }
 
     public List<ClienteDTO> listarClientesComUsuarios() {
-        String sql = "SELECT c.usuario_email, c.qtd_pontos, u.nome, u.telefone, u.data_nascimento FROM cliente c INNER JOIN usuario u ON c.usuario_email = u.email";
+        String sql = "SELECT c.usuario_email, c.qtd_pontos, u.nome, u.telefone, u.data_nascimento FROM cliente c INNER JOIN usuario u ON c.usuario_email = u.email WHERE u.active = true";
         List<ClienteDTO> clientes = new ArrayList<>();
         try (Connection conn = DataBaseConfig.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql);
