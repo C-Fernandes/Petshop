@@ -28,4 +28,8 @@ public class PedidoHasProdutoService {
    public void deletarPedidoHasProduto(Long id) {
         pedidoHasProdutoRepository.deletarPedidoHasProduto(id);
    }
+
+   public void deletarPedidoHasProduto(Long idPedido, Long idProduto) {
+        pedidoHasProdutoRepository.deletarPedidoHasProduto(idPedido, idProduto);
+   }
 }

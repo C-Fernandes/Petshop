@@ -1,11 +1,8 @@
 package br.com.imd.petshop.Controller;
 
-import br.com.imd.petshop.DTO.CarrinhoDTO;
 import br.com.imd.petshop.DTO.PedidoDTO;
 import br.com.imd.petshop.DTO.PedidoHasProdutoDTO;
-import br.com.imd.petshop.Entity.Pedido;
 import br.com.imd.petshop.Entity.Produto;
-import br.com.imd.petshop.Repository.PedidoHasProdutoRepository;
 import br.com.imd.petshop.Service.PedidoHasProdutoService;
 import br.com.imd.petshop.Service.PedidoService;
 import br.com.imd.petshop.Service.ProdutoService;
@@ -61,7 +58,7 @@ public class PedidoController {
     @PostMapping("/{id}")
     public String findById(@PathVariable Long id, Model model,  HttpSession session) {
         List<PedidoHasProdutoDTO> pedido = pedidoService.findByPedidoId(id);
-        session.setAttribute("pedidoEmEdicao", pedido); // Set a meaningful attribute name
+        session.setAttribute("pedidoEmEdicao", pedido);
         model.addAttribute("pedido", pedido);
         return "redirect:/pedido/";
     }
@@ -72,9 +69,10 @@ public class PedidoController {
         return "redirect:/pedido/list";
     }
 
-    @PutMapping("/update/{id}")
-    public String update(Long id, Pedido pedido) {
-        return "";
+    @PostMapping("/update/{funcionarioId}/{clienteId}")
+    public String update(@RequestBody PedidoHasProdutoDTO pedidoHasProdutoDTO, @PathVariable String funcionarioId, @PathVariable String clienteId) {
+        pedidoService.update(pedidoHasProdutoDTO);
+        return "redirect:/pedido/list";
     }
 
     @DeleteMapping("/{id}")

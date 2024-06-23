@@ -1,7 +1,6 @@
 package br.com.imd.petshop.Repository;
 
 import br.com.imd.petshop.Config.DataBaseConfig;
-import br.com.imd.petshop.Entity.Cep;
 import br.com.imd.petshop.Entity.Cliente;
 import br.com.imd.petshop.Entity.Usuario;
 import org.springframework.stereotype.Repository;

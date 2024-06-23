@@ -75,26 +75,66 @@
 
       </div>
     </div>
-    <button id="finalizarCompra" type="button" class="btn btn-sm btn-outline-primary"></button>
+    <button id="finalizarCompra" th:if="${pedidoEmEdicao == null}" type="button" class="btn btn-sm btn-outline-primary">Finalizar pedido</button>
+    <button id="atualizarCompra" th:if="${pedidoEmEdicao != null}" type="button" class="btn btn-sm btn-outline-primary">Atualizar pedido</button>
   </div>
 
   <script src="/scripts/carrinho.js"></script>
-
   <script th:inline="javascript">
   var pedidoEmEdicao = /*[[${pedidoEmEdicao}]]*/ [];
-  var btn = document.getElementById("finalizarCompra");
 
   if (pedidoEmEdicao.length > 0) {
-    btn.innerText = 'Atualizar Compra';
     var pedidoId = pedidoEmEdicao[0].pedido_id;
     console.log('ID do Pedido em Edição:', pedidoId);
     const produtos = pedidoEmEdicao[0].produtos;
     produtos.forEach(produto => {
       addProduto(produto.produto_nome, produto.produto_preco, produto.produto_id, produto.quantidade);
     });
-  } else {
-    btn.innerText = 'Finalizar Compra';
   }
-</script>
+
+  const atualizarCompra = document.getElementById("atualizarCompra");
+
+  atualizarCompra.addEventListener('click', () => {
+    const funcionarioId = document.getElementById("funcionario").value;
+    const clienteId = document.getElementById("cliente").value;
+
+    const carrinhoDTO = carrinho.map(item => ({
+      produto_nome: item.nome,
+      quantidade: item.qtd,
+      produto_id: item.id,
+      produto_preco: item.preco
+    }));
+
+    fetch(`/pedido/update/${funcionarioId}/${clienteId}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        valor: total,
+        data: new Date().toISOString(),
+        status: "ativo",
+        produtos: carrinhoDTO,
+        funcionarioId: funcionarioId,
+        clienteId: clienteId,
+        pedido_id: pedidoId
+      })
+    })
+            .then(response => {
+              if (!response.ok) {
+                return response.json().then(errors => {
+                  errors.forEach(error => {
+                    console.error(error);
+                  });
+                });
+              } else {
+                window.location.href = '/pedido/list';
+              }
+            })
+            .catch(error => {
+              console.error('Erro na atualização do pedido:', error);
+            });
+  });
+  </script>
 </body>
 </html>

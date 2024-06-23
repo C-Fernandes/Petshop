@@ -10,8 +10,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Date;
 
 @Repository
 public class PedidoRepository {
@@ -54,6 +53,21 @@ public class PedidoRepository {
             ps.setLong(1, id);
             ps.executeUpdate();
         } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void update(double valor, Date data, Long id) {
+        String sql = "UPDATE pedido SET valor = ?, data = ? WHERE id = ?";
+
+        try (Connection conn = DataBaseConfig.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setDouble(1, valor);
+            ps.setDate(2, new java.sql.Date(new Date().getTime()));
+            ps.setLong(3, id);
+            ps.executeUpdate();
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

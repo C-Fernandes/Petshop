@@ -11,6 +11,10 @@ public class PedidoHasProdutoDTO {
 
     private double valor;
 
+    private String clienteId;
+
+    private String funcionarioId;
+
     private List<ProdutoListDTO> produtos;
 
     public List<ProdutoListDTO> getProdutos() {
@@ -27,6 +31,22 @@ public class PedidoHasProdutoDTO {
 
     public void setValor(double valor) {
         this.valor = valor;
+    }
+
+    public String getClienteId() {
+        return clienteId;
+    }
+
+    public void setClienteId(String clienteId) {
+        this.clienteId = clienteId;
+    }
+
+    public String getFuncionarioId() {
+        return funcionarioId;
+    }
+
+    public void setFuncionarioId(String funcionarioId) {
+        this.funcionarioId = funcionarioId;
     }
 
     public Date getData() {
