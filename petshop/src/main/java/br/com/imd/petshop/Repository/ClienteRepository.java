@@ -74,4 +74,30 @@ public class ClienteRepository {
         return clientes;
     }
 
+
+    public ClienteDTO findClienteDTOByEmail(String email) {
+        String sql = "SELECT c.qtd_pontos, u.nome, u.telefone, u.data_nascimento, u.logradouro, u.numero, u.bairro FROM cliente c INNER JOIN usuario u ON c.usuario_email = u.email WHERE u.email = ?";
+        try (Connection conn = DataBaseConfig.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, email);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    ClienteDTO clienteDTO = new ClienteDTO();
+                    clienteDTO.setEmail(email);
+                    clienteDTO.setQtdPontos(rs.getLong("qtd_pontos"));
+                    clienteDTO.setNome(rs.getString("nome"));
+                    clienteDTO.setTelefone(rs.getString("telefone"));
+                    clienteDTO.setDataNascimento(rs.getDate("data_nascimento"));
+                    clienteDTO.setLogradouro(rs.getString("logradouro"));
+                    clienteDTO.setNumero(rs.getLong("numero"));
+                    clienteDTO.setBairro(rs.getString("bairro"));
+                    return clienteDTO;
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
 }

@@ -3,6 +3,7 @@ package br.com.imd.petshop.Controller;
 import br.com.imd.petshop.DTO.ClienteDTO;
 import br.com.imd.petshop.DTO.FuncionarioDTO;
 import br.com.imd.petshop.DTO.UsuarioDTO;
+import br.com.imd.petshop.Entity.Usuario;
 import br.com.imd.petshop.Entity.UsuarioLogado;
 import br.com.imd.petshop.Service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +37,7 @@ public class UsuarioController {
         return "cadastrar-usuario-cliente";
     }
 
-    @GetMapping("/cadastro/funcionario")
+    @GetMapping("/cadastro-funcionario")
     public String cadastroFuncionario() {
         return "cadastrar-usuario-funcionario";
     }
@@ -84,6 +85,30 @@ public class UsuarioController {
         model.addAttribute("funcionarios", funcionarios);
         model.addAttribute("email", usuarioLogado.getEmail());
         return "listagem-usuario";
+    }
+    /*
+    @GetMapping("/{email}")
+    public ResponseEntity<Usuario> obterUsuarioPorEmail(@PathVariable String email) {
+        Usuario usuario = usuarioService.findUsuario(email);
+        if (usuario != null) {
+            return ResponseEntity.ok(usuario);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }*/
+    @GetMapping("/{email}")
+    public ResponseEntity<?> obterUsuarioPorEmail(@PathVariable String email) {
+        ClienteDTO clienteDTO = usuarioService.obterClienteDTO(email);
+        if (clienteDTO != null) {
+            return ResponseEntity.ok(clienteDTO);
+        }
+
+        FuncionarioDTO funcionarioDTO = usuarioService.obterFuncionarioDTO(email);
+        if (funcionarioDTO != null) {
+            return ResponseEntity.ok(funcionarioDTO);
+        }
+
+        return ResponseEntity.notFound().build();
     }
 
 

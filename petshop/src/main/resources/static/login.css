@@ -1,6 +1,6 @@
 body{
     height: 100vh;
-    width: 100vw;
+    max-width: 100vw;
     align-content: center;
     color: #a46c5c;
 }
@@ -69,4 +69,21 @@ body{
 
 .h1-title{
     color: #742a0f;;
+}
+
+.subscribe-button{
+    padding-top: 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.subscribe-button button{
+    border: none;
+    background-color: #742a0f;
+    color: white;
+    padding: .5rem 1rem;
+    border-radius: 20px;
+    margin-top: .5rem;
 }

@@ -73,4 +73,30 @@ public class FuncionarioRepository {
         return funcionarios;
     }
 
+    public FuncionarioDTO findFuncionarioDTOByEmail(String email) {
+        String sql = "SELECT f.cargo, u.nome, u.telefone, u.data_nascimento, u.logradouro, u.numero, u.bairro FROM funcionario f INNER JOIN usuario u ON f.usuario_email = u.email WHERE u.email = ?";
+        try (Connection conn = DataBaseConfig.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, email);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    FuncionarioDTO funcionarioDTO = new FuncionarioDTO();
+                    funcionarioDTO.setEmail(email);
+                    funcionarioDTO.setCargo(rs.getString("cargo"));
+                    funcionarioDTO.setNome(rs.getString("nome"));
+                    funcionarioDTO.setTelefone(rs.getString("telefone"));
+                    funcionarioDTO.setDataNascimento(rs.getDate("data_nascimento"));
+                    funcionarioDTO.setLogradouro(rs.getString("logradouro"));
+                    funcionarioDTO.setNumero(rs.getLong("numero"));
+                    funcionarioDTO.setBairro(rs.getString("bairro"));
+                    return funcionarioDTO;
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+
 }

@@ -3,6 +3,18 @@
     background-repeat: repeat;
     background-size: 4rem;
     background-position: top left;
+    width: 100vw;
+    overflow-x: hidden;
+}
+
+.a{
+    color: white;
+    text-decoration: none;
+}
+
+.a:hover{
+    color: #666666;
+    text-decoration: none;
 }
 
 main {
@@ -15,6 +27,7 @@ nav {
     color: white;
     font-size: 1.3rem;
     box-shadow: 0 5px 5px rgba(0, 0, 0, 0.3);
+    width: 100vw;
 }
 
 .initial {
@@ -117,4 +130,22 @@ main {
 i {
     font-size: 8rem;
     color: #fba383;
+}
+
+.btn-login{
+    background-color: #fba383;
+    padding: 0.2rem 1rem;
+    color: white;
+    outline: none;
+    border: none;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid transparent;
+}
+
+.btn-login:hover{
+    color: #666666;
+    border: 1px solid #742a0f;
 }
