@@ -2,8 +2,10 @@ package br.com.imd.petshop.Service;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
-
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -11,11 +13,15 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.Date;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import org.springframework.util.StringUtils;
+
+import br.com.imd.petshop.DTO.ProdutoDTO;
 import br.com.imd.petshop.Entity.Preco;
 import br.com.imd.petshop.Entity.Produto;
 import br.com.imd.petshop.Repository.PrecoRepository;
@@ -114,6 +120,41 @@ public class ProdutoService {
         return produtoRepository.findbyId(id);
     }
 
+    public List<Produto> buscarPorNome(String nome) {
+        return produtoRepository.findByNomeContainingIgnoreCase(nome);
+    }
+
+    public ResponseEntity<Map<String, Object>> validarProduto(ProdutoDTO produtoDTO) {
+        Produto produto = produtoDTO.getProduto();
+        Preco preco = produtoDTO.getPreco();
+        Map<String, Object> response = new HashMap<>();
+        List<String> errors = new ArrayList<>();
+
+        // Validando campos obrigatórios
+        if (produto.getNome() == null || produto.getNome().isEmpty() || produto.getNome().trim().equals("")) {
+            errors.add("O nome do produto é obrigatório.");
+        }
+        if (produto.getQuantidade() == null) {
+            errors.add("A quantidade é obrigatória.");
+        } else if (produto.getQuantidade() <= 0) {
+            errors.add("A quantidade deve ser maior que zero.");
+        }
+        if (preco.getValor() == null) {
+            errors.add("O preço é obrigatório.");
+        } else if (preco.getValor() <= 0) {
+            errors.add("O preço deve ser maior que zero.");
+        } else if (!String.valueOf(preco.getValor()).matches("^\\d+(\\.\\d{1,2})?(,\\d{1,2})?$")) {
+            errors.add("O preço deve conter apenas números, ponto ou vírgula.");
+        }
+        if (!errors.isEmpty()) {
+            response.put("errors", errors);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        }
+
+        return ResponseEntity.ok().build();
+
+    }
+
     public void removerImagem(String nomeImagem, String UPLOAD_DIR) {
         System.out.println("Nome imagem : " + nomeImagem);
         if (!nomeImagem.equals("padrao.jpeg")) {
@@ -138,4 +179,5 @@ public class ProdutoService {
         // Retorna apenas o caminho relativo da imagem, sem o prefixo do domínio
         return nomeImagem;
     }
+
 }

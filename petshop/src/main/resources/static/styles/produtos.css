@@ -125,3 +125,15 @@ a:hover {
 #imgProdutoAtualizacao {
   border: none;
 }
+#imgProdutoAtualizacao {
+  border: none;
+}
+.filtro {
+  margin: 0 1em 0 0;
+}
+.filtro input {
+  border-radius: 10px;
+}
+.filtro img {
+  width: 2em;
+}
