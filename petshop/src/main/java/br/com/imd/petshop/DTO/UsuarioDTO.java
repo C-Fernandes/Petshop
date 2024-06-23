@@ -42,8 +42,8 @@ public class UsuarioDTO {
         this.nome = nome;
     }
 
-    public Date getDataDeNascimento() {
-        return dataDeNascimento;
+    public java.sql.Date getDataDeNascimento() {
+        return (java.sql.Date) dataDeNascimento;
     }
 
     public void setDataDeNascimento(Date dataDeNascimento) {

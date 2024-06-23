@@ -3,6 +3,8 @@ package br.com.imd.petshop.Repository;
 import br.com.imd.petshop.Config.DataBaseConfig;
 import br.com.imd.petshop.DTO.ClienteDTO;
 import br.com.imd.petshop.DTO.FuncionarioDTO;
+import br.com.imd.petshop.DTO.UsuarioDTO;
+import br.com.imd.petshop.Entity.Cep;
 import br.com.imd.petshop.Entity.Funcionario;
 import br.com.imd.petshop.Entity.Usuario;
 import org.springframework.stereotype.Repository;
@@ -74,7 +76,11 @@ public class FuncionarioRepository {
     }
 
     public FuncionarioDTO findFuncionarioDTOByEmail(String email) {
-        String sql = "SELECT f.cargo, u.nome, u.telefone, u.data_nascimento, u.logradouro, u.numero, u.bairro FROM funcionario f INNER JOIN usuario u ON f.usuario_email = u.email WHERE u.email = ?";
+        String sql = "SELECT f.cargo, u.nome, u.telefone, u.data_nascimento, u.logradouro, u.numero, u.bairro, u.cep, c.cidade, c.estado " +
+                "FROM funcionario f " +
+                "INNER JOIN usuario u ON f.usuario_email = u.email " +
+                "LEFT JOIN cep c ON u.cep = c.cep " +
+                "WHERE u.email = ?";
         try (Connection conn = DataBaseConfig.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, email);
@@ -89,6 +95,13 @@ public class FuncionarioRepository {
                     funcionarioDTO.setLogradouro(rs.getString("logradouro"));
                     funcionarioDTO.setNumero(rs.getLong("numero"));
                     funcionarioDTO.setBairro(rs.getString("bairro"));
+
+                    Cep cep = new Cep();
+                    cep.setCep(rs.getString("cep"));
+                    cep.setCidade(rs.getString("cidade"));
+                    cep.setEstado(rs.getString("estado"));
+
+                    funcionarioDTO.setCep(cep);
                     return funcionarioDTO;
                 }
             }
@@ -97,6 +110,51 @@ public class FuncionarioRepository {
         }
         return null;
     }
+
+    public void atualizarFuncionario(UsuarioDTO usuarioDTO) {
+        String updateUsuarioSql = "UPDATE usuario SET nome = ?, telefone = ?, logradouro = ?, numero = ?, bairro = ? WHERE email = ?";
+        String updateCepUsuarioSql = "UPDATE usuario SET cep = ? WHERE email = ?";
+        String updateCepSql = "UPDATE cep SET cidade = ?, estado = ? WHERE cep = ?";
+        String updateFuncionarioSql = "UPDATE funcionario SET cargo = ? WHERE usuario_email = ?";
+
+        try (Connection conn = DataBaseConfig.getConnection()) {
+            // Atualiza os dados do usuário na tabela usuario
+            try (PreparedStatement ps = conn.prepareStatement(updateUsuarioSql)) {
+                ps.setString(1, usuarioDTO.getNome());
+                ps.setString(2, usuarioDTO.getTelefone());
+                ps.setString(3, usuarioDTO.getLogradouro());
+                ps.setLong(4, usuarioDTO.getNumero());
+                ps.setString(5, usuarioDTO.getBairro());
+                ps.setString(6, usuarioDTO.getEmail());
+                ps.executeUpdate();
+            }
+
+            // Atualiza o cep do usuário na tabela usuario
+            try (PreparedStatement ps = conn.prepareStatement(updateCepUsuarioSql)) {
+                ps.setString(1, usuarioDTO.getCep().getCep());
+                ps.setString(2, usuarioDTO.getEmail());
+                ps.executeUpdate();
+            }
+
+            // Atualiza o cep na tabela cep
+            try (PreparedStatement ps = conn.prepareStatement(updateCepSql)) {
+                ps.setString(1, usuarioDTO.getCep().getCidade());
+                ps.setString(2, usuarioDTO.getCep().getEstado());
+                ps.setString(3, usuarioDTO.getCep().getCep());
+                ps.executeUpdate();
+            }
+
+            // Atualiza o cargo do funcionário
+            try (PreparedStatement ps = conn.prepareStatement(updateFuncionarioSql)) {
+                ps.setString(1, usuarioDTO.getCargo());
+                ps.setString(2, usuarioDTO.getEmail());
+                ps.executeUpdate();
+            }
+        } catch (SQLException e) {
+            throw new IllegalArgumentException("Erro ao atualizar cliente: " + e.getMessage(), e);
+        }
+    }
+
 
 
 }
