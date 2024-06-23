@@ -9,7 +9,6 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
   <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" rel="stylesheet"/>
   <link rel="stylesheet" href="/styles/produtos.css" />
-  <script async src="/scripts/carrinho.js"></script>
 </head>
 <body>
 <header>
@@ -76,8 +75,26 @@
 
       </div>
     </div>
-    <button id="finalizarCompra" type="button" class="btn btn-sm btn-outline-primary">Finalizar Compra</button>
+    <button id="finalizarCompra" type="button" class="btn btn-sm btn-outline-primary"></button>
   </div>
-</main>
+
+  <script src="/scripts/carrinho.js"></script>
+
+  <script th:inline="javascript">
+  var pedidoEmEdicao = /*[[${pedidoEmEdicao}]]*/ [];
+  var btn = document.getElementById("finalizarCompra");
+
+  if (pedidoEmEdicao.length > 0) {
+    btn.innerText = 'Atualizar Compra';
+    var pedidoId = pedidoEmEdicao[0].pedido_id;
+    console.log('ID do Pedido em Edição:', pedidoId);
+    const produtos = pedidoEmEdicao[0].produtos;
+    produtos.forEach(produto => {
+      addProduto(produto.produto_nome, produto.produto_preco, produto.produto_id, produto.quantidade);
+    });
+  } else {
+    btn.innerText = 'Finalizar Compra';
+  }
+</script>
 </body>
 </html>

@@ -30,11 +30,14 @@ public class PedidoHasProdutoRepository {
         }
     }
 
-   public List<PedidoHasProdutoDTO> listarProdutosPorPedido(String email) {
+   public List<PedidoHasProdutoDTO> listarProdutosPorPedido(String email, Long id) {
         String sql = "SELECT DISTINCT p.id AS pedido_id, p.data, p.valor, pr.id AS produto_id, pr.nome AS produto_nome, preco.valor AS preco_produto,  php.quantidade FROM pedido_has_produto php JOIN pedido p ON php.pedido_id = p.id JOIN produto pr ON php.produto_id = pr.id JOIN produto_has_preco pp ON pp.produto_id = pr.id JOIN preco ON preco.id = pp.preco_id ";
         if (email != null) {
             sql += " WHERE p.cliente_usuario_email = ? ";
         }
+       if (id != null) {
+           sql += " WHERE p.id = ? ";
+       }
         sql += " ORDER BY p.id ";
 
         List<PedidoHasProdutoDTO> pedidos = new ArrayList<>();
@@ -43,6 +46,10 @@ public class PedidoHasProdutoRepository {
             PreparedStatement ps = conn.prepareStatement(sql)) {
             if (email != null) {
                 ps.setString(1, email);
+            }
+
+            if (id != null) {
+                ps.setLong(1, id);
             }
 
             try (ResultSet rs = ps.executeQuery()) {

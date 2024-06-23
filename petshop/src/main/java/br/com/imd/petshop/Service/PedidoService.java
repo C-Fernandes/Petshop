@@ -31,8 +31,12 @@ public class PedidoService {
     @Autowired
     private ProdutoService produtoService;
 
-    public List<PedidoHasProdutoDTO> findaAll(String email) {
-        return pedidoHasProdutoService.listarPedidoHasProdutos(email);
+    public List<PedidoHasProdutoDTO> findaAll(String email, Long id) {
+        return pedidoHasProdutoService.listarPedidoHasProdutos(email, id);
+    }
+
+    public List<PedidoHasProdutoDTO> findByPedidoId(Long id) {
+        return pedidoHasProdutoService.listarPedidoHasProdutos(null, id);
     }
 
     public void save(PedidoDTO pedido) {

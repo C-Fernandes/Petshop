@@ -16,7 +16,7 @@
             <th scope="col">Data</th>
             <th scope="col">Valor</th>
             <th scope="col">Produtos</th>
-            <th scope="col">Cancelar</th>
+            <th scope="col">Ações</th>
         </tr>
         </thead>
         <tbody>
@@ -33,13 +33,18 @@
                     </li>
                 </ul>
             </td>
-            <td><button class="btn btn-danger cancelarPedido" th:attr="data-pedido-id=${pedido.pedido_id}">Cancelar</button></td>
+            <td>
+                <button class="btn btn-danger cancelarPedido" th:attr="data-pedido-id=${pedido.pedido_id}" style="margin-left: 5px">Cancelar</button>
+                <button class="btn btn-success atualizarPedido" th:attr="data-pedido-id=${pedido.pedido_id}">Atualizar</button>
+            </td>
         </tr>
         </tbody>
     </table>
 </div>
 <script>
     const botoesCancelar = document.querySelectorAll('.cancelarPedido');
+    const botoesAtualizar = document.querySelectorAll('.atualizarPedido');
+    var carrinho = []
 
     botoesCancelar.forEach(botao => {
         botao.addEventListener('click', function (event) {
@@ -67,6 +72,39 @@
                 })
         });
     });
+
+    botoesAtualizar.forEach(botao => {
+        botao.addEventListener('click', function (event) {
+            const pedidoId = this.getAttribute('data-pedido-id');
+
+            console.log('Pedido:', pedidoId);
+
+            fetch(`/pedido/${pedidoId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    id: pedidoId
+                })
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        return response.json().then(errors => {
+                            errors.forEach(error => {
+                                console.error(error);
+                            });
+                        });
+                    } else {
+                        window.location.href = '/pedido/';
+                    }
+                })
+                .catch(error => {
+                    console.error('Erro ao enviar requisição:', error);
+                });
+        });
+    });
+
 </script>
 </body>
 </html>

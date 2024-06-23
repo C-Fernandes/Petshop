@@ -10,6 +10,7 @@ import br.com.imd.petshop.Service.PedidoHasProdutoService;
 import br.com.imd.petshop.Service.PedidoService;
 import br.com.imd.petshop.Service.ProdutoService;
 import br.com.imd.petshop.Service.UsuarioService;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -37,7 +38,13 @@ public class PedidoController {
     }
 
     @GetMapping("/")
-    public String index(Model model) {
+    public String index(Model model, HttpSession session) {
+        List<PedidoHasProdutoDTO> pedidoEmEdicao = (List<PedidoHasProdutoDTO>) session.getAttribute("pedidoEmEdicao");
+
+        if (pedidoEmEdicao != null) {
+            System.out.println("pedido id" + pedidoEmEdicao.get(0).getPedido_id());
+            model.addAttribute("pedidoEmEdicao", pedidoEmEdicao); // Use a descriptive attribute name
+        }
         model.addAttribute("clientes", usuarioService.findAllClientes());
         model.addAttribute("funcionarios", usuarioService.findAllFuncionarios());
         model.addAttribute("produtos", produtoService.findAll());
@@ -47,8 +54,16 @@ public class PedidoController {
 
     @GetMapping("/list")
     public String findAll(Model model, @RequestParam(required = false) String email) {
-        model.addAttribute("pedidos", pedidoHasProdutoService.listarPedidoHasProdutos(email));
+        model.addAttribute("pedidos", pedidoHasProdutoService.listarPedidoHasProdutos(email, null));
         return "listagem-pedidos";
+    }
+
+    @PostMapping("/{id}")
+    public String findById(@PathVariable Long id, Model model,  HttpSession session) {
+        List<PedidoHasProdutoDTO> pedido = pedidoService.findByPedidoId(id);
+        session.setAttribute("pedidoEmEdicao", pedido); // Set a meaningful attribute name
+        model.addAttribute("pedido", pedido);
+        return "redirect:/pedido/";
     }
 
     @PostMapping("/create/{funcionarioId}/{clienteId}")
