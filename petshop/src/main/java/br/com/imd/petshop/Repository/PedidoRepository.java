@@ -46,24 +46,6 @@ public class PedidoRepository {
         return null;
     }
 
-    public List<Pedido> findAll() {
-        String sql = "SELECT * FROM pedido";
-        List<Pedido> pedidos = new ArrayList<>();
-
-        try (Connection conn = DataBaseConfig.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql);
-             ResultSet rs = ps.executeQuery()) {
-            while (rs.next()) {
-                Pedido pedido = mapRow(rs);
-                pedidos.add(pedido);
-            }
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return pedidos;
-    }
-
     public void delete(Long id) {
         String sql = "DELETE FROM pedido WHERE id = ?";
 
@@ -84,6 +66,16 @@ public class PedidoRepository {
         pedido.setStatus(rs.getString("status"));
         pedido.setFuncionario(rs.getObject("funcionario", Funcionario.class));
         pedido.setCliente(rs.getObject("cliente", Cliente.class));
+        return pedido;
+    }
+
+
+    private Pedido mapRowList(ResultSet rs) throws SQLException {
+        Pedido pedido = new Pedido();
+        pedido.setId(rs.getLong("id"));
+        pedido.setValor(rs.getDouble("valor"));
+        pedido.setData(rs.getDate("data"));
+        pedido.setStatus(rs.getString("status"));
         return pedido;
     }
 }

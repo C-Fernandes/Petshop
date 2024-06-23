@@ -32,12 +32,12 @@ public class ProdutoService {
             Preco precoMenorQuantidadeDias = new Preco();
 
             for (Preco preco : precosProduto) {
-                System.out.println("preco retornado: " + preco.getValor());
+               // System.out.println("preco retornado: " + preco.getValor());
                 long diasPassados = ChronoUnit.DAYS.between(new Date(preco.getData().getTime()).toLocalDate(),
                         LocalDate.now());
 
-                System.out.println("Menor quantidade de dias " + menorQuantidadeDias);
-                System.out.println("dias passados: " + diasPassados);
+             //   System.out.println("Menor quantidade de dias " + menorQuantidadeDias);
+               // System.out.println("dias passados: " + diasPassados);
 
                 if (diasPassados < menorQuantidadeDias) {
                     menorQuantidadeDias = diasPassados;
@@ -46,7 +46,7 @@ public class ProdutoService {
                     precoMenorQuantidadeDias.setValor(preco.getValor());
                 }
             }
-            System.out.println("preco com menor quantidade de dias;" + precoMenorQuantidadeDias.getValor());
+           // System.out.println("preco com menor quantidade de dias;" + precoMenorQuantidadeDias.getValor());
             produto.setPreco(precoMenorQuantidadeDias);
         }
         return produtos;
@@ -57,11 +57,11 @@ public class ProdutoService {
         try {
             Date dataAtual = new Date(System.currentTimeMillis());
             Preco precoExistente = precoRepository.findbyDateEValor(dataAtual, preco.getValor());
-            System.out.println();
+           // System.out.println();
             if (precoExistente == null) {
                 precoExistente = precoRepository.save(preco);
             }
-            System.out.println(precoExistente.getId());
+           // System.out.println(precoExistente.getId());
             Produto prod = produtoRepository.saveProdutoEPreco(produto);
             produtoRepository.salvarRelacionamento(prod, precoExistente);
 

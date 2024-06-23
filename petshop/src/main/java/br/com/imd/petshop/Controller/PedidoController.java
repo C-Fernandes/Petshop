@@ -2,11 +2,15 @@ package br.com.imd.petshop.Controller;
 
 import br.com.imd.petshop.DTO.CarrinhoDTO;
 import br.com.imd.petshop.DTO.PedidoDTO;
+import br.com.imd.petshop.DTO.PedidoHasProdutoDTO;
 import br.com.imd.petshop.Entity.Pedido;
 import br.com.imd.petshop.Entity.Produto;
+import br.com.imd.petshop.Repository.PedidoHasProdutoRepository;
+import br.com.imd.petshop.Service.PedidoHasProdutoService;
 import br.com.imd.petshop.Service.PedidoService;
 import br.com.imd.petshop.Service.ProdutoService;
 import br.com.imd.petshop.Service.UsuarioService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -20,11 +24,13 @@ public class PedidoController {
     private final PedidoService pedidoService;
     private final UsuarioService usuarioService;
     private final ProdutoService produtoService;
+    private final PedidoHasProdutoService pedidoHasProdutoService;
 
-    public PedidoController(PedidoService pedidoService, UsuarioService usuarioService, ProdutoService produtoService) {
+    public PedidoController(PedidoService pedidoService, UsuarioService usuarioService, ProdutoService produtoService, PedidoHasProdutoService pedidoHasProdutoService) {
         this.pedidoService = pedidoService;
         this.usuarioService = usuarioService;
         this.produtoService = produtoService;
+        this.pedidoHasProdutoService = pedidoHasProdutoService;
     }
 
     @GetMapping("/")
@@ -37,8 +43,9 @@ public class PedidoController {
     }
 
     @GetMapping("/list")
-    public List<Pedido> findAll() {
-        return pedidoService.findAll();
+    public String findAll(Model model) {
+        model.addAttribute("pedidos", pedidoHasProdutoService.listarPedidoHasProdutos());
+        return "listagem-pedidos";
     }
 
     @PostMapping("/create/{funcionarioId}/{clienteId}")

@@ -134,7 +134,7 @@ finalizarCompra.addEventListener('click', () => {
                     });
                 });
             } else{
-                window.location.href = '/pedido/';
+                window.location.href = '/pedido/list';
             }
         })
 })

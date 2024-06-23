@@ -2,6 +2,7 @@ package br.com.imd.petshop.Service;
 
 import br.com.imd.petshop.DTO.CarrinhoDTO;
 import br.com.imd.petshop.DTO.PedidoDTO;
+import br.com.imd.petshop.DTO.PedidoHasProdutoDTO;
 import br.com.imd.petshop.Entity.*;
 import br.com.imd.petshop.Repository.ClienteRepository;
 import br.com.imd.petshop.Repository.FuncionarioRepository;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class PedidoService {
@@ -30,8 +32,8 @@ public class PedidoService {
     @Autowired
     private ProdutoService produtoService;
 
-    public List<Pedido> findAll() {
-        return pedidoRepository.findAll();
+    public List<PedidoHasProdutoDTO> findaAll() {
+        return pedidoHasProdutoService.listarPedidoHasProdutos();
     }
 
     public void save(PedidoDTO pedido) {

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Listagem de pedidos</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" rel="stylesheet"/>
+</head>
+<body>
+<div class="container">
+    <h1 class="my-4">Listagem de Pedidos</h1>
+
+    <table class="table table-bordered table-striped">
+        <thead class="thead-dark">
+        <tr>
+            <th scope="col">Pedido ID</th>
+            <th scope="col">Data</th>
+            <th scope="col">Valor</th>
+            <th scope="col">Produtos</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="pedido : ${pedidos}">
+            <td th:text="${pedido.pedido_id}"></td>
+            <td th:text="${#dates.format(pedido.data, 'dd/MM/yyyy')}"></td>
+            <td th:text="${pedido.valor}"></td>
+            <td>
+                <ul>
+                    <li th:each="produto : ${pedido.produtos}">
+                        <span th:text="${produto.produto_nome}"></span> -
+                        <span th:text="${produto.quantidade}"></span> unidades -
+                        <span th:text="${produto.produto_preco}"></span> cada
+                    </li>
+                </ul>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+</body>
+</html>
