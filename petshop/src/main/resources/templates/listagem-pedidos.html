@@ -16,6 +16,7 @@
             <th scope="col">Data</th>
             <th scope="col">Valor</th>
             <th scope="col">Produtos</th>
+            <th scope="col">Cancelar</th>
         </tr>
         </thead>
         <tbody>
@@ -32,10 +33,44 @@
                     </li>
                 </ul>
             </td>
+            <td><button class="btn btn-danger cancelarPedido" th:attr="data-pedido-id=${pedido.pedido_id}">Cancelar</button></td>
         </tr>
         </tbody>
     </table>
 </div>
+<script>
+    const botoesCancelar = document.querySelectorAll('.cancelarPedido');
 
+    botoesCancelar.forEach(botao => {
+        botao.addEventListener('click', function (event) {
+            const pedidoId = this.getAttribute('data-pedido-id');
+
+            fetch(`/pedido/${pedidoId}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    id: pedidoId
+                })
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        return response.json().then(errors => {
+                            errors.forEach(error => {
+                                console.error(error);
+                            });
+                        });
+                    } else {
+                        alert("Pedido cancelado com sucesso");
+                        window.location.href = '/pedido/list';
+                    }
+                })
+                .catch(error => {
+                    console.error('Erro ao cancelar pedido:', error);
+                });
+        });
+    });
+</script>
 </body>
 </html>

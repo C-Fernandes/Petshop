@@ -61,9 +61,10 @@ public class PedidoController {
     }
 
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable Long id, Model model) {
+    public void delete(@PathVariable String id, Model model) {
+        Long idPedido = Long.parseLong(id);
         try {
-            pedidoService.delete(id);
+            pedidoService.delete(idPedido);
             model.addAttribute("msg", "Pedido deletado com sucesso");
         } catch (Exception e) {
             e.printStackTrace();
