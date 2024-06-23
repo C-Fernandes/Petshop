@@ -1,7 +1,6 @@
 package br.com.imd.petshop.DTO;
 
 import br.com.imd.petshop.Entity.Cep;
-import br.com.imd.petshop.Entity.Usuario;
 
 import java.util.Date;
 
@@ -17,6 +16,7 @@ public class FuncionarioDTO {
     private String bairro;
     private Cep cep;
     private String cargo;
+    private Boolean active;
     public String getEmail() {
         return email;
     }
@@ -106,4 +106,11 @@ public class FuncionarioDTO {
         this.dataNascimento = dataNascimento;
     }
 
+    public Boolean getActive() {
+        return active;
+    }
+
+    public void setActive(Boolean active) {
+        this.active = active;
+    }
 }

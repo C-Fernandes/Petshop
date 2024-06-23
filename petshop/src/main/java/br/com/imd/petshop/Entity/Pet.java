@@ -10,6 +10,7 @@ public class Pet {
     private Integer idade;
     private Usuario dono;
     private Raca raca;
+    private Boolean active;
 
     public Long getId() {
         return id;
@@ -57,5 +58,13 @@ public class Pet {
 
     public void setRaca(Raca raca) {
         this.raca = raca;
+    }
+
+    public Boolean getActive() {
+        return active;
+    }
+
+    public void setActive(Boolean active) {
+        this.active = active;
     }
 }

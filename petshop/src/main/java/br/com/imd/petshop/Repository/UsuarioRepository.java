@@ -97,6 +97,32 @@ public class UsuarioRepository {
         return false;
     }
 
+    public void desativarUsuario(String email) {
+        String sqlDesativarUsuario = "UPDATE usuario SET active = false WHERE email = ?";
+        String sqlDesativarPet = "UPDATE pet SET active = false WHERE cliente_usuario_email = ?";
+        String sqlDesativarSolicitacao = "UPDATE solicita SET active = false WHERE cliente_usuario_email = ?";
 
+        try (Connection conn = DataBaseConfig.getConnection();
+             PreparedStatement psDesativarUsuario = conn.prepareStatement(sqlDesativarUsuario);
+             PreparedStatement psDesativarPet = conn.prepareStatement(sqlDesativarPet);
+             PreparedStatement psDesativarSolicitacao = conn.prepareStatement(sqlDesativarSolicitacao)) {
+
+            conn.setAutoCommit(false);
+
+            psDesativarUsuario.setString(1, email);
+            psDesativarUsuario.executeUpdate();
+
+            psDesativarPet.setString(1, email);
+            psDesativarPet.executeUpdate();
+
+            psDesativarSolicitacao.setString(1, email);
+            psDesativarSolicitacao.executeUpdate();
+
+            conn.commit();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 
 }

@@ -13,6 +13,7 @@ public class Usuario {
     private Long numero;
     private String bairro;
     private Cep cep;
+    private Boolean active;
 
     public String getEmail() {
         return email;
@@ -94,4 +95,11 @@ public class Usuario {
         this.cep = cep;
     }
 
+    public Boolean getActive() {
+        return active;
+    }
+
+    public void setActive(Boolean active) {
+        this.active = active;
+    }
 }

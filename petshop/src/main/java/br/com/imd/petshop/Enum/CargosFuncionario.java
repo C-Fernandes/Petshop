@@ -2,10 +2,9 @@ package br.com.imd.petshop.Enum;
 
 public enum CargosFuncionario {
     VETERINARIO("Veterinário"),
-    AUXILIAR_VETERINARIO("Auxiliar de Veterinário"),
     RECEPCIONISTA("Recepcionista"),
-    GROOMER("Groomer"),
-    GERENTE("Gerente");
+    GROMMER("Grommer"),
+    GERENTE("Gerente"),;
 
     private final String descricao;
 

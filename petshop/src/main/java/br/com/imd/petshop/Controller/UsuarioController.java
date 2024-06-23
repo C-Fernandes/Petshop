@@ -106,8 +106,26 @@ public class UsuarioController {
 
         return ResponseEntity.notFound().build();
     }
+    @PutMapping("/editar")
+    public ResponseEntity<Map<String, Object>> editarUsuario(@RequestBody UsuarioDTO usuarioDTO) {
+        ResponseEntity<Map<String, Object>> validationResponse = usuarioService.validarCamposObrigatoriosEdicao(usuarioDTO);
 
+        if (validationResponse.getStatusCode() != HttpStatus.OK) {
+            return ResponseEntity.badRequest().body(validationResponse.getBody());
+        }
 
-
-
+        try {
+            usuarioService.editarUsuario(usuarioDTO);
+        } catch (IllegalArgumentException e) {
+            Map<String, Object> response = new HashMap<>();
+            response.put("errors", Collections.singletonList(e.getMessage()));
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        }
+        return ResponseEntity.ok().build();
+    }
+    @PutMapping("/desativar")
+    public ResponseEntity<?> desativarUsuario(@RequestBody UsuarioDTO usuarioDTO) {
+        usuarioService.desativarUsuario(usuarioDTO.getEmail());
+        return ResponseEntity.ok().build();
+    }
 }
