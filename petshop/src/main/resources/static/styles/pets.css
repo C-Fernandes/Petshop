@@ -48,7 +48,7 @@ nav {
   font-size: 1.1em;
   display: flex;
   flex-direction: row;
-  justify-content: flex-end;
+  justify-content: flex-start;
   height: auto;
   width: 100%;
   background-color: var(--maroon);
@@ -57,12 +57,16 @@ nav {
 }
 
 .navbar {
+  width: 60%;
+  justify-content: flex-end;
   flex-wrap: wrap;
   padding: 0.5em;
   margin: 0 0.5em 0 0;
 }
-.navbar p {
-  margin: 0 25em 0 0;
+nav p {
+  width: 40%;
+  margin: 1em;
+  justify-content: flex-start;
 }
 
 a {
@@ -80,13 +84,17 @@ a {
 .card {
   display: flex;
   flex-direction: row;
-  width: 80%;
+
   height: 15em;
   margin: 2em;
   transition: transform 0.3s ease;
   border: none;
-}
 
+  width: 60%;
+}
+.card p {
+  font-size: 15px;
+}
 .card img:hover {
   transform: translateY(-5px);
   box-shadow: 0 0 4px var(--tan);
