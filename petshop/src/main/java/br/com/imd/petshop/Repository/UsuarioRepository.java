@@ -68,13 +68,44 @@ public class UsuarioRepository {
         return null;
     }
 
+    public List<Usuario> findAllClientes() {
+        String sql = "SELECT u.*  FROM Usuario u JOIN Cliente c ON u.email = c.usuario_email";
+        List<Usuario> usuarios = new ArrayList<>();
+        try (Connection conn = DataBaseConfig.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                Usuario usuario = mapRow(rs);
+                usuarios.add(usuario);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return usuarios;
+    }
+
+    public List<Usuario> findAllFuncionarios() {
+        String sql = "SELECT u.*  FROM Usuario u JOIN Funcionario f ON u.email = f.usuario_email";
+        List<Usuario> usuarios = new ArrayList<>();
+        try (Connection conn = DataBaseConfig.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                Usuario usuario = mapRow(rs);
+                usuarios.add(usuario);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return usuarios;
+    }
     private Usuario mapRow(ResultSet rs) throws SQLException {
         Usuario usuario = new Usuario();
         usuario.setEmail(rs.getString("email"));
         usuario.setSenha(rs.getString("senha"));
         usuario.setNome(rs.getString("nome"));
         usuario.setDataDeNascimento(rs.getDate("data_nascimento"));
-        usuario.setIdade(rs.getInt("idade"));
+        //usuario.setIdade(rs.getInt("idade"));
         usuario.setTelefone(rs.getString("telefone"));
         usuario.setLogradouro(rs.getString("logradouro"));
         usuario.setNumero(rs.getLong("numero"));
