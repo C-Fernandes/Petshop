@@ -35,10 +35,14 @@
     </div>
   </div>
 
-  <div class="myContainer">
+  <div class="myContainer" id="product-container">
     <div class="card"  th:each="produto : ${produtos}">
       <div class="card-body">
         <h5 class="card-title" th:text="${produto.nome}">Nome do Produto</h5>
+        <img
+                th:src="'/images/uploads/produtos/' + ${produto.imagem}"
+                alt="Imagem do Produto"
+        />
         <div class="card-text">
           <p>
             Valor: R$ <span th:text="${produto.preco.valor}">100,00</span>

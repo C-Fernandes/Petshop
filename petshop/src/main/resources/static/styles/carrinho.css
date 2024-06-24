@@ -10,8 +10,8 @@ body {
     font-family: 'Inter', sans-serif;
     margin: 0;
     padding: 0;
-    background-color: #f9f9f9; /* Fundo levemente cinza */
-    color: #333; /* Texto padrão */
+    background-color: #f9f9f9;
+    color: #333;
 }
 
 .navbar {
@@ -30,7 +30,7 @@ body {
 }
 
 .navbar a:hover {
-    background-color: var(--coral); /* Cor ao passar o mouse */
+    background-color: var(--coral);
     border-radius: 5px;
 }
 
@@ -52,7 +52,7 @@ body {
     position: absolute;
     top: -8px;
     right: -8px;
-    background: var(--coral); /* Cor do badge do carrinho */
+    background: var(--coral);
     color: #fff;
     font-size: 12px;
     padding: 4px 8px;
@@ -60,37 +60,36 @@ body {
 }
 
 .total {
-    color: var(--peru); /* Cor do total */
+    color: var(--peru);
     font-size: 20px;
     font-weight: bold;
 }
 
 #shoppingCart {
-    background-color: #fff; /* Fundo branco */
+    background-color: #fff;
     padding: 20px;
     margin-top: 20px;
     border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Sombra suave */
-    width: calc(50%); /* Define a largura como metade da tela */
-    max-width: 550px; /* Define uma largura máxima para não ocupar toda a largura em telas maiores */
-    margin-left: auto; /* Alinha à direita */
-    margin-right: 20px; /* Distância da borda direita */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    width: calc(50%);
+    max-width: 550px;
+    margin-left: auto;
+    margin-right: 20px;
 }
 
 main {
     padding: 20px;
     text-align: center;
-    display: flex; /* Utiliza flexbox para alinhar conteúdo */
-    justify-content: center; /* Centraliza conteúdo principal */
+    display: flex;
+    justify-content: center;
 }
 
 @media (max-width: 768px) {
-    /* Para telas menores que 768px, ajuste para ocupar 90% da largura */
     #shoppingCart {
         width: 90%;
-        max-width: none; /* Remove a largura máxima */
-        margin-right: auto; /* Centraliza na tela */
-        margin-left: auto; /* Centraliza na tela */
+        max-width: none;
+        margin-right: auto;
+        margin-left: auto;
     }
 }
 
@@ -102,7 +101,7 @@ main {
 }
 
 #cartTable th {
-    background-color: var(--maroon); /* Cor de fundo do cabeçalho da tabela */
+    background-color: var(--maroon);
     color: #fff;
     padding: 10px 0;
     text-align: center;
@@ -114,7 +113,7 @@ main {
 }
 
 .btn-success {
-    background-color: var(--tan); /* Cor do botão de finalizar/atualizar */
+    background-color: var(--tan);
     border-color: var(--tan);
     color: #fff;
     padding: 10px 20px;
@@ -124,7 +123,7 @@ main {
 }
 
 .btn-success:hover {
-    background-color: var(--maroon); /* Cor ao passar o mouse */
+    background-color: var(--maroon);
     border-color: var(--maroon);
 }
 
@@ -134,11 +133,17 @@ main {
 }
 
 .alert-success {
-    background-color: var(--coral); /* Cor da mensagem de sucesso */
+    background-color: var(--coral);
     color: #fff;
     text-align: center;
     padding: 10px;
     margin-top: 20px;
     border-radius: 5px;
-    display: none; /* Inicialmente escondida */
+    display: none;
+}
+
+.card img {
+    max-width: 100%;
+    height: 12rem;
+    border-radius: 10px 10px 0 0;
 }
