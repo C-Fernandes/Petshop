@@ -128,4 +128,22 @@ public class UsuarioController {
         usuarioService.desativarUsuario(usuarioDTO.getEmail());
         return ResponseEntity.ok().build();
     }
+    @GetMapping("/filtrar")
+    public ResponseEntity<?> filtrarUsuarios(@RequestParam String tipo) {
+        if (tipo.equals("cliente")) {
+            List<ClienteDTO> clientes = usuarioService.listarClientesComUsuarios();
+            return ResponseEntity.ok(clientes);
+        } else if (tipo.equals("funcionario")) {
+            List<FuncionarioDTO> funcionarios = usuarioService.listarFuncionariosComUsuarios();
+            return ResponseEntity.ok(funcionarios);
+        } else {
+            List<ClienteDTO> clientes = usuarioService.listarClientesComUsuarios();
+            List<FuncionarioDTO> funcionarios = usuarioService.listarFuncionariosComUsuarios();
+            Map<String, List<?>> todosUsuarios = new HashMap<>();
+            todosUsuarios.put("clientes", clientes);
+            todosUsuarios.put("funcionarios", funcionarios);
+            return ResponseEntity.ok(todosUsuarios);
+        }
+    }
+
 }

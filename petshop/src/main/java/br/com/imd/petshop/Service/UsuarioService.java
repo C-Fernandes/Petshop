@@ -304,5 +304,12 @@ public class UsuarioService {
         }
     }
 
+    public List<UsuarioDTO> listarUsuariosComCliente() {
+        return usuarioRepository.listarClientes();
+    }
+
+    public List<UsuarioDTO> listarUsuariosComFuncionario() {
+        return usuarioRepository.listarFuncionarios();
+    }
 
 }
