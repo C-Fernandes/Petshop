@@ -14,6 +14,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.sql.SQLException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -128,4 +129,30 @@ public class UsuarioController {
         usuarioService.desativarUsuario(usuarioDTO.getEmail());
         return ResponseEntity.ok().build();
     }
+    @GetMapping("/filtrar")
+    public ResponseEntity<?> filtrarUsuarios(@RequestParam String tipo) {
+        if (tipo.equals("cliente")) {
+            List<ClienteDTO> clientes = usuarioService.listarClientesComUsuarios();
+            return ResponseEntity.ok(clientes);
+        } else if (tipo.equals("funcionario")) {
+            List<FuncionarioDTO> funcionarios = usuarioService.listarFuncionariosComUsuarios();
+            return ResponseEntity.ok(funcionarios);
+        } else {
+            List<ClienteDTO> clientes = usuarioService.listarClientesComUsuarios();
+            List<FuncionarioDTO> funcionarios = usuarioService.listarFuncionariosComUsuarios();
+            Map<String, List<?>> todosUsuarios = new HashMap<>();
+            todosUsuarios.put("clientes", clientes);
+            todosUsuarios.put("funcionarios", funcionarios);
+            return ResponseEntity.ok(todosUsuarios);
+        }
+    }
+
+    @GetMapping("/meus-dados")
+    public String meusDados(Model model) throws SQLException {
+        UsuarioDTO usuarioDTO = usuarioService.obterUsuarioDTO(usuarioLogado.getEmail());
+        model.addAttribute("usuario", usuarioDTO);
+        return "meu-usuario";
+    }
+
+
 }

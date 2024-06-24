@@ -43,10 +43,6 @@ public class UsuarioDTO {
         this.nome = nome;
     }
 
-    public java.sql.Date getDataDeNascimento() {
-        return (java.sql.Date) dataDeNascimento;
-    }
-
     public void setDataDeNascimento(Date dataDeNascimento) {
         this.dataDeNascimento = dataDeNascimento;
     }
@@ -122,4 +118,9 @@ public class UsuarioDTO {
     public void setActive(Boolean active) {
         this.active = active;
     }
+    public Date getDataDeNascimento() {
+        return dataDeNascimento;
+    }
+
+
 }

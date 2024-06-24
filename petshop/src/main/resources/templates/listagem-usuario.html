@@ -60,6 +60,7 @@
 
         .table {
             width: 60%;
+            background-color: white;
         }
 
         .main {
@@ -67,6 +68,20 @@
             display: flex;
             align-items: center;
             justify-content: center;
+        }
+
+        .filter-buttons {
+            margin-left: 80px;
+            margin-top: 40px;
+            margin-bottom: 20px;
+        }
+
+        .filter-buttons button {
+            margin-right: 10px;
+        }
+
+        .table tbody tr:hover {
+            background-color: #f2f2f2;
         }
     </style>
 </head>
@@ -78,9 +93,21 @@
         <a id="produtos">Produtos</a>
         <a id="servicos">Servicos</a>
         <a id="listagem">Listagem</a>
-        <a id="cadastrarFuncionario">Cadastrar funcionário</a>
     </div>
 </nav>
+
+<div class="filter-buttons ">
+    <button id="clientes" class="btn btn-secondary" onclick="filtrarUsuarios('cliente')">Clientes</button>
+    <button id="funcionarios" class="btn btn-secondary" onclick="filtrarUsuarios('funcionario')">Funcionários</button>
+    <button id="todos" class="btn btn-secondary" onclick="filtrarUsuarios('todos')">Todos</button>
+</div>
+<a id="cadastrarFuncionarioBtn" class="btn btn-primary ml-2" href="/usuario/cadastro-funcionario">Cadastrar Funcionário</a>
+<script>
+    document.getElementById("cadastrarFuncionarioBtn").addEventListener("click", function () {
+        window.location.href = "/usuario/cadastro-funcionario";
+    });
+</script>
+
 
 <div class="main">
     <table class="table">
@@ -91,12 +118,13 @@
             <th scope="col">Data de Nascimento</th>
             <th scope="col">Telefone</th>
             <th scope="col">Tipo</th>
-            <th scope="col">Ações</th>
+            <th scope="col" class="cargo-column oculto" style="display: none;">Cargo</th>
+            <th scope="col" class="acoes-colum">Ações</th>
         </tr>
         </thead>
         <tbody>
         <!-- Linhas para clientes -->
-        <tr th:id="${cliente.email}" th:each="cliente : ${clientes}">
+        <tr th:id="${cliente.email}" th:each="cliente : ${clientes}" data-tipo="cliente">
             <td th:text="${cliente.nome}"></td>
             <td th:text="${cliente.email}"></td>
             <td th:text="${cliente.dataNascimento}"></td>
@@ -104,20 +132,23 @@
             <td>Cliente</td>
             <td>
                 <i class="fas fa-edit edit-icon" onclick="editarUsuario(this.parentElement.parentElement.id)"></i>
-                <i class="fas fa-trash-alt delete-icon" onclick="excluirUsuario(this.parentElement.parentElement.id)"></i>
+                <i class="fas fa-trash-alt delete-icon"
+                   onclick="excluirUsuario(this.parentElement.parentElement.id)"></i>
             </td>
         </tr>
         <!-- Linhas para funcionários -->
-        <tr th:id="${funcionario.email}" th:each="funcionario : ${funcionarios}" data-email="${funcionario.email}">
+        <tr th:id="${funcionario.email}" th:each="funcionario : ${funcionarios}" data-tipo="funcionario">
             <td th:text="${funcionario.nome}"></td>
             <td id="funcionarioEmail" th:text="${funcionario.email}"></td>
             <td th:text="${funcionario.dataNascimento}"></td>
             <td th:text="${funcionario.telefone}"></td>
             <td>Funcionário</td>
+            <td class="cargo-column" style="display: none;" th:text="${funcionario.cargo}"></td>
             <td>
                 <i class="fas fa-edit edit-icon" onclick="editarUsuario(this.parentElement.parentElement.id)"
                    data-email="${funcionario.email}"></i>
-                <i class="fas fa-trash-alt delete-icon" onclick="excluirUsuario(this.parentElement.parentElement.id)"></i>
+                <i class="fas fa-trash-alt delete-icon"
+                   onclick="excluirUsuario(this.parentElement.parentElement.id)"></i>
             </td>
         </tr>
         </tbody>
@@ -149,7 +180,6 @@
                         <select class="form-control" id="cargo" name="cargo">
                             <option value="VETERINÁRIO">Veterinário</option>
                             <option value="RECEPCIONISTA">Recepcionista</option>
-                            <option value="GROMMER">Groomer</option>
                             <option value="GERENTE">Gerente</option>
                         </select>
                     </div>
@@ -248,7 +278,7 @@
                 document.getElementById('bairro').value = usuario.bairro;
                 document.getElementById('cargo').value = usuario.cargo;
 
-                if (usuario.cargo && (usuario.cargo === "VETERINÁRIO" || usuario.cargo === "RECEPCIONISTA" || usuario.cargo === "GROMMER" || usuario.cargo === "GERENTE")) {
+                if (usuario.cargo && (usuario.cargo === "VETERINÁRIO" || usuario.cargo === "RECEPCIONISTA" || usuario.cargo === "GERENTE")) {
                     document.getElementById('cargoField').style.display = 'block';
                     document.getElementById('cargo').value = usuario.cargo;
                 } else {
@@ -309,7 +339,7 @@
                 url: '/usuario/desativar',
                 type: 'PUT',
                 contentType: 'application/json',
-                data: JSON.stringify({ email: email }),
+                data: JSON.stringify({email: email}),
                 success: function (response) {
                     console.log('Usuário desativado com sucesso!');
                     // Recarregar a página ou atualizar a lista de usuários
@@ -324,6 +354,92 @@
         });
     }
 
+    function filtrarUsuarios(tipo) {
+        if (tipo === 'todos') {
+            window.location.reload(); // Recarregar a página
+            return; // Sair da função para evitar a execução do código abaixo
+        }
+
+        // Fazer uma requisição AJAX para o endpoint /filtrar no back-end
+        $.ajax({
+            url: '/usuario/filtrar',
+            type: 'GET',
+            data: {
+                tipo: tipo // Passar o tipo de filtro como parâmetro
+            },
+            success: function (response) {
+                // Atualizar a tabela com os resultados filtrados
+                atualizarTabela(response, tipo); // Passar o tipo de usuário
+            },
+            error: function (error) {
+                console.error('Erro ao filtrar usuários:', error);
+                // Exibir mensagem de erro ou tratar de outra forma
+                alert('Erro ao filtrar usuários. Por favor, tente novamente.');
+            }
+        });
+    }
+    function atualizarTabela(usuarios, tipo) {
+        console.log('Atualizando tabela com usuários:', usuarios, 'do tipo:', tipo);
+        // Limpar o corpo da tabela
+        $('tbody').empty();
+
+        // Mostrar ou esconder a coluna "Cargo" com base no tipo
+        if (tipo === 'funcionario') {
+            $('.cargo-column').show();
+        } else {
+            $('.cargo-column').hide();
+        }
+        if (tipo === 'funcionario' || tipo === 'cliente') {
+            $('.acoes-colum').hide();
+        } else {
+            $('.cargo-column').show();
+        }
+
+        // Verificar se o tipo é 'cliente'
+        if (tipo === 'cliente') {
+            console.log('Clientes:', usuarios);
+            // Adicionar clientes à tabela
+            usuarios.forEach(function (usuario) {
+                adicionarLinhaTabela(usuario, 'Cliente', false);
+            });
+        } else if (tipo === 'funcionario') {
+            console.log('Funcionários:', usuarios);
+            usuarios.forEach(function (usuario) {
+                if (usuario.cargo !== undefined) {
+                    adicionarLinhaTabela(usuario, 'Funcionário', false);
+                }
+            });
+        } else {
+            console.log('Outros usuários:', usuarios);
+            usuarios.forEach(function (usuario) {
+                adicionarLinhaTabela(usuario, 'Desconhecido', false);
+            });
+        }
+    }
+
+    function adicionarLinhaTabela(usuario, tipoUsuario, mostrarBotoes) {
+        console.log('Adicionando linha à tabela para usuário:', usuario, 'Tipo:', tipoUsuario);
+        var cargo = '';
+        var cargoColumn = tipoUsuario === 'Funcionário' ? '<td class="cargo-column">' + (usuario.cargo || '') + '</td>' : '';
+        var botoes = mostrarBotoes ? '<td>' +
+            '<i class="fas fa-edit edit-icon" onclick="editarUsuario(this.parentElement.parentElement.id)"></i>' +
+            '<i class="fas fa-trash-alt delete-icon" onclick="excluirUsuario(this.parentElement.parentElement.id)"></i>' +
+            '</td>' : '';
+
+        // Construir a linha da tabela com os dados do usuário
+        var linha = '<tr>' +
+            '<td>' + usuario.nome + '</td>' +
+            '<td>' + usuario.email + '</td>' +
+            '<td>' + usuario.dataNascimento + '</td>' +
+            '<td>' + usuario.telefone + '</td>' +
+            '<td>' + tipoUsuario + '</td>' +
+            cargoColumn + // Adiciona a coluna de cargo somente se o tipo de usuário for "Funcionário"
+            (mostrarBotoes ? botoes : '') + // Adiciona os botões de edição e deleção somente se "mostrarBotoes" for true
+            '</tr>';
+
+        // Adicionar a linha à tabela
+        $('tbody').append(linha);
+    }
 </script>
 </body>
 </html>
