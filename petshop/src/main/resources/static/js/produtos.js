@@ -1,19 +1,15 @@
+
+// Declaração das variáveis globais
 var idProduto = 0,
     date = "",
-    idPre = 0, nome = "", quantidade = 0, preco = 0, imagem;
-var stompClient = null;
+    idPre = 0,
+    nome = "",
+    quantidade = 0,
+    preco = 0,
+    imagem;
 
-function connect() {
-    var socket = new SockJS("/ws");
-    stompClient = Stomp.over(socket);
-    stompClient.connect({}, function (frame) {
-        console.log("Connected: " + frame);
-        stompClient.subscribe("/topic/products", function (message) {
-            console.log("Product update message received");
-
-        });
-    });
-} function fetchProducts() {
+// Função para buscar e exibir produtos
+function fetchProducts() {
     fetch("/produtos/listar", {
         method: "GET"
     })
@@ -26,6 +22,7 @@ function connect() {
         .then((data) => {
             var productContainer = document.getElementById("product-container");
             productContainer.innerHTML = "";
+
             data.forEach((produto) => {
                 var card = document.createElement("div");
                 card.className = "card div-editar";
@@ -37,10 +34,11 @@ function connect() {
                 card.setAttribute("data-id-preco", produto.preco.id);
                 card.setAttribute("data-data-preco", produto.preco.data);
                 card.setAttribute("data-imagem", produto.imagem);
+
                 var img = "/images/uploads/produtos/" + produto.imagem;
                 console.log("Imagem: " + img);
-                card.innerHTML = `
 
+                card.innerHTML = `
                 <img src="${img}" alt="Imagem do Produto" accept="image/*" />
                 <div class="card-body">
                     <h5 class="card-title">${produto.nome}</h5>
@@ -49,13 +47,14 @@ function connect() {
                         <p>Valor: R$ ${produto.preco.valor}</p>
                     </div>
                 </div>`;
+
                 productContainer.appendChild(card);
             });
         })
         .catch((error) => console.error("Erro ao buscar produtos:", error));
 }
 
-// Função para verificar se a imagem está disponível
+// Função para verificar disponibilidade de imagem
 function checkImageAvailability(url, callback) {
     fetch(url, { method: 'HEAD' })
         .then((response) => {
@@ -71,10 +70,9 @@ function checkImageAvailability(url, callback) {
         });
 }
 
-
+// Chamada para conectar ao Stomp e processar mensagens de produtos
 $(document).ready(function () {
 
-    connect();
 
     $(document).on('click', '.div-editar', function () {
         idProduto = $(this).data("id");
@@ -185,7 +183,7 @@ $(document).ready(function () {
                             });
                         }
                     });
-                }
+                } return response.json();
             })
             .then((data) => {
                 if (data && data.imagem) {

@@ -104,3 +104,12 @@ button:hover {
   font-size: 1rem;
   color: #666;
 }
+.filtro {
+  margin: 0 1em 0 0;
+}
+.filtro input {
+  border-radius: 10px;
+}
+.filtro img {
+  width: 2em;
+}

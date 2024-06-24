@@ -165,7 +165,7 @@ public class UsuarioService {
             usuarioLogado.setEmail(email);
 
             if (cliente != null) {
-                return "redirect:/usuario/meus-dados";
+                return "redirect:/pets/";
             } else {
                 Funcionario funcionario = funcionarioRepository.findByUsuario(String.valueOf(usuario.getEmail()));
                 usuarioLogado.setEmail(email);
