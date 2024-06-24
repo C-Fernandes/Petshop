@@ -87,19 +87,6 @@ public class ProdutoService {
         }
     }
 
-    public void deletarProduto(Long idProduto) {
-        List<Preco> precos = precoRepository.findByProduto(idProduto);
-        produtoRepository.deleteProduto(idProduto);
-
-        for (Preco p : precos) {
-            System.out.println(p.getId());
-            System.out.println(!precoRepository.verificarProdutoHasPreco(p.getId()));
-            if (!precoRepository.verificarProdutoHasPreco(p.getId())) {
-                precoRepository.deletarPreco(p.getId());
-            }
-        }
-    }
-
     public List<Produto> findAll() {
         List<Produto> produtos = atualizarPreco(produtoRepository.findAll());
 
@@ -108,8 +95,6 @@ public class ProdutoService {
 
     public void atualizarProduto(Produto produto, Preco preco) {
         Produto pVelho = produtoRepository.findbyId(produto.getId());
-        System.out.println("Valor velh9:" + preco.getValor());
-        System.out.println(precoMaisRecente(precoRepository.findByProduto(pVelho.getId())).getValor());
         if (preco.getValor() != precoMaisRecente(precoRepository.findByProduto(pVelho.getId())).getValor()) {
             produtoRepository.salvarRelacionamento(produto, precoRepository.save(preco));
         }

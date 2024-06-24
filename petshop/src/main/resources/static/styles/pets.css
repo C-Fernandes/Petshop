@@ -5,9 +5,8 @@
   --rosybrown: #a46c5c;
   --tan: #cda99d;
 }
-
 body {
-  background-color: white;
+  background-color: var(--coral);
 }
 
 .btn.btn-primary {
@@ -55,7 +54,16 @@ nav {
   color: white;
   box-shadow: 0 0 5px black;
 }
-
+.circle{
+    position: absolute;
+    height: 60rem;
+    width: 60rem;
+    border-radius: 50%;
+    z-index: -1;
+    background-color:var(--maroon);
+    right:55%;
+    top: 25%;
+}
 .navbar {
   width: 60%;
   justify-content: flex-end;
@@ -84,16 +92,18 @@ a {
 .card {
   display: flex;
   flex-direction: row;
-
-  height: 15em;
+  border-radius: 20px;
+  background-color:transparent; !important;
+  height: 13em;
   margin: 2em;
   transition: transform 0.3s ease;
   border: none;
+  color: black!important;
 
-  width: 60%;
+  width: 75%;
 }
 .card p {
-  font-size: 15px;
+  font-size: 18px;
 }
 .card img:hover {
   transform: translateY(-5px);
@@ -101,6 +111,7 @@ a {
 }
 
 .card-body {
+  margin-top:0.5em;
   text-align: center;
   padding: 1.25rem;
 }
@@ -110,20 +121,20 @@ a {
 }
 
 .card-text {
+  margin-top: 1.5em;
   display: flex;
   flex-direction: column;
-
   font-size: 1rem;
-  color: #666;
+  
 }
 .card-text p {
   margin: 0;
 }
 
 .card img {
-  border-radius: 200px;
+  border-radius: 50%;
   width: 15em;
-  height: 100%;
+  height: 15em;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 .card img:hover {
@@ -139,6 +150,8 @@ a {
   border-radius: 10px;
   height: 100%;
   border: none;
+  background-color: transparent;
+  color: black;
 }
 .filtro input:focus-visible {
   border: none;
@@ -161,8 +174,11 @@ a {
   transform: scale(1.5);
 }
 .icons {
-  padding: 1.5em;
+  width: 5em;
   color: var(--maroon);
+}
+.fa, .fas {
+    font-weight: 500; !important;
 }
 #raca {
   display: flex;
@@ -172,3 +188,4 @@ a {
 #raca p {
   padding: 0 0.2em;
 }
+

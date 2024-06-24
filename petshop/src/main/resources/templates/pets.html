@@ -17,18 +17,25 @@
   </head>
 
   <body>
+    <div class="circle"></div>
     <nav>
       <p>Bem vindo <span id="usuario-logado" th:text="${usuario}"></span></p>
       <div class="navbar">
         <a id="inicio">Inicio</a>
-        <a href="pets/" id="pets">Pets</a>
-        <a id="produtos/">Produtos</a>
+        <a id="pets">Pets</a>
+        <a id="produtos">Produtos</a>
         <a id="servicos">Servicos</a>
+        <a id="meu-usuario">Meu Usuario</a>
       </div>
     </nav>
     <div class="row">
       <div class="filtro">
-        <input type="text" name="filtro" id="filtroNome" />
+        <input
+          type="text"
+          placeholder="Busque por nome"
+          name="filtro"
+          id="filtroNome"
+        />
         <img src="/images/lupa.png" alt="Lupa" id="buscar" />
       </div>
       <button
@@ -41,6 +48,9 @@
       </button>
     </div>
     <div class="myContainer" id="product-container">
+      <div class="mensagem" th:if="${#lists.isEmpty(pets)}">
+        <p>Nenhum pet encontrado.</p>
+      </div>
       <div class="card div-editar" th:each="pet : ${pets}">
         <img
           th:src="'/images/uploads/pets/' + ${pet.imagem}"

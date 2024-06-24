@@ -1,450 +1,636 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
+  <head>
+    <meta charset="UTF-8" />
     <title>Listagem de Usuários</title>
     <!-- Bootstrap CSS -->
-    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
     <!-- Font Awesome CSS -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+      rel="stylesheet"
+    />
     <style>
-        :root {
-            --peru: #ec9474;
-            --coral: #fba383;
-            --maroon: #742a0f;
-            --rosybrown: #a46c5c;
-            --tan: #cda99d;
-        }
+      :root {
+        --peru: #ec9474;
+        --coral: #fba383;
+        --maroon: #742a0f;
+        --rosybrown: #a46c5c;
+        --tan: #cda99d;
+      }
 
-        body {
-            background-color: var(--peru);
-        }
+      body {
+        background-color: var(--peru);
+      }
 
-        .edit-icon,
-        .delete-icon {
-            cursor: pointer;
-            margin-right: 10px;
-        }
+      .edit-icon,
+      .delete-icon {
+        cursor: pointer;
+        margin-right: 10px;
+      }
 
-        nav {
-            font-size: 1.1em;
-            display: flex;
-            flex-direction: row;
-            justify-content: flex-end;
-            height: auto;
-            width: 100%;
-            background-color: var(--maroon);
-            color: white;
-            box-shadow: 0 0 5px black;
-        }
+      nav {
+        font-size: 1.1em;
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-end;
+        height: auto;
+        width: 100%;
+        background-color: var(--maroon);
+        color: white;
+        box-shadow: 0 0 5px black;
+      }
 
-        .navbar {
-            flex-wrap: wrap;
-            padding: 0.5em;
-            margin: 0 0.5em 0 0;
-        }
+      .navbar {
+        flex-wrap: wrap;
+        padding: 0.5em;
+        margin: 0 0.5em 0 0;
+      }
 
-        a {
-            color: white;
-            text-decoration: none;
-            padding: 0.3em 0.5em;
-        }
+      a {
+        color: white;
+        text-decoration: none;
+        padding: 0.3em 0.5em;
+      }
 
-        a:hover {
-            background-color: var(--maroon);
-            border: 1px solid var(--maroon);
-            border-radius: 15px;
-            text-decoration: none;
-            color: white;
-        }
+      a:hover {
+        background-color: var(--maroon);
+        border: 1px solid var(--maroon);
+        border-radius: 15px;
+        text-decoration: none;
+        color: white;
+      }
 
-        .table {
-            width: 60%;
-            background-color: white;
-        }
+      .table {
+        width: 60%;
+        background-color: white;
+      }
 
-        .main {
-            width: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
+      .main {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
 
-        .filter-buttons {
-            margin-left: 80px;
-            margin-top: 40px;
-            margin-bottom: 20px;
-        }
+      .filter-buttons {
+        margin-left: 80px;
+        margin-top: 40px;
+        margin-bottom: 20px;
+      }
 
-        .filter-buttons button {
-            margin-right: 10px;
-        }
+      .filter-buttons button {
+        margin-right: 10px;
+      }
 
-        .table tbody tr:hover {
-            background-color: #f2f2f2;
-        }
+      .table tbody tr:hover {
+        background-color: #f2f2f2;
+      }
     </style>
-</head>
-<body>
-<nav>
-    <div class="navbar">
+  </head>
+  <body>
+    <nav>
+      <div class="navbar">
         <a id="inicio">Inicio</a>
         <a id="pets">Pets</a>
         <a id="produtos">Produtos</a>
         <a id="servicos">Servicos</a>
         <a id="listagem">Listagem</a>
         <a id="meu-usuario">Meu Usuário</a>
+      </div>
+    </nav>
+
+    <div class="filter-buttons">
+      <button
+        id="clientes"
+        class="btn btn-secondary"
+        onclick="filtrarUsuarios('cliente')"
+      >
+        Clientes
+      </button>
+      <button
+        id="funcionarios"
+        class="btn btn-secondary"
+        onclick="filtrarUsuarios('funcionario')"
+      >
+        Funcionários
+      </button>
+      <button
+        id="todos"
+        class="btn btn-secondary"
+        onclick="filtrarUsuarios('todos')"
+      >
+        Todos
+      </button>
+      <a
+        id="cadastrarFuncionarioBtn"
+        class="btn btn-secondary ml-2"
+        href="/usuario/cadastro-funcionario"
+        >Cadastrar Funcionário</a
+      >
+      <!-- Movido para dentro de .filter-buttons -->
     </div>
-</nav>
+    <script>
+      document
+        .getElementById("cadastrarFuncionarioBtn")
+        .addEventListener("click", function () {
+          window.location.href = "/usuario/cadastro-funcionario";
+        });
+      document
+        .getElementById("meu-usuario")
+        .addEventListener("click", function () {
+          window.location.href = "/usuario/meus-dados";
+        });
+    </script>
 
-<div class="filter-buttons ">
-    <button id="clientes" class="btn btn-secondary" onclick="filtrarUsuarios('cliente')">Clientes</button>
-    <button id="funcionarios" class="btn btn-secondary" onclick="filtrarUsuarios('funcionario')">Funcionários</button>
-    <button id="todos" class="btn btn-secondary" onclick="filtrarUsuarios('todos')">Todos</button>
-    <a id="cadastrarFuncionarioBtn" class="btn btn-secondary ml-2" href="/usuario/cadastro-funcionario">Cadastrar Funcionário</a> <!-- Movido para dentro de .filter-buttons -->
-
-</div>
-<script>
-    document.getElementById("cadastrarFuncionarioBtn").addEventListener("click", function () {
-        window.location.href = "/usuario/cadastro-funcionario";
-    });
-    document.getElementById("meu-usuario").addEventListener("click", function () {
-        window.location.href = "/usuario/meus-dados";
-    });
-</script>
-
-
-<div class="main">
-    <table class="table">
+    <div class="main">
+      <table class="table">
         <thead class="bg-light">
-        <tr class="rounded-top">
+          <tr class="rounded-top">
             <th scope="col">Nome</th>
             <th scope="col" class="email-column">E-mail</th>
             <th scope="col">Data de Nascimento</th>
             <th scope="col">Telefone</th>
             <th scope="col">Tipo</th>
-            <th scope="col" class="cargo-column oculto" style="display: none;">Cargo</th>
+            <th scope="col" class="cargo-column oculto" style="display: none">
+              Cargo
+            </th>
             <th scope="col" class="acoes-colum">Ações</th>
-        </tr>
+          </tr>
         </thead>
         <tbody>
-        <!-- Linhas para clientes -->
-        <tr th:id="${cliente.email}" th:each="cliente : ${clientes}" data-tipo="cliente">
+          <!-- Linhas para clientes -->
+          <tr
+            th:id="${cliente.email}"
+            th:each="cliente : ${clientes}"
+            data-tipo="cliente"
+          >
             <td th:text="${cliente.nome}"></td>
             <td th:text="${cliente.email}"></td>
             <td th:text="${cliente.dataNascimento}"></td>
             <td th:text="${cliente.telefone}"></td>
             <td>Cliente</td>
             <td>
-                <i class="fas fa-edit edit-icon" onclick="editarUsuario(this.parentElement.parentElement.id)"></i>
-                <i class="fas fa-trash-alt delete-icon"
-                   onclick="excluirUsuario(this.parentElement.parentElement.id)"></i>
+              <i
+                class="fas fa-edit edit-icon"
+                onclick="editarUsuario(this.parentElement.parentElement.id)"
+              ></i>
+              <i
+                class="fas fa-trash-alt delete-icon"
+                onclick="excluirUsuario(this.parentElement.parentElement.id)"
+              ></i>
             </td>
-        </tr>
-        <!-- Linhas para funcionários -->
-        <tr th:id="${funcionario.email}" th:each="funcionario : ${funcionarios}" data-tipo="funcionario">
+          </tr>
+          <!-- Linhas para funcionários -->
+          <tr
+            th:id="${funcionario.email}"
+            th:each="funcionario : ${funcionarios}"
+            data-tipo="funcionario"
+          >
             <td th:text="${funcionario.nome}"></td>
             <td id="funcionarioEmail" th:text="${funcionario.email}"></td>
             <td th:text="${funcionario.dataNascimento}"></td>
             <td th:text="${funcionario.telefone}"></td>
             <td>Funcionário</td>
-            <td class="cargo-column" style="display: none;" th:text="${funcionario.cargo}"></td>
+            <td
+              class="cargo-column"
+              style="display: none"
+              th:text="${funcionario.cargo}"
+            ></td>
             <td>
-                <i class="fas fa-edit edit-icon" onclick="editarUsuario(this.parentElement.parentElement.id)"
-                   data-email="${funcionario.email}"></i>
-                <i class="fas fa-trash-alt delete-icon"
-                   onclick="excluirUsuario(this.parentElement.parentElement.id)"></i>
+              <i
+                class="fas fa-edit edit-icon"
+                onclick="editarUsuario(this.parentElement.parentElement.id)"
+                data-email="${funcionario.email}"
+              ></i>
+              <i
+                class="fas fa-trash-alt delete-icon"
+                onclick="excluirUsuario(this.parentElement.parentElement.id)"
+              ></i>
             </td>
-        </tr>
+          </tr>
         </tbody>
-    </table>
-</div>
-
-<div class="modal fade" id="editarUsuarioModal" tabindex="-1" role="dialog" aria-labelledby="editarUsuarioModalLabel"
-     aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="editarUsuarioModalLabel">Editar Usuário</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <form id="editarUsuarioForm">
-                    <div class="form-group">
-                        <label for="nome">Nome:</label>
-                        <input type="text" class="form-control" id="nome" name="nome">
-                    </div>
-                    <div class="form-group">
-                        <label for="email">E-mail:</label>
-                        <input type="email" class="form-control" id="email" name="email" readonly>
-                    </div>
-                    <div class="form-group" id="cargoField">
-                        <label for="cargo">Cargo:</label>
-                        <select class="form-control" id="cargo" name="cargo">
-                            <option value="VETERINÁRIO">Veterinário</option>
-                            <option value="RECEPCIONISTA">Recepcionista</option>
-                            <option value="GERENTE">Gerente</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="telefone">Telefone:</label>
-                        <input type="text" class="form-control" id="telefone" name="telefone">
-                    </div>
-                    <div class="form-group">
-                        <label for="cep">Cep</label>
-                        <input type="text" class="form-control" id="cep" name="cep">
-                    </div>
-                    <div class="form-group">
-                        <label for="cidade">Cidade</label>
-                        <input type="text" class="form-control" id="cidade" name="cidade">
-                    </div>
-                    <div class="form-group">
-                        <label for="estado">Estado</label>
-                        <input type="text" class="form-control" id="estado" name="estado">
-                    </div>
-                    <div class="form-group">
-                        <label for="logradouro">Logradouro</label>
-                        <input type="text" class="form-control" id="logradouro" name="logradouro">
-                    </div>
-                    <div class="form-group">
-                        <label for="numero">Numero</label>
-                        <input type="text" class="form-control" id="numero" name="numero">
-                    </div>
-                    <div class="form-group">
-                        <label for="bairro">Bairro</label>
-                        <input type="text" class="form-control" id="bairro" name="bairro">
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
-                <button type="button" class="btn btn-primary" onclick="salvarMudancas()">Salvar Mudanças</button>
-            </div>
-        </div>
+      </table>
     </div>
-</div>
-<div class="modal fade" id="confirmacaoExclusaoModal" tabindex="-1" role="dialog"
-     aria-labelledby="confirmacaoExclusaoModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="confirmacaoExclusaoModalLabel">Confirmar Exclusão</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                Tem certeza de que deseja excluir este usuário?
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                <button type="button" class="btn btn-danger" id="confirmarExclusao">Confirmar</button>
-            </div>
-        </div>
-    </div>
-</div>
-<!-- Bootstrap JS e jQuery -->
-<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-<script>
 
-    document.getElementById("inicio").addEventListener("click", function () {
+    <div
+      class="modal fade"
+      id="editarUsuarioModal"
+      tabindex="-1"
+      role="dialog"
+      aria-labelledby="editarUsuarioModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="editarUsuarioModalLabel">
+              Editar Usuário
+            </h5>
+            <button
+              type="button"
+              class="close"
+              data-dismiss="modal"
+              aria-label="Fechar"
+            >
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form id="editarUsuarioForm">
+              <div class="form-group">
+                <label for="nome">Nome:</label>
+                <input type="text" class="form-control" id="nome" name="nome" />
+              </div>
+              <div class="form-group">
+                <label for="email">E-mail:</label>
+                <input
+                  type="email"
+                  class="form-control"
+                  id="email"
+                  name="email"
+                  readonly
+                />
+              </div>
+              <div class="form-group" id="cargoField">
+                <label for="cargo">Cargo:</label>
+                <select class="form-control" id="cargo" name="cargo">
+                  <option value="VETERINÁRIO">Veterinário</option>
+                  <option value="RECEPCIONISTA">Recepcionista</option>
+                  <option value="GERENTE">Gerente</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="telefone">Telefone:</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="telefone"
+                  name="telefone"
+                />
+              </div>
+              <div class="form-group">
+                <label for="cep">Cep</label>
+                <input type="text" class="form-control" id="cep" name="cep" />
+              </div>
+              <div class="form-group">
+                <label for="cidade">Cidade</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="cidade"
+                  name="cidade"
+                />
+              </div>
+              <div class="form-group">
+                <label for="estado">Estado</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="estado"
+                  name="estado"
+                />
+              </div>
+              <div class="form-group">
+                <label for="logradouro">Logradouro</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="logradouro"
+                  name="logradouro"
+                />
+              </div>
+              <div class="form-group">
+                <label for="numero">Numero</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="numero"
+                  name="numero"
+                />
+              </div>
+              <div class="form-group">
+                <label for="bairro">Bairro</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="bairro"
+                  name="bairro"
+                />
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-dismiss="modal"
+            >
+              Fechar
+            </button>
+            <button
+              type="button"
+              class="btn btn-primary"
+              onclick="salvarMudancas()"
+            >
+              Salvar Mudanças
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="modal fade"
+      id="confirmacaoExclusaoModal"
+      tabindex="-1"
+      role="dialog"
+      aria-labelledby="confirmacaoExclusaoModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="confirmacaoExclusaoModalLabel">
+              Confirmar Exclusão
+            </h5>
+            <button
+              type="button"
+              class="close"
+              data-dismiss="modal"
+              aria-label="Fechar"
+            >
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            Tem certeza de que deseja excluir este usuário?
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-dismiss="modal"
+            >
+              Cancelar
+            </button>
+            <button type="button" class="btn btn-danger" id="confirmarExclusao">
+              Confirmar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Bootstrap JS e jQuery -->
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+      document.getElementById("inicio").addEventListener("click", function () {
         window.location.href = "/usuario/inicial";
-    });
+      });
 
-    document.getElementById("listagem").addEventListener("click", function () {
-        window.location.href = "/usuario/listagem";
-    });
+      document
+        .getElementById("listagem")
+        .addEventListener("click", function () {
+          window.location.href = "/usuario/listagem";
+        });
 
-    document.getElementById("cadastrarFuncionario").addEventListener("click", function () {
-        window.location.href = "/usuario/cadastro-funcionario";
-    });
+      document
+        .getElementById("cadastrarFuncionario")
+        .addEventListener("click", function () {
+          window.location.href = "/usuario/cadastro-funcionario";
+        });
+      document
+        .getElementById("produtos")
+        .addEventListener("click", function () {
+          window.location.href = "/produtos/";
+        });
+      document.getElementById("pets").addEventListener("click", function () {
+        window.location.href = "/pets/";
+      });
 
-    function editarUsuario(element) {
+      function editarUsuario(element) {
         var email = element;
-        console.log('Editar usuário com e-mail: ', element);
+        console.log("Editar usuário com e-mail: ", element);
         // Continuação da sua lógica...
         // Enviar solicitação AJAX para buscar os dados do usuário
         $.ajax({
-            url: '/usuario/' + email,
-            type: 'GET',
-            success: function (usuario) {
-                // Atualizar os campos do modal com os dados recebidos
-                document.getElementById('nome').value = usuario.nome;
-                document.getElementById('email').value = usuario.email;
-                document.getElementById('telefone').value = usuario.telefone;
-                document.getElementById('cep').value = usuario.cep.cep;
-                document.getElementById('cidade').value = usuario.cep.cidade;
-                document.getElementById('estado').value = usuario.cep.estado;
-                document.getElementById('logradouro').value = usuario.logradouro;
-                document.getElementById('numero').value = usuario.numero;
-                document.getElementById('bairro').value = usuario.bairro;
-                document.getElementById('cargo').value = usuario.cargo;
+          url: "/usuario/" + email,
+          type: "GET",
+          success: function (usuario) {
+            // Atualizar os campos do modal com os dados recebidos
+            document.getElementById("nome").value = usuario.nome;
+            document.getElementById("email").value = usuario.email;
+            document.getElementById("telefone").value = usuario.telefone;
+            document.getElementById("cep").value = usuario.cep.cep;
+            document.getElementById("cidade").value = usuario.cep.cidade;
+            document.getElementById("estado").value = usuario.cep.estado;
+            document.getElementById("logradouro").value = usuario.logradouro;
+            document.getElementById("numero").value = usuario.numero;
+            document.getElementById("bairro").value = usuario.bairro;
+            document.getElementById("cargo").value = usuario.cargo;
 
-                if (usuario.cargo && (usuario.cargo === "VETERINÁRIO" || usuario.cargo === "RECEPCIONISTA" || usuario.cargo === "GERENTE")) {
-                    document.getElementById('cargoField').style.display = 'block';
-                    document.getElementById('cargo').value = usuario.cargo;
-                } else {
-                    console.log('Cargo não informado');
-                    console.log('Cargo: ', usuario.cargo);
-                    document.getElementById('cargoField').style.display = 'none';
-                }
-
-                // Exibir o modal
-                $('#editarUsuarioModal').modal('show');
-            },
-            error: function () {
-                alert('Erro ao buscar os dados do usuário. Por favor, tente novamente.');
+            if (
+              usuario.cargo &&
+              (usuario.cargo === "VETERINÁRIO" ||
+                usuario.cargo === "RECEPCIONISTA" ||
+                usuario.cargo === "GERENTE")
+            ) {
+              document.getElementById("cargoField").style.display = "block";
+              document.getElementById("cargo").value = usuario.cargo;
+            } else {
+              console.log("Cargo não informado");
+              console.log("Cargo: ", usuario.cargo);
+              document.getElementById("cargoField").style.display = "none";
             }
-        });
-    }
 
-    function salvarMudancas() {
-        console.log('Salvando mudanças...');
+            // Exibir o modal
+            $("#editarUsuarioModal").modal("show");
+          },
+          error: function () {
+            alert(
+              "Erro ao buscar os dados do usuário. Por favor, tente novamente."
+            );
+          },
+        });
+      }
+
+      function salvarMudancas() {
+        console.log("Salvando mudanças...");
         const usuario = {
-            nome: document.getElementById('nome').value,
-            email: document.getElementById('email').value,
-            telefone: document.getElementById('telefone').value,
-            cep: {
-                cep: document.getElementById('cep').value,
-                cidade: document.getElementById('cidade').value,
-                estado: document.getElementById('estado').value
-            },
-            logradouro: document.getElementById('logradouro').value,
-            numero: document.getElementById('numero').value,
-            bairro: document.getElementById('bairro').value,
-            cargo: document.getElementById('cargo').value || null
+          nome: document.getElementById("nome").value,
+          email: document.getElementById("email").value,
+          telefone: document.getElementById("telefone").value,
+          cep: {
+            cep: document.getElementById("cep").value,
+            cidade: document.getElementById("cidade").value,
+            estado: document.getElementById("estado").value,
+          },
+          logradouro: document.getElementById("logradouro").value,
+          numero: document.getElementById("numero").value,
+          bairro: document.getElementById("bairro").value,
+          cargo: document.getElementById("cargo").value || null,
         };
 
         $.ajax({
-            url: '/usuario/editar',
-            type: 'PUT',
-            contentType: 'application/json',
-            data: JSON.stringify(usuario),
-            success: function (response) {
-                location.reload();
-            },
-            error: function (error) {
-                alert('Erro ao atualizar o usuário. Por favor, tente novamente.');
-            }
+          url: "/usuario/editar",
+          type: "PUT",
+          contentType: "application/json",
+          data: JSON.stringify(usuario),
+          success: function (response) {
+            location.reload();
+          },
+          error: function (error) {
+            alert("Erro ao atualizar o usuário. Por favor, tente novamente.");
+          },
         });
-    }
+      }
 
-    function excluirUsuario(email) {
-        console.log('Excluir usuário com e-mail: ', email);
+      function excluirUsuario(email) {
+        console.log("Excluir usuário com e-mail: ", email);
         // Abrir modal de confirmação
-        $('#confirmacaoExclusaoModal').modal('show');
+        $("#confirmacaoExclusaoModal").modal("show");
 
         // Definir ação de exclusão no botão de confirmação
-        $('#confirmarExclusao').off().on('click', function () {
+        $("#confirmarExclusao")
+          .off()
+          .on("click", function () {
             // Requisição PUT para desativar o usuário
             $.ajax({
-                url: '/usuario/desativar',
-                type: 'PUT',
-                contentType: 'application/json',
-                data: JSON.stringify({email: email}),
-                success: function (response) {
-                    console.log('Usuário desativado com sucesso!');
-                    // Recarregar a página ou atualizar a lista de usuários
-                    location.reload();
-                },
-                error: function (error) {
-                    console.error('Erro ao desativar usuário:', error);
-                    // Exibir mensagem de erro ou tratar de outra forma
-                    alert('Erro ao desativar o usuário. Por favor, tente novamente.');
-                }
+              url: "/usuario/desativar",
+              type: "PUT",
+              contentType: "application/json",
+              data: JSON.stringify({ email: email }),
+              success: function (response) {
+                console.log("Usuário desativado com sucesso!");
+                // Recarregar a página ou atualizar a lista de usuários
+                location.reload();
+              },
+              error: function (error) {
+                console.error("Erro ao desativar usuário:", error);
+                // Exibir mensagem de erro ou tratar de outra forma
+                alert(
+                  "Erro ao desativar o usuário. Por favor, tente novamente."
+                );
+              },
             });
-        });
-    }
+          });
+      }
 
-    function filtrarUsuarios(tipo) {
-        if (tipo === 'todos') {
-            window.location.reload(); // Recarregar a página
-            return; // Sair da função para evitar a execução do código abaixo
+      function filtrarUsuarios(tipo) {
+        if (tipo === "todos") {
+          window.location.reload(); // Recarregar a página
+          return; // Sair da função para evitar a execução do código abaixo
         }
 
         // Fazer uma requisição AJAX para o endpoint /filtrar no back-end
         $.ajax({
-            url: '/usuario/filtrar',
-            type: 'GET',
-            data: {
-                tipo: tipo // Passar o tipo de filtro como parâmetro
-            },
-            success: function (response) {
-                // Atualizar a tabela com os resultados filtrados
-                atualizarTabela(response, tipo); // Passar o tipo de usuário
-            },
-            error: function (error) {
-                console.error('Erro ao filtrar usuários:', error);
-                // Exibir mensagem de erro ou tratar de outra forma
-                alert('Erro ao filtrar usuários. Por favor, tente novamente.');
-            }
+          url: "/usuario/filtrar",
+          type: "GET",
+          data: {
+            tipo: tipo, // Passar o tipo de filtro como parâmetro
+          },
+          success: function (response) {
+            // Atualizar a tabela com os resultados filtrados
+            atualizarTabela(response, tipo); // Passar o tipo de usuário
+          },
+          error: function (error) {
+            console.error("Erro ao filtrar usuários:", error);
+            // Exibir mensagem de erro ou tratar de outra forma
+            alert("Erro ao filtrar usuários. Por favor, tente novamente.");
+          },
         });
-    }
-    function atualizarTabela(usuarios, tipo) {
-        console.log('Atualizando tabela com usuários:', usuarios, 'do tipo:', tipo);
+      }
+      function atualizarTabela(usuarios, tipo) {
+        console.log(
+          "Atualizando tabela com usuários:",
+          usuarios,
+          "do tipo:",
+          tipo
+        );
         // Limpar o corpo da tabela
-        $('tbody').empty();
+        $("tbody").empty();
 
         // Mostrar ou esconder a coluna "Cargo" com base no tipo
-        if (tipo === 'funcionario') {
-            $('.cargo-column').show();
+        if (tipo === "funcionario") {
+          $(".cargo-column").show();
         } else {
-            $('.cargo-column').hide();
+          $(".cargo-column").hide();
         }
-        if (tipo === 'funcionario' || tipo === 'cliente') {
-            $('.acoes-colum').hide();
+        if (tipo === "funcionario" || tipo === "cliente") {
+          $(".acoes-colum").hide();
         } else {
-            $('.cargo-column').show();
+          $(".cargo-column").show();
         }
 
         // Verificar se o tipo é 'cliente'
-        if (tipo === 'cliente') {
-            console.log('Clientes:', usuarios);
-            // Adicionar clientes à tabela
-            usuarios.forEach(function (usuario) {
-                adicionarLinhaTabela(usuario, 'Cliente', false);
-            });
-        } else if (tipo === 'funcionario') {
-            console.log('Funcionários:', usuarios);
-            usuarios.forEach(function (usuario) {
-                if (usuario.cargo !== undefined) {
-                    adicionarLinhaTabela(usuario, 'Funcionário', false);
-                }
-            });
+        if (tipo === "cliente") {
+          console.log("Clientes:", usuarios);
+          // Adicionar clientes à tabela
+          usuarios.forEach(function (usuario) {
+            adicionarLinhaTabela(usuario, "Cliente", false);
+          });
+        } else if (tipo === "funcionario") {
+          console.log("Funcionários:", usuarios);
+          usuarios.forEach(function (usuario) {
+            if (usuario.cargo !== undefined) {
+              adicionarLinhaTabela(usuario, "Funcionário", false);
+            }
+          });
         } else {
-            console.log('Outros usuários:', usuarios);
-            usuarios.forEach(function (usuario) {
-                adicionarLinhaTabela(usuario, 'Desconhecido', false);
-            });
+          console.log("Outros usuários:", usuarios);
+          usuarios.forEach(function (usuario) {
+            adicionarLinhaTabela(usuario, "Desconhecido", false);
+          });
         }
-    }
+      }
 
-    function adicionarLinhaTabela(usuario, tipoUsuario, mostrarBotoes) {
-        console.log('Adicionando linha à tabela para usuário:', usuario, 'Tipo:', tipoUsuario);
-        var cargo = '';
-        var cargoColumn = tipoUsuario === 'Funcionário' ? '<td class="cargo-column">' + (usuario.cargo || '') + '</td>' : '';
-        var botoes = mostrarBotoes ? '<td>' +
+      function adicionarLinhaTabela(usuario, tipoUsuario, mostrarBotoes) {
+        console.log(
+          "Adicionando linha à tabela para usuário:",
+          usuario,
+          "Tipo:",
+          tipoUsuario
+        );
+        var cargo = "";
+        var cargoColumn =
+          tipoUsuario === "Funcionário"
+            ? '<td class="cargo-column">' + (usuario.cargo || "") + "</td>"
+            : "";
+        var botoes = mostrarBotoes
+          ? "<td>" +
             '<i class="fas fa-edit edit-icon" onclick="editarUsuario(this.parentElement.parentElement.id)"></i>' +
             '<i class="fas fa-trash-alt delete-icon" onclick="excluirUsuario(this.parentElement.parentElement.id)"></i>' +
-            '</td>' : '';
+            "</td>"
+          : "";
 
         // Construir a linha da tabela com os dados do usuário
-        var linha = '<tr>' +
-            '<td>' + usuario.nome + '</td>' +
-            '<td>' + usuario.email + '</td>' +
-            '<td>' + usuario.dataNascimento + '</td>' +
-            '<td>' + usuario.telefone + '</td>' +
-            '<td>' + tipoUsuario + '</td>' +
-            cargoColumn + // Adiciona a coluna de cargo somente se o tipo de usuário for "Funcionário"
-            (mostrarBotoes ? botoes : '') + // Adiciona os botões de edição e deleção somente se "mostrarBotoes" for true
-            '</tr>';
+        var linha =
+          "<tr>" +
+          "<td>" +
+          usuario.nome +
+          "</td>" +
+          "<td>" +
+          usuario.email +
+          "</td>" +
+          "<td>" +
+          usuario.dataNascimento +
+          "</td>" +
+          "<td>" +
+          usuario.telefone +
+          "</td>" +
+          "<td>" +
+          tipoUsuario +
+          "</td>" +
+          cargoColumn + // Adiciona a coluna de cargo somente se o tipo de usuário for "Funcionário"
+          (mostrarBotoes ? botoes : "") + // Adiciona os botões de edição e deleção somente se "mostrarBotoes" for true
+          "</tr>";
 
         // Adicionar a linha à tabela
-        $('tbody').append(linha);
-    }
-</script>
-</body>
+        $("tbody").append(linha);
+      }
+    </script>
+  </body>
 </html>

@@ -148,26 +148,6 @@ public class ProdutoController {
         }
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<String> deletarProduto(@PathVariable Long id) {
-        try {
-            Produto produto = produtoService.findById(id);
-
-            if (produto != null && produto.getImagem() != null) {
-                produtoService.removerImagem(produto.getImagem(), UPLOAD_DIR); // Remove a imagem associada
-            }
-
-            // Deletar o produto do banco de dados (incluindo relações dependentes, se
-            // houver)
-            produtoService.deletarProduto(id);
-
-            return ResponseEntity.noContent().build();
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.badRequest().body("Erro ao deletar o produto");
-        }
-    }
-
     @GetMapping("/buscar")
     @ResponseBody
     public ResponseEntity<List<Produto>> buscarProdutos(@RequestParam("nome") String nome) {
