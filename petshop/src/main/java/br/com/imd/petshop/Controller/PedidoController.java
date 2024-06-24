@@ -64,8 +64,13 @@ public class PedidoController {
     }
 
     @PostMapping("/create/{funcionarioId}/{clienteId}")
-    public String create(@RequestBody PedidoDTO pedido, @PathVariable String funcionarioId, @PathVariable String clienteId) {
-        pedidoService.save(pedido);
+    public String create(@RequestBody PedidoDTO pedido, @PathVariable String funcionarioId, @PathVariable String clienteId, Model model) {
+        try {
+            pedidoService.save(pedido);
+            model.addAttribute("msg", "Pedido criado com sucesso!");
+        } catch (Exception e) {
+            model.addAttribute("msg", e.getMessage());
+        }
         return "redirect:/pedido/list";
     }
 

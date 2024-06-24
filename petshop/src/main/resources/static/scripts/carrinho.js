@@ -87,12 +87,14 @@ function mostrarResumoPedido() {
           <td>${item.nome}</td>
           <td>${item.preco}</td>
           <td>
-            <button class="btn btn-sm btn-outline-primary" onclick="removerItem(${item.id})">-</button>
+            <button class="btn btn-sm btn-outline-primary removerItem" onclick="removerItem(${item.id})" title="Remover item">-</button>
             <span>${item.qtd}</span>
-            <button class="btn btn-sm btn-outline-primary" onclick="addProduto('${item.nome}', '${item.preco}', '${item.id}', ${item.qtd + 1})">+</button>
+            <button class="btn btn-sm btn-outline-primary adicionarItem" onclick="addProduto('${item.nome}', '${item.preco}', '${item.id}', ${item.qtd + 1})" title="Adicionar item">+</button>
           </td>
           <td>
-            <button class="btn btn-danger" onclick="removerProduto(${item.id})">Remover</button>
+            <button class="removerProduto" style="margin-left: 5px; border: 0; color: green; background: transparent" onclick="removerProduto(${item.id})">
+                <i class="ph ph-trash" title="Remover pedido" style="font-size: 25px; color: #742a0f"></i>
+            </button>
            </td>
         `;
         tbody.appendChild(newRow);
@@ -134,7 +136,13 @@ finalizarCompra.addEventListener('click', () => {
                     });
                 });
             } else{
-                window.location.href = '/pedido/list';
+                var msg = document.getElementById('customMsg');
+                msg.textContent = "Pedido cadastrado com sucesso!";
+                msg.style.display = 'block';
+                setTimeout(() => {
+                    msg.style.display = 'none';
+                    window.location.href = '/pedido/list';
+                }, 1500);
             }
         })
 })

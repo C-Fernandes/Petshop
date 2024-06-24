@@ -1,0 +1,104 @@
+:root {
+    --peru: #ec9474;
+    --coral: #fba383;
+    --maroon: #742a0f;
+    --rosybrown: #a46c5c;
+    --tan: #cda99d;
+}
+
+body {
+    background-color: #f2f2f2;
+    font-family: Arial, sans-serif;
+}
+
+.container {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+    color: var(--maroon);
+    border-bottom: 2px solid var(--maroon);
+    padding-bottom: 10px;
+}
+
+table {
+    width: 100%;
+    margin-top: 20px;
+    border-collapse: collapse;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+th, td {
+    padding: 10px;
+    text-align: left;
+    border: 1px solid #ddd;
+}
+
+th {
+    background-color: var(--maroon);
+    color: white;
+}
+
+tr:nth-child(even) {
+    background-color: var(--tan);
+}
+
+.adicionarItem, .removerItem, .cancelarPedido {
+    border: none;
+    background: none;
+    cursor: pointer;
+    padding: 5px;
+    color: var(--maroon);
+}
+
+.adicionarItem:hover, .removerItem:hover, .cancelarPedido:hover {
+    opacity: 0.8;
+}
+
+.finalizarCompra, .atualizarPedido {
+    color: var(--maroon);
+}
+
+.thead {
+    background-color: var(--maroon);
+    color: white;
+}
+
+nav {
+    font-size: 1.1em;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    height: auto;
+    width: 100%;
+    background-color: var(--maroon);
+    color: white;
+    box-shadow: 0 0 5px black;
+}
+
+.navbar {
+    flex-wrap: wrap;
+    padding: 0.5em;
+    margin: 0 0.5em 0 0;
+}
+
+a {
+    color: white;
+    text-decoration: none;
+    padding: 0.3em 0.5em;
+}
+
+a:hover {
+    background-color: var(--maroon);
+    border: 1px solid var(--maroon);
+    border-radius: 15px;
+    text-decoration: none;
+    color: white;
+}

@@ -4,13 +4,36 @@
     <meta charset="UTF-8">
     <title>Listagem de pedidos</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" rel="stylesheet"/>
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" rel="stylesheet"/>
+
+    <link rel="stylesheet" href="/styles/listagemPedidos.css" />
+
 </head>
 <body>
-<div class="container">
+<header>
+    <nav>
+        <div class="navbar">
+            <a href="">Inicio</a>
+            <a href="">Pets</a>
+            <a href="">Produtos</a>
+            <a href="">Servicos</a>
+            <a id="carrinho" style="position: relative; display: inline-block;" href="#">
+                <i class="ph ph-shopping-cart" style="font-size: 35px;"></i>
+                <span id="qtd" class="badge badge-pill badge-primary" style="position: absolute; top: -1px; right: -1px; background: #ec9474">0</span>
+            </a>
+        </div>
+    </nav>
+</header>
+<div class="lateral-container">
+    <div id="customMsg" style="display: none; position: fixed; top: 20px; left: 50%; transform: translateX(-50%); font-size: 24px; padding: 15px;" class="alert alert-success" role="alert"></div>
+</div>
+
+<div class="container mt-5">
     <h1 class="my-4">Listagem de Pedidos</h1>
 
     <table class="table table-bordered table-striped">
-        <thead class="thead-dark">
+        <thead class="thead">
         <tr>
             <th scope="col">Pedido ID</th>
             <th scope="col">Data</th>
@@ -34,8 +57,12 @@
                 </ul>
             </td>
             <td>
-                <button class="btn btn-danger cancelarPedido" th:attr="data-pedido-id=${pedido.pedido_id}" style="margin-left: 5px">Cancelar</button>
-                <button class="btn btn-success atualizarPedido" th:attr="data-pedido-id=${pedido.pedido_id}">Atualizar</button>
+                <button class="atualizarPedido" th:attr="data-pedido-id=${pedido.pedido_id}" style="margin-left: 5px; border: 0; color: green; background: transparent">
+                    <i style="font-size: 25px;" class="ph ph-pencil" title="Editar pedido"></i>
+                </button>
+                <button class="cancelarPedido" th:attr="data-pedido-id=${pedido.pedido_id}" style="margin-left: 5px; border: 0; color: red; background: transparent">
+                    <i style="font-size: 25px;" class="ph ph-trash" title="Cancelar pedido"></i>
+                </button>
             </td>
         </tr>
         </tbody>
@@ -67,7 +94,13 @@
                             });
                         });
                     } else{
-                        window.location.href = '/pedido/list';
+                        var msg = document.getElementById('customMsg');
+                        msg.textContent = "Pedido deletado com sucesso!";
+                        msg.style.display = 'block';
+                        setTimeout(() => {
+                            msg.style.display = 'none';
+                            window.location.href = '/pedido/list';
+                        }, 1500);
                     }
                 })
         });

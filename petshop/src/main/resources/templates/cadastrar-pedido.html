@@ -9,6 +9,9 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
   <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" rel="stylesheet"/>
   <link rel="stylesheet" href="/styles/produtos.css" />
+  <link rel="stylesheet" href="/styles/carrinho.css" />
+
+
 </head>
 <body>
 <header>
@@ -18,9 +21,9 @@
       <a href="">Pets</a>
       <a href="">Produtos</a>
       <a href="">Servicos</a>
-      <a id="carrinho" style="position: relative; display: inline-block;" href="#">
+      <a id="carrinho" style="position: relative; display: inline-block; margin-right: 10px" href="#">
         <i class="ph ph-shopping-cart" style="font-size: 35px;"></i>
-        <span id="qtd" class="badge badge-pill badge-primary" style="position: absolute; top: -1px; right: -1px; background: #ec9474">0</span>
+        <span id="qtd" class="badge badge-pill badge-primary" style="position: absolute; top: -1px; right: -1px; background: #ec9474; margin-right: 5px; margin-top: 4px">0</span>
       </a>
     </div>
   </nav>
@@ -47,36 +50,39 @@
   </div>
 
   <div id="shoppingCart" style="display: none;">
-    <h2 style="margin-left: 100px">Carrinho de compras</h2>
-    <table id="cartTable" class="table" style="width: 500px; margin-left: 100px">
-      <thead>
+    <h4>Resumo do pedido</h4>
+    <table id="cartTable" class="table table-bordered table-striped" style="width: 500px;">
+      <thead class="thead">
       <tr>
         <th scope="col">ITEM</th>
         <th scope="col">NOME</th>
         <th scope="col">PREÇO</th>
         <th scope="col">QUANTIDADE</th>
-        <th scope="col">REMOVER</th>
+        <th scope="col">AÇÃO</th>
       </tr>
       </thead>
       <tbody id="cartBody">
       </tbody>
     </table>
+    <hr>
     <p>Total: <span class="total"></span></p>
-    <div class="form-row">
       <div class="form-group">
+        <label>Funcionário</label>
         <select id="funcionario" name="funcionario">
           <option th:each="funcionario : ${funcionarios}" th:value="${funcionario.getEmail()}" th:text="${'funcionario ' + funcionario.email}"></option>
         </select>
       </div>
       <div class="form-group">
+        <label>Cliente</label>
         <select id="cliente" name="cliente">
           <option th:each="cliente : ${clientes}" th:value="${cliente.getEmail()}" th:text="${'cliente ' + cliente.email}"></option>
         </select>
-
       </div>
+    <button id="finalizarCompra" th:if="${pedidoEmEdicao == null}" type="button" class="btn btn-success">Finalizar pedido</button>
+    <button id="atualizarCompra" th:if="${pedidoEmEdicao != null}" type="button" class="btn btn-success">Atualizar pedido</button>
+    <div class="lateral-container">
+      <div id="customMsg" style="display: none; position: fixed; top: 20px; left: 50%; transform: translateX(-50%); font-size: 24px; padding: 15px;" class="alert alert-success" role="alert"></div>
     </div>
-    <button id="finalizarCompra" th:if="${pedidoEmEdicao == null}" type="button" class="btn btn-sm btn-outline-primary">Finalizar pedido</button>
-    <button id="atualizarCompra" th:if="${pedidoEmEdicao != null}" type="button" class="btn btn-sm btn-outline-primary">Atualizar pedido</button>
   </div>
 
   <script src="/scripts/carrinho.js"></script>
@@ -128,7 +134,13 @@
                   });
                 });
               } else {
-                window.location.href = '/pedido/list';
+                var msg = document.getElementById('customMsg');
+                msg.textContent = "Pedido editado com sucesso!";
+                msg.style.display = 'block';
+                setTimeout(() => {
+                  msg.style.display = 'none';
+                  window.location.href = '/pedido/list';
+                }, 1500);
               }
             })
             .catch(error => {

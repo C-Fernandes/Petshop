@@ -1,0 +1,144 @@
+:root {
+    --peru: #ec9474;
+    --coral: #fba383;
+    --maroon: #742a0f;
+    --rosybrown: #a46c5c;
+    --tan: #cda99d;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f9f9f9; /* Fundo levemente cinza */
+    color: #333; /* Texto padrão */
+}
+
+.navbar {
+    display: flex;
+    justify-content: center;
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.navbar a {
+    color: #fff;
+    text-decoration: none;
+    padding: 10px 15px;
+    transition: background-color 0.3s ease;
+}
+
+.navbar a:hover {
+    background-color: var(--coral); /* Cor ao passar o mouse */
+    border-radius: 5px;
+}
+
+#carrinho {
+    position: relative;
+    color: #fff;
+   // text-decoration: none;
+    //margin-left: auto;
+    //padding-right: 20px;
+    display: inline-block
+}
+
+#carrinho i {
+    font-size: 35px;
+}
+
+
+#qtd {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background: var(--coral); /* Cor do badge do carrinho */
+    color: #fff;
+    font-size: 12px;
+    padding: 4px 8px;
+    border-radius: 50%;
+}
+
+.total {
+    color: var(--peru); /* Cor do total */
+    font-size: 20px;
+    font-weight: bold;
+}
+
+#shoppingCart {
+    background-color: #fff; /* Fundo branco */
+    padding: 20px;
+    margin-top: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Sombra suave */
+    width: calc(50%); /* Define a largura como metade da tela */
+    max-width: 550px; /* Define uma largura máxima para não ocupar toda a largura em telas maiores */
+    margin-left: auto; /* Alinha à direita */
+    margin-right: 20px; /* Distância da borda direita */
+}
+
+main {
+    padding: 20px;
+    text-align: center;
+    display: flex; /* Utiliza flexbox para alinhar conteúdo */
+    justify-content: center; /* Centraliza conteúdo principal */
+}
+
+@media (max-width: 768px) {
+    /* Para telas menores que 768px, ajuste para ocupar 90% da largura */
+    #shoppingCart {
+        width: 90%;
+        max-width: none; /* Remove a largura máxima */
+        margin-right: auto; /* Centraliza na tela */
+        margin-left: auto; /* Centraliza na tela */
+    }
+}
+
+
+#cartTable {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+}
+
+#cartTable th {
+    background-color: var(--maroon); /* Cor de fundo do cabeçalho da tabela */
+    color: #fff;
+    padding: 10px 0;
+    text-align: center;
+}
+
+#cartTable td {
+    padding: 8px;
+    text-align: center;
+}
+
+.btn-success {
+    background-color: var(--tan); /* Cor do botão de finalizar/atualizar */
+    border-color: var(--tan);
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.btn-success:hover {
+    background-color: var(--maroon); /* Cor ao passar o mouse */
+    border-color: var(--maroon);
+}
+
+.form-group {
+    margin-bottom: 15px;
+    text-align: left;
+}
+
+.alert-success {
+    background-color: var(--coral); /* Cor da mensagem de sucesso */
+    color: #fff;
+    text-align: center;
+    padding: 10px;
+    margin-top: 20px;
+    border-radius: 5px;
+    display: none; /* Inicialmente escondida */
+}
