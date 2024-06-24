@@ -44,9 +44,20 @@ public class PetService {
     }
 
     public void inserirPet(Pet pet) {
+<<<<<<< Updated upstream
         System.out.println("raca:" + racaRepository.findByRaca(pet.getRaca().getRaca()));
         if (racaRepository.findByRaca(pet.getRaca().getRaca()) == null) {
             racaRepository.save(pet.getRaca());
+=======
+
+        try {
+            if (racaRepository.findByRaca(pet.getRaca().getRaca()) == null) {
+                racaRepository.save(pet.getRaca());
+            }
+            petRepository.inserirPet(pet);
+        } catch (Exception e) {
+            e.printStackTrace();
+>>>>>>> Stashed changes
         }
 
         System.out.println(pet.getDataDeNascimento());
@@ -131,6 +142,53 @@ public class PetService {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         }
 
+        return ResponseEntity.ok().build();
+    }
+
+    public ResponseEntity<Map<String, Object>> validarPet(Pet pet) {
+        Map<String, Object> response = new HashMap<>();
+        List<String> errors = new ArrayList<>();
+
+        // Validando campos obrigatórios
+        if (pet.getNome() == null || pet.getNome().isEmpty() || pet.getNome().trim().equals("")) {
+            errors.add("O nome do pet é obrigatório.");
+        }
+
+        if (pet.getPeso() == null) {
+            errors.add("O peso do pet é obrigatório.");
+        } else if (pet.getPeso() <= 0) {
+            errors.add("O peso do pet deve ser maior que zero.");
+        }
+
+        if (pet.getRaca() == null) {
+            errors.add("A raça do pet é obrigatória.");
+        } else {
+            if (pet.getRaca().getRaca() == null || pet.getRaca().getRaca().isEmpty()
+                    || pet.getRaca().getRaca().trim().equals("")) {
+                errors.add("A raça do pet é obrigatória.");
+            }
+            if (pet.getRaca().getEspecie() == null || pet.getRaca().getEspecie().isEmpty()
+                    || pet.getRaca().getEspecie().trim().equals("")) {
+                errors.add("A espécie do pet é obrigatória.");
+            }
+        }
+
+        if (pet.getSexo() == '\0') {
+            errors.add("O sexo do pet é obrigatório.");
+        }
+
+        if (pet.getDataDeNascimento() == null) {
+            errors.add("A data de nascimento do pet é obrigatória.");
+        }
+
+        // Se houver erros, retorna uma resposta com status 400 (Bad Request) e a lista
+        // de erros
+        if (!errors.isEmpty()) {
+            response.put("errors", errors);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        }
+
+        // Se não houver erros, retorna uma resposta com status 200 (OK)
         return ResponseEntity.ok().build();
     }
 }

@@ -77,6 +77,10 @@ public class PetController {
 
             // Obtendo o objeto Pet do PetDTO
             Pet pet = petDTO.getPet();
+<<<<<<< Updated upstream
+=======
+            Usuario u = usuarioService.findUsuario(usuarioLogado.getEmail());
+>>>>>>> Stashed changes
             Cliente usuario = new Cliente();
             usuario.setEmail(usuarioLogado.getEmail());
             String urlImagem = "padrao.jpg"; // Nome da imagem padrão
@@ -85,12 +89,15 @@ public class PetController {
                 // Salva a nova imagem
                 urlImagem = petService.salvarNovaImagem(file, UPLOAD_DIR);
             }
-
             pet.setImagem(urlImagem);
             pet.setDono(usuario);
-
             Raca raca = petDTO.getRaca();
             pet.setRaca(raca);
+            ResponseEntity<Map<String, Object>> validationResponse = petService
+                    .validarPet(pet);
+            if (validationResponse.getStatusCode() != HttpStatus.OK) {
+                return ResponseEntity.badRequest().body(validationResponse.getBody());
+            }
             petService.inserirPet(pet);
 
             Map<String, Object> response = new HashMap<>();
@@ -118,11 +125,9 @@ public class PetController {
             pet.setRaca(petDTO.getRaca());
             ResponseEntity<Map<String, Object>> validationResponse = petService
                     .validarPetAtualizacao(pet);
-
             if (validationResponse.getStatusCode() != HttpStatus.OK) {
                 return ResponseEntity.badRequest().body(validationResponse.getBody());
             }
-
             String urlImagem = "padrao.jpeg";
             // Se uma nova imagem foi enviada, processa e salva como no cadastro
             if (file != null && !file.isEmpty()) {

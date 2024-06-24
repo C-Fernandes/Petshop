@@ -126,18 +126,9 @@ $(document).ready(function () {
                                     case "O nome do pet é obrigatório.":
                                         document.getElementById("mensagemNomePet").innerText = error;
                                         break;
-                                    case "A raça do pet é obrigatória.":
-                                        document.getElementById("mensagemRacaPet").innerText = error;
-                                        break;
-                                    case "A espécie do pet é obrigatória.":
-                                        document.getElementById("mensagemEspeciePet").innerText = error;
-                                        break;
                                     case "O peso do pet é obrigatório.":
                                     case "O peso do pet deve ser maior que zero.":
                                         document.getElementById("mensagemPesoPet").innerText = error;
-                                        break;
-                                    case "O sexo do pet é obrigatório e deve ser 'M' (macho) ou 'F' (fêmea).":
-                                        document.getElementById("mensagemSexoPet").innerText = error;
                                         break;
                                     default:
                                         console.error("Erro desconhecido:", error);
@@ -258,10 +249,42 @@ $(document).ready(function () {
             .then(response => {
                 if (!response.ok) {
                     return response.json().then(data => {
-                        throw new Error(data.mensagem || "Erro ao cadastrar o pet.");
+                        if (data.errors) {
+                            data.errors.forEach(error => {
+                                switch (error) {
+                                    case "O nome do pet é obrigatório.":
+                                        document.getElementById("mensagemNomePet").innerText = error;
+                                        break;
+                                    case "A raça do pet é obrigatória.":
+                                        document.getElementById("mensagemRacaPet").innerText = error;
+                                        break;
+                                    case "A espécie do pet é obrigatória.":
+                                        document.getElementById("mensagemEspeciePet").innerText = error;
+                                        break;
+                                    case "O peso do pet é obrigatório.":
+                                    case "O peso do pet deve ser maior que zero.":
+                                        document.getElementById("mensagemPesoPet").innerText = error;
+                                        break;
+                                    case "O sexo do pet é obrigatório.":
+                                        document.getElementById("mensagemSexoPet").innerText = error;
+                                        break;
+                                    case "A data de nascimento do pet é obrigatória.":
+                                    case "A data de nascimento do pet é inválida.":
+                                    case "A data de nascimento do pet não pode ser superior à data atual.":
+                                        document.getElementById("mensagemDataNascimentoPet").innerText = error;
+                                        break;
+                                    default:
+                                        console.error("Erro desconhecido:", error);
+                                }
+                            });
+                        }
+                        // Retorna null para que o próximo then não seja executado com data undefined
+                        return null;
                     });
+                } else {
+                    // Retorna os dados da resposta se a requisição foi bem sucedida
+                    return response.json();
                 }
-                return response.json(); // Converte a resposta para JSON
             })
             .then(data => {
                 // Acessa a URL da nova imagem atualizada, se disponível
