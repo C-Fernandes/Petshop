@@ -59,7 +59,6 @@
         <a id="produtos">Produtos</a>
         <a id="servicos">Servicos</a>
         <a id="listagem">Listagem</a>
-        <a id="cadastrarFuncionario">Cadastrar funcionário</a>
     </div>
 </nav>
 <div class="login-container position-relative overflow-hidden">
@@ -259,7 +258,6 @@
                         <option value="" disabled selected>Selecione o cargo</option>
                         <option value="VETERINARIO">Veterinário</option>
                         <option value="RECEPCIONISTA">Recepcionista</option>
-                        <option value="GROOMER">Groomer</option>
                         <option value="GERENTE">Gerente</option>
                     </select>
                     <div id="mensagemErroCargo" class="alerta" role="alert"></div>
@@ -426,7 +424,7 @@
                             }
                         });
                     } else {
-                        window.location.href = '/usuario/login';
+                        window.location.href = '/usuario/listagem';
                     }
                 })
         };

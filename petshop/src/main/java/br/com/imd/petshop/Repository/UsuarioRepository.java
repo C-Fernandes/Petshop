@@ -1,6 +1,7 @@
 package br.com.imd.petshop.Repository;
 
 import br.com.imd.petshop.DTO.UsuarioDTO;
+import br.com.imd.petshop.Entity.Cep;
 import br.com.imd.petshop.Entity.Usuario;
 import br.com.imd.petshop.Config.DataBaseConfig;
 import org.springframework.stereotype.Repository;
@@ -170,5 +171,44 @@ public class UsuarioRepository {
 
         return usuario;
     }
+
+
+    public Usuario findByEmailTelaDados(String email) throws SQLException {
+        String sql = "SELECT u.nome, u.email, u.data_nascimento, u.telefone, u.numero, u.logradouro, u.bairro, " +
+                "c.cep AS c_cep, c.cidade, c.estado " +  // Adicionado espaço após estado
+                "FROM usuario u " +
+                "JOIN cep c ON u.cep = c.cep " +
+                "WHERE u.email = ?";
+
+        try (Connection conn = DataBaseConfig.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, email);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                Usuario usuario = new Usuario();
+                usuario.setNome(rs.getString("nome"));
+                usuario.setEmail(rs.getString("email"));
+                usuario.setDataDeNascimento(rs.getDate("data_nascimento"));
+                usuario.setTelefone(rs.getString("telefone"));
+                usuario.setLogradouro(rs.getString("logradouro"));
+                usuario.setNumero(rs.getLong("numero"));
+                usuario.setBairro(rs.getString("bairro"));
+
+                Cep cep = new Cep();
+                cep.setCep(rs.getString("c_cep"));
+                cep.setCidade(rs.getString("cidade"));
+                cep.setEstado(rs.getString("estado"));
+
+                usuario.setCep(cep);
+
+                return usuario;
+            }
+        }
+        return null; // Usuario não encontrado
+    }
+
+
+
 
 }

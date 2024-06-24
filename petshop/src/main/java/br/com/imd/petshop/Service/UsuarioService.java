@@ -18,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.Period;
 import java.time.ZoneId;
@@ -300,8 +301,8 @@ public class UsuarioService {
         return usuarioRepository.listarFuncionarios();
     }
 
-    public UsuarioDTO obterUsuarioDTO(String email) {
-        Usuario usuario = usuarioRepository.findByEmail(email);
+    public UsuarioDTO obterUsuarioDTO(String email) throws SQLException {
+        Usuario usuario = usuarioRepository.findByEmailTelaDados(email);
 
         UsuarioDTO usuarioDTO = convertToDTO(usuario);
 

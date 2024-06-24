@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Tela de login</title>
@@ -9,16 +9,184 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <style>
+        :root {
+            --peru: #ec9474;
+            --coral: #fba383;
+            --maroon: #742a0f;
+            --rosybrown: #a46c5c;
+            --tan: #cda99d;
+        }
 
+        body{
+            background-color: #fba383;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+        }
+        .my-container{
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            margin-top: 5rem;
+        }
+
+        main{
+            width: 60%;
+            background-color: white;
+            border-radius: 20px;
+            padding: 5rem;
+        }
+
+        img{
+            border-radius: 50%;
+            margin-right: 5rem;
+        }
+
+        .initial{
+            background-color: #742a0f;
+            color: white;
+            display: flex;
+            align-items: center;
+            padding: 2rem;
+            border-radius: 20px;
+        }
+
+        .initial span{
+            font-size: 1.5rem;
+        }
+
+        .initial div{
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .initial #nome{
+            font-weight: bold;
+        }
+
+        .linha{
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 2rem;
+            border: 1px solid #742a0f;
+            border-radius: 20px;
+        }
+
+        nav {
+            font-size: 1.1em;
+            display: flex;
+            flex-direction: row;
+            justify-content: flex-end;
+            height: auto;
+            width: 100%;
+            background-color: var(--maroon);
+            color: white;
+            box-shadow: 0 0 5px black;
+        }
+
+        .navbar {
+            flex-wrap: wrap;
+            padding: 0.5em;
+            margin: 0 0.5em 0 0;
+        }
+
+        a {
+            color: white;
+            text-decoration: none;
+            padding: 0.3em 0.5em;
+        }
+
+        a:hover {
+            background-color: var(--maroon);
+            border: 1px solid var(--maroon);
+            border-radius: 15px;
+            text-decoration: none;
+            color: white;
+        }
+    </style>
 </head>
 <body>
-<main>
-    <section>
-        <img src=""/>
-        <span id="nome">Nome</span>
-        <span id="email">email</span>
-        <span id="number">84912344321</span>
-    </section>
-</main>
+
+<nav>
+    <div class="navbar">
+        <a id="inicio">Inicio</a>
+        <a id="pets">Pets</a>
+        <a id="produtos">Produtos</a>
+        <a id="servicos">Servicos</a>
+        <a id="listagem">Listagem</a>
+        <a id="cadastrarFuncionario">Cadastrar funcionário</a>
+    </div>
+</nav>
+
+<div class="my-container">
+
+    <main>
+        <section class="initial">
+            <img width="100px" height="100px" src="https://st.depositphotos.com/2398521/2608/i/450/depositphotos_26089317-stock-photo-cute-small-dog.jpg"/>
+            <div>
+                <span id="nome" th:text="${usuario.nome}"></span>
+                <span id="email" th:text="${usuario.email}"></span>
+                <span id="telefone" th:text="${usuario.telefone}"></span>
+            </div>
+        </section>
+
+        <section>
+            <div class="linha">
+                <div>
+                    <span>CEP: </span>
+                    <span id="cep" th:text="${usuario.cep.getCep()}"></span>
+                </div>
+
+                <div>
+                    <span>Estado: </span>
+                    <span id="estado" th:text="${usuario.cep.getEstado()}"></span>
+                </div>
+
+                <div>
+                    <span>Cidade: </span>
+                    <span id="cidade" th:text="${usuario.cep.getCidade()}"></span>
+                </div>
+            </div>
+
+            <div class="linha">
+                <div>
+                    <span>Bairro: </span>
+                    <span id="bairro" th:text="${usuario.bairro}">/span>
+                </div>
+
+                <div>
+                    <span>Logradouro: </span>
+                    <span id="logradouro" th:text="${usuario.logradouro}"></span>
+                </div>
+
+                <div>
+                    <span>Número: </span>
+                    <span id="numero" th:text="${usuario.numero}"></span>
+                </div>
+            </div>
+        </section>
+    </main>
+</div>
+
+<script>
+    // Event listeners para os links do menu
+    document.getElementById("inicio").addEventListener("click", function () {
+        window.location.href = "/usuario/inicial";
+    });
+
+    document.getElementById("listagem").addEventListener("click", function () {
+        window.location.href = "/usuario/listagem";
+    });
+
+    document.getElementById("cadastrarFuncionario").addEventListener("click", function () {
+        window.location.href = "/usuario/cadastro-funcionario";
+    });
+</script>
+
 </body>
 </html>

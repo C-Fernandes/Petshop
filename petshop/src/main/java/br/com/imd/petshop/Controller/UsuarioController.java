@@ -14,6 +14,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.sql.SQLException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -147,10 +148,11 @@ public class UsuarioController {
     }
 
     @GetMapping("/meus-dados")
-    public String meusDados(Model model) {
+    public String meusDados(Model model) throws SQLException {
         UsuarioDTO usuarioDTO = usuarioService.obterUsuarioDTO(usuarioLogado.getEmail());
         model.addAttribute("usuario", usuarioDTO);
         return "meu-usuario";
     }
+
 
 }
