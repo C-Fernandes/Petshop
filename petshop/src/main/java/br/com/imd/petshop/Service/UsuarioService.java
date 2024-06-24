@@ -1,23 +1,5 @@
 package br.com.imd.petshop.Service;
 
-import br.com.imd.petshop.DTO.ClienteDTO;
-import br.com.imd.petshop.DTO.FuncionarioDTO;
-import br.com.imd.petshop.DTO.UsuarioDTO;
-import br.com.imd.petshop.Entity.Cliente;
-import br.com.imd.petshop.Entity.Funcionario;
-import br.com.imd.petshop.Entity.Usuario;
-import br.com.imd.petshop.Entity.UsuarioLogado;
-import br.com.imd.petshop.Enum.CargosFuncionario;
-import br.com.imd.petshop.Repository.CepRepository;
-import br.com.imd.petshop.Repository.ClienteRepository;
-import br.com.imd.petshop.Repository.FuncionarioRepository;
-import br.com.imd.petshop.Repository.UsuarioRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.stereotype.Service;
-
 import java.time.LocalDate;
 import java.time.Period;
 import java.time.ZoneId;
@@ -25,7 +7,25 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.stereotype.Service;
+
+import br.com.imd.petshop.DTO.ClienteDTO;
+import br.com.imd.petshop.DTO.FuncionarioDTO;
+import br.com.imd.petshop.DTO.UsuarioDTO;
+import br.com.imd.petshop.Enum.CargosFuncionario;
+import br.com.imd.petshop.Repository.CepRepository;
+import br.com.imd.petshop.Repository.ClienteRepository;
+import br.com.imd.petshop.Repository.FuncionarioRepository;
+import br.com.imd.petshop.Repository.UsuarioRepository;
+import br.com.imd.petshop.Entity.Cliente;
+import br.com.imd.petshop.Entity.Funcionario;
+import br.com.imd.petshop.Entity.Usuario;
+import br.com.imd.petshop.Entity.UsuarioLogado;
 
 @Service
 public class UsuarioService {
@@ -38,8 +38,10 @@ public class UsuarioService {
     private final UsuarioLogado usuarioLogado;
 
     @Autowired
-    public UsuarioService(UsuarioRepository usuarioRepository, CepRepository cepRepository, BCryptPasswordEncoder passwordEncoder,
-                          ClienteRepository clienteRepository, FuncionarioRepository funcionarioRepository, UsuarioLogado usuarioLogado) {
+    public UsuarioService(UsuarioRepository usuarioRepository, CepRepository cepRepository,
+            BCryptPasswordEncoder passwordEncoder,
+            ClienteRepository clienteRepository, FuncionarioRepository funcionarioRepository,
+            UsuarioLogado usuarioLogado) {
         this.cepRepository = cepRepository;
         this.passwordEncoder = passwordEncoder;
         this.clienteRepository = clienteRepository;
@@ -66,7 +68,8 @@ public class UsuarioService {
         }
 
         LocalDate dataAtual = LocalDate.now();
-        LocalDate dataNascimento = usuario.getDataDeNascimento().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        LocalDate dataNascimento = usuario.getDataDeNascimento().toInstant().atZone(ZoneId.systemDefault())
+                .toLocalDate();
         Period periodo = Period.between(dataNascimento, dataAtual);
         int idade = periodo.getYears();
         usuario.setIdade(idade);
@@ -160,10 +163,8 @@ public class UsuarioService {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         }
 
-
         return ResponseEntity.ok().build();
     }
-
 
     private boolean isValidEmail(String email) {
         return email.matches("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$");
@@ -176,7 +177,7 @@ public class UsuarioService {
             usuarioLogado.setEmail(email);
 
             if (cliente != null) {
-                return "redirect:/pets/cadastro";
+                return "redirect:/pets/";
             } else {
                 Funcionario funcionario = funcionarioRepository.findByUsuario(String.valueOf(usuario.getEmail()));
                 usuarioLogado.setEmail(email);
@@ -212,97 +213,5 @@ public class UsuarioService {
     public List<FuncionarioDTO> listarFuncionariosComUsuarios() {
         return funcionarioRepository.listarFuncionariosComUsuarios();
     }
-
-    public ClienteDTO obterClienteDTO(String email) {
-        ClienteDTO cliente = clienteRepository.findClienteDTOByEmail(email);
-        if (cliente != null) {
-            return cliente;
-        }
-        return null;
-    }
-
-    public FuncionarioDTO obterFuncionarioDTO(String email) {
-        FuncionarioDTO funcionario = funcionarioRepository.findFuncionarioDTOByEmail(email);
-        if (funcionario != null) {
-            return funcionario;
-        }
-        return null;
-    }
-
-    public void editarUsuario(UsuarioDTO usuarioDTO) {
-
-        if (usuarioDTO.getCargo() == null || usuarioDTO.getCargo().isEmpty() || usuarioDTO.getCargo().equals("undefined")) {
-            clienteRepository.atualizarCliente(usuarioDTO);
-        } else{
-            funcionarioRepository.atualizarFuncionario(usuarioDTO);
-        }
-    }
-
-    public ResponseEntity<Map<String, Object>> validarCamposObrigatoriosEdicao(UsuarioDTO usuarioDTO) {
-        Map<String, Object> response = new HashMap<>();
-        List<String> errors = new ArrayList<>();
-
-        if (usuarioDTO.getNome() == null || usuarioDTO.getNome().isEmpty()) {
-            errors.add("Nome é um campo obrigatório.");
-        }
-        if (usuarioDTO.getTelefone() == null || usuarioDTO.getTelefone().isEmpty()) {
-            errors.add("Telefone é um campo obrigatório.");
-        }
-        if (usuarioDTO.getLogradouro() == null || usuarioDTO.getLogradouro().isEmpty()) {
-            errors.add("Logradouro é um campo obrigatório.");
-        }
-        if (usuarioDTO.getEmail() == null || usuarioDTO.getEmail().isEmpty()) {
-            errors.add("E-mail é um campo obrigatório.");
-        }
-        if (usuarioDTO.getBairro() == null || usuarioDTO.getBairro().isEmpty()) {
-            errors.add("Bairro é um campo obrigatório.");
-        }
-        if (usuarioDTO.getNumero() == null) {
-            errors.add("Número é um campo obrigatório.");
-        }
-        if (usuarioDTO.getCep() == null || usuarioDTO.getCep().isEmpty()) {
-            errors.add("Cep é um campo obrigatório.");
-            if (usuarioDTO.getCep().getCidade() == null || usuarioDTO.getCep().getCidade().isEmpty()) {
-                errors.add("Cidade é um campo obrigatório.");
-            }
-            if (usuarioDTO.getCep().getEstado() == null || usuarioDTO.getCep().getEstado().isEmpty()) {
-                errors.add("Estado é um campo obrigatório.");
-            }
-        } else {
-            if (usuarioDTO.getCep().getCidade() == null || usuarioDTO.getCep().getCidade().isEmpty()) {
-                errors.add("Cidade é um campo obrigatório.");
-            }
-            if (usuarioDTO.getCep().getEstado() == null || usuarioDTO.getCep().getEstado().isEmpty()) {
-                errors.add("Estado é um campo obrigatório.");
-            }
-        }
-        if (usuarioDTO.getCargo() != null && !usuarioDTO.getCargo().isEmpty()) {
-            boolean cargoValido = false;
-            for (CargosFuncionario cargo : CargosFuncionario.values()) {
-                if (cargo.getDescricao().equalsIgnoreCase(usuarioDTO.getCargo())) {
-                    cargoValido = true;
-                    break;
-                }
-            }
-            if (!cargoValido) {
-                errors.add("Cargo inválido.");
-            }
-        }
-        if (!errors.isEmpty()) {
-            response.put("errors", errors);
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
-        }
-
-        return ResponseEntity.ok().build();
-    }
-
-    public void desativarUsuario(String email) {
-        Usuario usuario = usuarioRepository.findByEmail(email);
-        if (usuario != null) {
-            usuarioRepository.desativarUsuario(email);
-            // Desativar os pets associados ao usuário
-        }
-    }
-
 
 }
