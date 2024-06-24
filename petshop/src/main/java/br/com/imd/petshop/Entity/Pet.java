@@ -71,26 +71,14 @@ public class Pet {
         this.raca = raca;
     }
 
-    <<<<<<<HEAD
-
-    public Boolean getActive() {
-        return active;
-=======
-
-    public Boolean isActive() {
-        return this.active;
-    }
-
     public Boolean getActive() {
         return this.active;
->>>>>>> #2-CRUD-Pet
+
     }
 
     public void setActive(Boolean active) {
         this.active = active;
-    }<<<<<<<HEAD
-
-}=======
+    }
 
     public Double getPeso() {
         return this.peso;
@@ -107,4 +95,4 @@ public class Pet {
     public void setSexo(char sexo) {
         this.sexo = sexo;
     }
-}>>>>>>>#2-CRUD-Pet
+}
