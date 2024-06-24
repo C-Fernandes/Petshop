@@ -17,7 +17,7 @@ import java.util.Optional;
 public class RacaRepository {
 
     public Raca buscarPorRaca(String racaNome) {
-        Raca raca = null;
+        Raca raca = new Raca();
         String sql = "SELECT * FROM raca WHERE raca = ?";
 
         try (Connection conn = DataBaseConfig.getConnection();
@@ -27,16 +27,16 @@ public class RacaRepository {
             ResultSet rs = stmt.executeQuery();
 
             if (rs.next()) {
-                raca = new Raca();
                 raca.setRaca(rs.getString("raca"));
                 raca.setEspecie(rs.getString("especie"));
+                return raca;
             }
 
         } catch (SQLException e) {
             e.printStackTrace(); // Trate melhor o erro de acordo com suas necessidades
         }
 
-        return raca;
+        return null;
     }
 
     public Optional<Raca> findById(String raca) {
@@ -65,8 +65,10 @@ public class RacaRepository {
                 while (rs.next()) {
 
                     raca = mapRow(rs);
+                    return raca;
                 }
             }
+
         } catch (SQLException e) {
             e.printStackTrace();
         }

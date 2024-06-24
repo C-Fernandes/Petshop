@@ -84,6 +84,7 @@ public class PetRepository {
                 PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, pet.getNome());
             statement.setDate(2, new java.sql.Date(pet.getDataDeNascimento().getTime()));
+            System.out.println(pet.getDataDeNascimento());
             statement.setString(3, pet.getDono().getEmail());
             statement.setString(4, pet.getRaca().getRaca());
             statement.setString(5, pet.getImagem());

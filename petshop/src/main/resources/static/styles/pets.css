@@ -189,3 +189,13 @@ a {
   padding: 0 0.2em;
 }
 
+#mensagemFotoPet,
+#mensagemNomePet,
+#mensagemEspeciePet,
+#mensagemRacaPet,
+#mensagemSexoPet
+#mensagemPesoPet
+#mensagemDataNascimentoPet{
+  color: red;
+  font-size: 10px;
+}
