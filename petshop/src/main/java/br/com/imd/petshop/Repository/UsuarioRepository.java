@@ -17,14 +17,14 @@ import java.util.List;
 public class UsuarioRepository {
 
     public void save(Usuario usuario) {
-        String sql = "INSERT INTO usuario (email, senha, nome, data_nascimento, idade, telefone, logradouro, numero, bairro, cep) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO usuario (email, senha, nome, data_nascimento, ativo, telefone, logradouro, numero, bairro, cep) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try (Connection conn = DataBaseConfig.getConnection();
                 PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, usuario.getEmail());
             ps.setString(2, usuario.getSenha());
             ps.setString(3, usuario.getNome());
             ps.setDate(4, new java.sql.Date(usuario.getDataDeNascimento().getTime()));
-            ps.setInt(5, usuario.getIdade());
+            ps.setBoolean(5, true);
             ps.setString(6, usuario.getTelefone());
             ps.setString(7, usuario.getLogradouro());
             ps.setLong(8, usuario.getNumero());
@@ -74,7 +74,6 @@ public class UsuarioRepository {
         usuario.setSenha(rs.getString("senha"));
         usuario.setNome(rs.getString("nome"));
         usuario.setDataDeNascimento(rs.getDate("data_nascimento"));
-        usuario.setIdade(rs.getInt("idade"));
         usuario.setTelefone(rs.getString("telefone"));
         usuario.setLogradouro(rs.getString("logradouro"));
         usuario.setNumero(rs.getLong("numero"));
@@ -162,7 +161,6 @@ public class UsuarioRepository {
         usuario.setSenha(rs.getString("senha"));
         usuario.setNome(rs.getString("nome"));
         usuario.setDataDeNascimento(rs.getDate("data_nascimento"));
-        usuario.setIdade(rs.getInt("idade"));
         usuario.setTelefone(rs.getString("telefone"));
         usuario.setLogradouro(rs.getString("logradouro"));
         usuario.setNumero(rs.getLong("numero"));

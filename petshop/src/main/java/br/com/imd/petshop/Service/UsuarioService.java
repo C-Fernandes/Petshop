@@ -49,11 +49,15 @@ public class UsuarioService {
     }
 
     public void cadastrarUsuario(UsuarioDTO usuarioDto) {
+        if (usuarioDto.getActive() == null) {
+            usuarioDto.setActive(true);
+        }
 
         Usuario usuario = new Usuario();
         usuario.setEmail(usuarioDto.getEmail());
         usuario.setSenha(usuarioDto.getSenha());
         usuario.setNome(usuarioDto.getNome());
+        usuario.setActive(usuarioDto.getActive());
         usuario.setDataDeNascimento(usuarioDto.getDataDeNascimento());
         usuario.setTelefone(usuarioDto.getTelefone());
         usuario.setLogradouro(usuarioDto.getLogradouro());
