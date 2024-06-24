@@ -82,12 +82,13 @@ public class UsuarioController {
     }
 
     @GetMapping("/listagem")
-    public String listarUsuarios(Model model) {
+    public String listarUsuarios(Model model) throws SQLException {
         List<ClienteDTO> clientes = usuarioService.listarClientesComUsuarios();
         List<FuncionarioDTO> funcionarios = usuarioService.listarFuncionariosComUsuarios();
+        UsuarioDTO usuarioDTO = usuarioService.obterUsuarioDTO(usuarioLogado.getEmail());
         model.addAttribute("clientes", clientes);
         model.addAttribute("funcionarios", funcionarios);
-        model.addAttribute("email", usuarioLogado.getEmail());
+        model.addAttribute("usuario", usuarioDTO);
         return "listagem-usuario";
     }
 
