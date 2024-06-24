@@ -111,7 +111,7 @@ $(document).ready(function () {
     }); document.getElementById("servicos").addEventListener("click", function () {
         window.location.href = "";
     }); document.getElementById("meu-usuario").addEventListener("click", function () {
-        window.location.href = "/meu-usuario/";
+        window.location.href = "/usuario/meus-dados-cliente";
     });
 
 

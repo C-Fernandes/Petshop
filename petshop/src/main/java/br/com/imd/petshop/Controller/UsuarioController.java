@@ -152,5 +152,12 @@ public class UsuarioController {
         return "meu-usuario";
     }
 
+    @GetMapping("/meus-dados-cliente")
+    public String meusDadosCliente(Model model) throws SQLException {
+        UsuarioDTO usuarioDTO = usuarioService.obterUsuarioDTO(usuarioLogado.getEmail());
+        model.addAttribute("usuario", usuarioDTO);
+        return "meu-usuario-cliente";
+    }
+
 
 }

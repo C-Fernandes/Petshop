@@ -45,9 +45,16 @@
       }
 
       .navbar {
+        width: 60%;
+        justify-content: flex-end;
         flex-wrap: wrap;
         padding: 0.5em;
         margin: 0 0.5em 0 0;
+      }
+      nav p {
+        width: 40%;
+        margin: 1em;
+        justify-content: flex-start;
       }
 
       a {
@@ -93,13 +100,15 @@
   </head>
   <body>
     <nav>
+      <p>Bem vindo <span id="usuario-logado" th:text="${usuario}"></span></p>
+
       <div class="navbar">
-        <a id="inicio">Inicio</a>
         <a id="pets">Pets</a>
         <a id="produtos">Produtos</a>
         <a id="servicos">Servicos</a>
         <a id="listagem">Listagem</a>
         <a id="meu-usuario">Meu Usuário</a>
+        <a id="inicio">Sair</a>
       </div>
     </nav>
 
