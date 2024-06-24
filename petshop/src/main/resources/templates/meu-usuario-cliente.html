@@ -8,7 +8,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <style>
         :root {
             --peru: #ec9474;
@@ -18,14 +19,15 @@
             --tan: #cda99d;
         }
 
-        body{
+        body {
             background-color: #fba383;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: flex-start;
         }
-        .my-container{
+
+        .my-container {
             display: flex;
             align-items: center;
             justify-content: center;
@@ -33,19 +35,19 @@
             margin-top: 5rem;
         }
 
-        main{
+        main {
             width: 60%;
             background-color: white;
             border-radius: 20px;
             padding: 5rem;
         }
 
-        img{
+        img {
             border-radius: 50%;
             margin-right: 5rem;
         }
 
-        .initial{
+        .initial {
             background-color: #742a0f;
             color: white;
             display: flex;
@@ -54,21 +56,21 @@
             border-radius: 20px;
         }
 
-        .initial span{
+        .initial span {
             font-size: 1.5rem;
         }
 
-        .initial div{
+        .initial div {
             display: flex;
             flex-direction: column;
             justify-content: center;
         }
 
-        .initial #nome{
+        .initial #nome {
             font-weight: bold;
         }
 
-        .linha{
+        .linha {
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -98,14 +100,14 @@
         }
 
 
-        .circle{
+        .circle {
             position: absolute;
             height: 60rem;
             width: 60rem;
             border-radius: 50%;
             z-index: -1;
-            background-color:var(--maroon);
-            right:55%;
+            background-color: var(--maroon);
+            right: 55%;
             top: 25%;
         }
 
@@ -122,6 +124,7 @@
             text-decoration: none;
             color: white;
         }
+
         nav p {
             width: 40%;
             margin: 1em;
@@ -146,11 +149,13 @@
 
     <main>
         <section class="initial">
-            <img width="100px" height="100px" src="https://st.depositphotos.com/2398521/2608/i/450/depositphotos_26089317-stock-photo-cute-small-dog.jpg"/>
+            <img width="100px" height="100px"
+                 src="https://st.depositphotos.com/2398521/2608/i/450/depositphotos_26089317-stock-photo-cute-small-dog.jpg"/>
             <div>
                 <span id="nome" th:text="${usuario.nome}"></span>
                 <span id="email" th:text="${usuario.email}"></span>
                 <span id="telefone" th:text="${usuario.telefone}"></span>
+                <i class="fas fa-edit edit-icon" onclick="editarUsuario()"></i>
             </div>
         </section>
 
@@ -191,16 +196,152 @@
         </section>
     </main>
 </div>
+<div
+        class="modal fade"
+        id="editarUsuarioModal"
+        tabindex="-1"
+        role="dialog"
+        aria-labelledby="editarUsuarioModalLabel"
+        aria-hidden="true"
+>
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editarUsuarioModalLabel">Editar Usuário</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="editarUsuarioForm">
+                    <div class="form-group">
+                        <label for="nome">Nome:</label>
+                        <input type="text" class="form-control" id="nomemodal" name="nome"/>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">E-mail:</label>
+                        <input type="email" class="form-control" id="emailmodal" name="email" readonly/>
+                    </div>
+                    <div class="form-group">
+                        <label for="telefone">Telefone:</label>
+                        <input type="text" class="form-control" id="telefonemodal" name="telefone"/>
+                    </div>
+                    <div class="form-group">
+                        <label for="cep">Cep</label>
+                        <input type="text" class="form-control" id="cepmodal" name="cep"/>
+                    </div>
+                    <div class="form-group">
+                        <label for="cidade">Cidade</label>
+                        <input type="text" class="form-control" id="cidademodal" name="cidade"/>
+                    </div>
+                    <div class="form-group">
+                        <label for="estado">Estado</label>
+                        <input type="text" class="form-control" id="estadomodal" name="estado"/>
+                    </div>
+                    <div class="form-group">
+                        <label for="logradouro">Logradouro</label>
+                        <input type="text" class="form-control" id="logradouromodal" name="logradouro"/>
+                    </div>
+                    <div class="form-group">
+                        <label for="numero">Numero</label>
+                        <input type="text" class="form-control" id="numeromodal" name="numero"/>
+                    </div>
+                    <div class="form-group">
+                        <label for="bairro">Bairro</label>
+                        <input type="text" class="form-control" id="bairromodal" name="bairro"/>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                <button type="button" class="btn btn-primary" onclick="salvarMudancas()">Salvar Mudanças</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 <script>
+    function editarUsuario() {
+        // Supondo que você já tenha os dados do usuário no HTML
+        const usuario = {
+            nome: document.getElementById('nome').innerText,
+            email: document.getElementById('email').innerText,
+            telefone: document.getElementById('telefone').innerText,
+            cep: document.getElementById('cep').innerText,
+            cidade: document.getElementById('cidade').innerText,
+            estado: document.getElementById('estado').innerText,
+            logradouro: document.getElementById('logradouro').innerText,
+            numero: document.getElementById('numero').innerText,
+            bairro: document.getElementById('bairro').innerText
+        };
+
+        // Preencher o modal com os dados do usuário
+        document.getElementById('nome').value = usuario.nome;
+        document.getElementById('email').value = usuario.email;
+        document.getElementById('telefone').value = usuario.telefone;
+        document.getElementById('cep').value = usuario.cep;
+        document.getElementById('cidade').value = usuario.cidade;
+        document.getElementById('estado').value = usuario.estado;
+        document.getElementById('logradouro').value = usuario.logradouro;
+        document.getElementById('numero').value = usuario.numero;
+        document.getElementById('bairro').value = usuario.bairro;
+
+        // Mostrar o modal
+        $('#editarUsuarioModal').modal('show');
+    }
+
+    function salvarMudancas() {
+        console.log('Salvando mudanças...');
+        const usuario = {
+            nome: document.getElementById('nome').value,
+            email: document.getElementById('email').value,
+            telefone: document.getElementById('telefone').value,
+            cep: document.getElementById('cep').value,
+            cidade: document.getElementById('cidade').value,
+            estado: document.getElementById('estado').value,
+            logradouro: document.getElementById('logradouro').value,
+            numero: document.getElementById('numero').value,
+            bairro: document.getElementById('bairro').value
+        };
+
+        $.ajax({
+            url: "/usuario/editar",
+            type: "PUT",
+            contentType: "application/json",
+            data: JSON.stringify(usuario),
+            success: function (response) {
+                alert('Usuário atualizado com sucesso!');
+                // Atualizar os dados no HTML após a edição
+                document.getElementById('nome').innerText = usuario.nome;
+                document.getElementById('email').innerText = usuario.email;
+                document.getElementById('telefone').innerText = usuario.telefone;
+                document.getElementById('cep').innerText = usuario.cep;
+                document.getElementById('cidade').innerText = usuario.cidade;
+                document.getElementById('estado').innerText = usuario.estado;
+                document.getElementById('logradouro').innerText = usuario.logradouro;
+                document.getElementById('numero').innerText = usuario.numero;
+                document.getElementById('bairro').innerText = usuario.bairro;
+
+                // Fechar o modal
+                $('#editarUsuarioModal').modal('hide');
+            },
+            error: function () {
+                alert('Erro ao atualizar os dados do usuário. Por favor, tente novamente.');
+            }
+        });
+    }
+
     document.getElementById("inicio").addEventListener("click", function () {
         window.location.href = "/usuario/inicial";
     });
     document.getElementById("produtos").addEventListener("click", function () {
         window.location.href = "";
-    }); document.getElementById("servicos").addEventListener("click", function () {
+    });
+    document.getElementById("servicos").addEventListener("click", function () {
         window.location.href = "";
-    }); document.getElementById("meu-usuario").addEventListener("click", function () {
+    });
+    document.getElementById("meu-usuario").addEventListener("click", function () {
         window.location.href = "/usuario/meus-dados-cliente";
     });
     document.getElementById("pets").addEventListener("click", function () {
