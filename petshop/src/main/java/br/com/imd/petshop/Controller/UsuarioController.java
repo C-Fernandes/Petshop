@@ -3,7 +3,6 @@ package br.com.imd.petshop.Controller;
 import br.com.imd.petshop.DTO.ClienteDTO;
 import br.com.imd.petshop.DTO.FuncionarioDTO;
 import br.com.imd.petshop.DTO.UsuarioDTO;
-import br.com.imd.petshop.Entity.Usuario;
 import br.com.imd.petshop.Entity.UsuarioLogado;
 import br.com.imd.petshop.Service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +11,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
 
 import java.sql.SQLException;
 import java.util.Collections;
@@ -44,7 +42,7 @@ public class UsuarioController {
     }
 
     @PostMapping("/cadastro-usuario")
-    public ResponseEntity<Map<String, Object>> cadastrarUsuario(@RequestBody UsuarioDTO usuarioDto) {
+    public ResponseEntity<Map<String, Object>> cadastrarUsuario(@RequestBody UsuarioDTO usuarioDto, Model model) {
         ResponseEntity<Map<String, Object>> validationResponse = usuarioService.validarCamposObrigatorios(usuarioDto);
 
         if (validationResponse.getStatusCode() != HttpStatus.OK) {
@@ -58,7 +56,7 @@ public class UsuarioController {
             response.put("errors", Collections.singletonList(e.getMessage()));
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         }
-
+        model.addAttribute("email", usuarioLogado.getEmail());
         return null;
     }
 

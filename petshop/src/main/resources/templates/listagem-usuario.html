@@ -93,6 +93,7 @@
         <a id="produtos">Produtos</a>
         <a id="servicos">Servicos</a>
         <a id="listagem">Listagem</a>
+        <a id="meu-usuario">Meu Usuário</a>
     </div>
 </nav>
 
@@ -100,11 +101,15 @@
     <button id="clientes" class="btn btn-secondary" onclick="filtrarUsuarios('cliente')">Clientes</button>
     <button id="funcionarios" class="btn btn-secondary" onclick="filtrarUsuarios('funcionario')">Funcionários</button>
     <button id="todos" class="btn btn-secondary" onclick="filtrarUsuarios('todos')">Todos</button>
+    <a id="cadastrarFuncionarioBtn" class="btn btn-secondary ml-2" href="/usuario/cadastro-funcionario">Cadastrar Funcionário</a> <!-- Movido para dentro de .filter-buttons -->
+
 </div>
-<a id="cadastrarFuncionarioBtn" class="btn btn-primary ml-2" href="/usuario/cadastro-funcionario">Cadastrar Funcionário</a>
 <script>
     document.getElementById("cadastrarFuncionarioBtn").addEventListener("click", function () {
         window.location.href = "/usuario/cadastro-funcionario";
+    });
+    document.getElementById("meu-usuario").addEventListener("click", function () {
+        window.location.href = "/usuario/meus-dados";
     });
 </script>
 
