@@ -209,53 +209,6 @@ $(document).ready(function () {
         modal.find(".modal-body input").val(recipient);
     });
 
-    $("#deleteButtonModal").click(function () {
-
-        $("#modalAtualizacao").modal("hide");
-        $("#modalDelete").modal("show");
-
-        $("#modalDelete")
-            .find(".modal-title")
-            .text("Deletar: " + nome);
-    });
-
-    $("#deleteButton").click(function () {
-
-        fetch(`/produtos/${idProduto}`, {
-            method: "DELETE",
-            headers: {
-                "Content-Type": "application/json",
-            },
-        })
-            .then((response) => {
-                if (!response.ok) {
-                    throw new Error("Erro ao deletar produto.");
-                }
-                fetchProducts();
-
-                return response;
-            })
-            .then((data) => {
-                console.log("Produto deletado com sucesso:", data);
-                // Ocultar o modal ou executar outra ação após a exclusão
-                $("#modalCadastro").modal("hide");
-            })
-            .catch((error) => {
-                console.error("Erro ao deletar produto:", error);
-            });
-    });
-
-    $("#deleteButtonModal").click(function () {
-
-
-        $("#modalAtualizacao").modal("hide");
-        $("#modalDelete").modal("show");
-        console.log(nome);
-
-        $("#modalDelete")
-            .find(".modal-title")
-            .text("Deletar: " + nome);
-    });
     $("#cadastrarButton").click(function () {
 
         console.log("Entrou na função");

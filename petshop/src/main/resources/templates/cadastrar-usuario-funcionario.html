@@ -30,11 +30,17 @@
     }
 
     .navbar {
+        width: 60%;
+        justify-content: flex-end;
         flex-wrap: wrap;
         padding: 0.5em;
         margin: 0 0.5em 0 0;
     }
-
+    nav p {
+        width: 40%;
+        margin: 1em;
+        justify-content: flex-start;
+    }
     a {
         color: white;
         text-decoration: none;
@@ -54,12 +60,12 @@
 <body>
 <nav>
     <div class="navbar">
-        <a id="inicio">Inicio</a>
         <a id="pets">Pets</a>
-        <a id="produtos">Produtos</a>
+        <a id="produtos" th:href="@{/pedido/}">Produtos</a>
         <a id="servicos">Servicos</a>
         <a id="listagem">Listagem</a>
         <a id="meu-usuario">Meu Usuario</a>
+        <a id="inicio">Sair</a>
     </div>
 </nav>
 <div class="login-container position-relative overflow-hidden">

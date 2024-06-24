@@ -25,8 +25,8 @@ public class PetRepository {
         pet.setNome(resultSet.getString("nome"));
         pet.setDataDeNascimento(resultSet.getDate("data_de_nascimento"));
         pet.setImagem(resultSet.getString("imagem"));
-        pet.setActive(resultSet.getBoolean("active"));
-        pet.setSexo(resultSet.getString("sexo").charAt(0)); // Assume que 'sexo' é um char no banco
+        pet.setActive(resultSet.getBoolean("ativo"));
+        pet.setSexo(resultSet.getString("sexo").charAt(0));
         pet.setPeso(resultSet.getDouble("peso"));
 
         Cliente dono = new Cliente();
@@ -38,6 +38,24 @@ public class PetRepository {
         pet.setRaca(raca);
 
         return pet;
+    }
+
+    public List<Pet> findByNomeContainingIgnoreCase(String nome, String email) {
+        String sql = "SELECT * FROM pet WHERE LOWER(nome) LIKE LOWER(?) AND cliente_usuario_email = ? AND ativo = true";
+        List<Pet> pets = new ArrayList<>();
+        try (Connection conn = DataBaseConfig.getConnection();
+                PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, "%" + nome + "%");
+            ps.setString(2, email);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                pets.add(mapeamento(rs));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return pets;
     }
 
     public void atualizarPet(Pet pet) {
@@ -58,7 +76,7 @@ public class PetRepository {
     }
 
     public void inserirPet(Pet pet) {
-        String sql = "INSERT INTO pet (nome, data_de_nascimento, cliente_usuario_email, raca, imagem, active, sexo, peso) "
+        String sql = "INSERT INTO pet (nome, data_de_nascimento, cliente_usuario_email, raca, imagem, ativo, sexo, peso) "
                 +
                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
@@ -66,6 +84,7 @@ public class PetRepository {
                 PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, pet.getNome());
             statement.setDate(2, new java.sql.Date(pet.getDataDeNascimento().getTime()));
+            System.out.println(pet.getDataDeNascimento());
             statement.setString(3, pet.getDono().getEmail());
             statement.setString(4, pet.getRaca().getRaca());
             statement.setString(5, pet.getImagem());
@@ -81,7 +100,7 @@ public class PetRepository {
 
     public List<Pet> listarPets(String clienteEmail) {
         List<Pet> pets = new ArrayList<>();
-        String sql = "SELECT * FROM pet WHERE cliente_usuario_email = ? AND active = 1";
+        String sql = "SELECT * FROM pet WHERE cliente_usuario_email = ? AND ativo = 1";
 
         try (Connection connection = DataBaseConfig.getConnection();
                 PreparedStatement statement = connection.prepareStatement(sql)) {
@@ -99,7 +118,7 @@ public class PetRepository {
 
     public List<Pet> procurarPorNome(String name) {
         List<Pet> pets = new ArrayList<>();
-        String sql = "SELECT * FROM pet WHERE nome = ? AND active = 1";
+        String sql = "SELECT * FROM pet WHERE nome = ? AND ativo = 1";
 
         try (Connection connection = DataBaseConfig.getConnection();
                 PreparedStatement statement = connection.prepareStatement(sql)) {
@@ -117,7 +136,7 @@ public class PetRepository {
 
     public List<Pet> findByUser(String emailUser) {
         List<Pet> pets = new ArrayList<>();
-        String sql = "SELECT * FROM pet WHERE cliente_usuario_email = ? AND active = 1";
+        String sql = "SELECT * FROM pet WHERE cliente_usuario_email = ? AND ativo = 1";
 
         try (Connection connection = DataBaseConfig.getConnection();
                 PreparedStatement statement = connection.prepareStatement(sql)) {
@@ -134,7 +153,7 @@ public class PetRepository {
     }
 
     public Pet procurarPorId(Long id) {
-        String sql = "SELECT * FROM pet WHERE id = ? AND active = true";
+        String sql = "SELECT * FROM pet WHERE id = ? AND ativo = true";
 
         try (Connection connection = DataBaseConfig.getConnection();
                 PreparedStatement statement = connection.prepareStatement(sql)) {
@@ -151,7 +170,7 @@ public class PetRepository {
     }
 
     public void desativarPet(Long id) {
-        String sql = "UPDATE pet SET active = false WHERE id = ?";
+        String sql = "UPDATE pet SET ativo = false WHERE id = ?";
 
         try (Connection connection = DataBaseConfig.getConnection();
                 PreparedStatement statement = connection.prepareStatement(sql)) {

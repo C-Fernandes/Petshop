@@ -45,16 +45,25 @@ public class PetService {
 
     public void inserirPet(Pet pet) {
         System.out.println("raca:" + racaRepository.findByRaca(pet.getRaca().getRaca()));
-        if (racaRepository.findByRaca(pet.getRaca().getRaca()) == null) {
-            racaRepository.save(pet.getRaca());
-        }
 
-        System.out.println(pet.getDataDeNascimento());
-        petRepository.inserirPet(pet);
+        try {
+            if (racaRepository.findByRaca(pet.getRaca().getRaca()) == null) {
+                racaRepository.save(pet.getRaca());
+            }
+
+            System.out.println("print: " + pet.getDataDeNascimento());
+            petRepository.inserirPet(pet);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void deletarPet(Long id) {
         petRepository.desativarPet(id);
+    }
+
+    public List<Pet> buscarPorNome(String nome, String email) {
+        return petRepository.findByNomeContainingIgnoreCase(nome, email);
     }
 
     public List<Pet> findAll(String emailUser) {
@@ -69,7 +78,7 @@ public class PetService {
     }
 
     private void calcularIdadeEmMeses(Pet pet) {
-        Date dataNascimento = pet.getDataDeNascimento(); // Assume que getDataDeNascimento retorna um objeto Date
+        Date dataNascimento = pet.getDataDeNascimento();
         Date hoje = new Date(); // Data atual
 
         Calendar calNascimento = Calendar.getInstance();
@@ -87,7 +96,6 @@ public class PetService {
     }
 
     public void removerImagem(String nomeImagem, String UPLOAD_DIR) {
-        System.out.println("Nome imagem : " + nomeImagem);
         if (!nomeImagem.equals("padrao.jpg")) {
             Path pathImagemAntiga = Paths.get(UPLOAD_DIR + nomeImagem);
             try {

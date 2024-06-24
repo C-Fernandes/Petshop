@@ -26,20 +26,6 @@ public class ProdutoRepository {
         return produto;
     }
 
-    public void deleteProduto(Long idProduto) {
-        String deleteProdutoSql = "DELETE FROM produto WHERE id = ?";
-        try (Connection conn = DataBaseConfig.getConnection();
-                PreparedStatement ps = conn.prepareStatement(deleteProdutoSql)) {
-            ps.setLong(1, idProduto);
-            int rowsDeleted = ps.executeUpdate();
-            if (rowsDeleted == 0) {
-                throw new SQLException("Nenhum produto foi deletado. Produto não encontrado.");
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
     public Produto saveProdutoEPreco(Produto produto) {
         String sql = "INSERT INTO produto (nome, quantidade, ativo, imagem) VALUES (?, ?, ?, ?)";
         try {

@@ -4,8 +4,10 @@ import br.com.imd.petshop.DTO.PetDTO;
 import br.com.imd.petshop.Entity.Cliente;
 import br.com.imd.petshop.Entity.Pet;
 import br.com.imd.petshop.Entity.Raca;
+import br.com.imd.petshop.Entity.Usuario;
 import br.com.imd.petshop.Entity.UsuarioLogado;
 import br.com.imd.petshop.Service.PetService;
+import br.com.imd.petshop.Service.UsuarioService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -37,18 +39,31 @@ public class PetController {
     private final PetService petService;
     private final UsuarioLogado usuarioLogado;
 
+    private final UsuarioService usuarioService;
+
     @Autowired
-    public PetController(PetService petService, UsuarioLogado usuarioLogado) {
+    public PetController(PetService petService, UsuarioLogado usuarioLogado, UsuarioService usuarioService) {
         this.petService = petService;
         this.usuarioLogado = usuarioLogado;
+        this.usuarioService = usuarioService;
     }
 
     @GetMapping("/")
     public String cadastro(Model model) {
-        List<Pet> pets = petService.findAll(usuarioLogado.getEmail());
-        model.addAttribute("pets", pets);
-        model.addAttribute("usuario", usuarioLogado.getEmail());
-        return "pets";
+        try {
+
+            Usuario usuario = usuarioService.findUsuario(usuarioLogado.getEmail());
+            List<Pet> pets = petService.findAll(usuarioLogado.getEmail());
+            model.addAttribute("pets", pets);
+            model.addAttribute("usuario", usuario.getNome());
+            return "pets";
+        } catch (Exception e) {
+            if (usuarioLogado.getEmail() == null) {
+                return "tela-login";
+
+            }
+            return null;
+        }
     }
 
     @GetMapping("/listar")
@@ -77,8 +92,10 @@ public class PetController {
 
             // Obtendo o objeto Pet do PetDTO
             Pet pet = petDTO.getPet();
+            Usuario u = usuarioService.findUsuario(usuarioLogado.getEmail());
+            System.out.println("datanascimento:" + petDTO.getPet().getDataDeNascimento());
             Cliente usuario = new Cliente();
-            usuario.setEmail(usuarioLogado.getEmail());
+            usuario.setEmail(u.getEmail());
             String urlImagem = "padrao.jpg"; // Nome da imagem padrão
 
             if (file != null && !file.isEmpty()) {
@@ -154,12 +171,24 @@ public class PetController {
         }
     }
 
+    @GetMapping("/buscar")
+    @ResponseBody
+    public ResponseEntity<List<Pet>> buscarPets(@RequestParam("nome") String nome) {
+
+        try {
+            List<Pet> pets = petService.buscarPorNome(nome, usuarioLogado.getEmail());
+            return ResponseEntity.ok(pets);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
     @DeleteMapping("delete/{id}")
     public ResponseEntity<String> deletarPet(@PathVariable Long id) {
         try {
             Pet pet = petService.findById(id);
             petService.deletarPet(id);
-            petService.removerImagem(pet.getImagem(), UPLOAD_DIR);
             return ResponseEntity.noContent().build(); // Retorna 204 No Content em caso de sucesso
         } catch (Exception e) {
             e.printStackTrace();

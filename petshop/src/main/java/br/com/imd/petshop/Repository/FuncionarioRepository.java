@@ -101,7 +101,7 @@ public class FuncionarioRepository {
         return funcionario;
     }
     public List<FuncionarioDTO> listarFuncionariosComUsuarios() {
-        String sql = "SELECT f.usuario_email, f.cargo, u.nome, u.telefone, u.data_nascimento FROM funcionario f INNER JOIN usuario u ON f.usuario_email = u.email WHERE u.active = true";
+        String sql = "SELECT f.usuario_email, f.cargo, u.nome, u.telefone, u.data_nascimento FROM funcionario f INNER JOIN usuario u ON f.usuario_email = u.email WHERE u.ativo = true";
         List<FuncionarioDTO> funcionarios = new ArrayList<>();
         try (Connection conn = DataBaseConfig.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql);
