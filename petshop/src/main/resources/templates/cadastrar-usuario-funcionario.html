@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <title>Cadastro de usuário</title>
+    <title>Cadastro de usuário - Funcionário</title>
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <link rel="stylesheet" href="/cadastro.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -59,6 +59,7 @@
         <a id="produtos">Produtos</a>
         <a id="servicos">Servicos</a>
         <a id="listagem">Listagem</a>
+        <a id="meu-usuario">Meu Usuario</a>
     </div>
 </nav>
 <div class="login-container position-relative overflow-hidden">
@@ -173,7 +174,7 @@
     <div class="main">
 
         <div class="title d-flex align-items-center justify-content-between">
-            <h1 class="p-2 h1-title">CADASTRO DE USUÁRIO</h1>
+            <h1 class="p-2 h1-title">CADASTRO DE FUNCIONÁRIO</h1>
             <i class="ph ph-dog"></i>
             <i class="ph ph-dog"></i>
             <i class="ph ph-dog"></i>
@@ -269,7 +270,7 @@
                 <div class="col-6">
                     <div class="row">
                         <div class="text-start col-6">
-                            <button type="button" class="btn-cadastro rounded-pill" id="fazerLogin">
+                            <button type="button" class="btn-cadastro rounded-pill" id="voltarListagem">
                                 <i class="ph ph-arrow-bend-up-left"></i>
                                 <span>Voltar</span>
                             </button>
@@ -428,8 +429,8 @@
                     }
                 })
         };
-        document.getElementById("fazerLogin").onclick = function () {
-            window.location.href = '/usuario/login';
+        document.getElementById("voltarListagem").onclick = function () {
+            window.location.href = '/usuario/listagem';
         };
 
         document.getElementById("inicio").addEventListener("click", function () {
@@ -442,6 +443,9 @@
 
         document.getElementById("cadastrarFuncionario").addEventListener("click", function () {
             window.location.href = "/usuario/cadastro-funcionario";
+        });
+        document.getElementById("meu-usuario").addEventListener("click", function () {
+            window.location.href = "/usuario/meus-dados";
         });
     </script>
 </div>
