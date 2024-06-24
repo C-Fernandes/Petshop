@@ -18,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.Period;
 import java.time.ZoneId;
@@ -142,18 +143,6 @@ public class UsuarioService {
         if (usuarioDTO.getSenha() != null && usuarioDTO.getSenha().length() <= 7) {
             errors.add("A senha deve ter no mínimo 7 caracteres.");
         }
-        if (usuarioDTO.getCargo() != null && !usuarioDTO.getCargo().isEmpty()) {
-            boolean cargoValido = false;
-            for (CargosFuncionario cargo : CargosFuncionario.values()) {
-                if (cargo.getDescricao().equalsIgnoreCase(usuarioDTO.getCargo())) {
-                    cargoValido = true;
-                    break;
-                }
-            }
-            if (!cargoValido) {
-                errors.add("Cargo inválido.");
-            }
-        }
         if (!errors.isEmpty()) {
             response.put("errors", errors);
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
@@ -183,7 +172,7 @@ public class UsuarioService {
             usuarioLogado.setEmail(email);
 
             if (cliente != null) {
-                return "redirect:/pets/cadastro";
+                return "redirect:/pets/";
             } else {
                 Funcionario funcionario = funcionarioRepository.findByUsuario(String.valueOf(usuario.getEmail()));
                 usuarioLogado.setEmail(email);
@@ -311,5 +300,20 @@ public class UsuarioService {
         }
     }
 
+    public List<UsuarioDTO> listarUsuariosComCliente() {
+        return usuarioRepository.listarClientes();
+    }
+
+    public List<UsuarioDTO> listarUsuariosComFuncionario() {
+        return usuarioRepository.listarFuncionarios();
+    }
+
+    public UsuarioDTO obterUsuarioDTO(String email) throws SQLException {
+        Usuario usuario = usuarioRepository.findByEmailTelaDados(email);
+
+        UsuarioDTO usuarioDTO = convertToDTO(usuario);
+
+        return usuarioDTO;
+    }
 
 }

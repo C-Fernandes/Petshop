@@ -5,6 +5,7 @@ import br.com.imd.petshop.Config.DataBaseConfig;
 import org.springframework.stereotype.Repository;
 
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -15,20 +16,27 @@ import java.util.Optional;
 @Repository
 public class RacaRepository {
 
-    public boolean existsById(String raca) {
-        String sql = "SELECT COUNT(*) AS count FROM raca WHERE raca = ?";
+    public Raca buscarPorRaca(String racaNome) {
+        Raca raca = null;
+        String sql = "SELECT * FROM raca WHERE raca = ?";
+
         try (Connection conn = DataBaseConfig.getConnection();
-                PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setString(1, raca);
-            try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) {
-                    return rs.getInt("count") > 0;
-                }
+                PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, racaNome);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                raca = new Raca();
+                raca.setRaca(rs.getString("raca"));
+                raca.setEspecie(rs.getString("especie"));
             }
+
         } catch (SQLException e) {
-            e.printStackTrace();
+            e.printStackTrace(); // Trate melhor o erro de acordo com suas necessidades
         }
-        return false;
+
+        return raca;
     }
 
     public Optional<Raca> findById(String raca) {
@@ -47,9 +55,9 @@ public class RacaRepository {
         return Optional.empty();
     }
 
-    public Raca findByEspecie(String especie) {
+    public Raca findByRaca(String especie) {
         Raca raca = new Raca();
-        String sql = "SELECT * FROM raca WHERE especie = ?";
+        String sql = "SELECT * FROM raca WHERE raca = ?";
         try (Connection conn = DataBaseConfig.getConnection();
                 PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, especie);
@@ -62,7 +70,7 @@ public class RacaRepository {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return raca;
+        return null;
     }
 
     public List<Raca> findAll() {

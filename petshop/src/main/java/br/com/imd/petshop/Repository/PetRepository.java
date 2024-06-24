@@ -11,9 +11,9 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
-import br.com.imd.petshop.Entity.Cep;
+import br.com.imd.petshop.Entity.Cliente;
 import br.com.imd.petshop.Entity.Pet;
-import br.com.imd.petshop.Entity.Usuario;
+import br.com.imd.petshop.Entity.Raca;
 import br.com.imd.petshop.Config.DataBaseConfig;
 
 @Repository
@@ -21,60 +21,75 @@ public class PetRepository {
 
     private Pet mapeamento(ResultSet resultSet) throws SQLException {
         Pet pet = new Pet();
-        pet.setId(resultSet.getLong("u.email"));
+        pet.setId(resultSet.getLong("id"));
         pet.setNome(resultSet.getString("nome"));
         pet.setDataDeNascimento(resultSet.getDate("data_de_nascimento"));
+        pet.setImagem(resultSet.getString("imagem"));
+        pet.setActive(resultSet.getBoolean("active"));
+        pet.setSexo(resultSet.getString("sexo").charAt(0)); // Assume que 'sexo' é um char no banco
+        pet.setPeso(resultSet.getDouble("peso"));
 
-        Usuario usuario = new Usuario();
-        usuario.setEmail(resultSet.getString("u.email"));
-        usuario.setNome(resultSet.getString("u.nome"));
-        usuario.setDataDeNascimento(resultSet.getDate("u.data_de_nascimento"));
-        usuario.setTelefone(resultSet.getString("u.telefone"));
-        usuario.setLogradouro(resultSet.getString("u.logradouro"));
-        usuario.setNumero(resultSet.getLong("u.numero"));
-        usuario.setBairro(resultSet.getString("u.bairro"));
+        Cliente dono = new Cliente();
+        Raca raca = new Raca();
+        raca.setRaca(resultSet.getString("raca"));
+        dono.setEmail(resultSet.getString("cliente_usuario_email"));
 
-        Cep cep = new Cep();
-        cep.setCep(resultSet.getString("cep"));
-        cep.setCidade(resultSet.getString("cidade"));
-        cep.setEstado(resultSet.getString("estado"));
+        pet.setDono(dono);
+        pet.setRaca(raca);
 
-        pet.setDono(usuario);
         return pet;
-
     }
 
-    public void inserirPet(Pet pet) {
-        String sql = "INSERT INTO pet (nome, data_de_nascimento, cliente_usuario_email, raca_especie) VALUES (?, ?, ?, ?)";
+    public void atualizarPet(Pet pet) {
+        String sql = "UPDATE pet SET nome = ?, peso = ?, imagem = ? WHERE id = ?";
 
-        try {
-            Connection connection = DataBaseConfig.getConnection();
-            PreparedStatement statement = connection.prepareStatement(sql);
+        try (Connection connection = DataBaseConfig.getConnection();
+                PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, pet.getNome());
-            statement.setDate(2, new java.sql.Date(pet.getDataDeNascimento().getTime()));
-            statement.setString(3, pet.getDono().getEmail());
-            statement.setString(4, pet.getRaca().getRaca());
+            statement.setDouble(2, pet.getPeso());
+            statement.setString(3, pet.getImagem());
+            statement.setLong(4, pet.getId());
 
             statement.executeUpdate();
 
-        } catch (
-
-        SQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
-    public List<Pet> listarPets() {
-        List<Pet> pets = new ArrayList<>();
-        String sql = "SELECT * FROM pet p JOIN cliente c ON cliente_email = email NATURAL JOIN usuario NATURAL JOIN cep";
+    public void inserirPet(Pet pet) {
+        String sql = "INSERT INTO pet (nome, data_de_nascimento, cliente_usuario_email, raca, imagem, active, sexo, peso) "
+                +
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
         try (Connection connection = DataBaseConfig.getConnection();
-                Statement statement = connection.createStatement();
-                ResultSet resultSet = statement.executeQuery(sql)) {
+                PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setString(1, pet.getNome());
+            statement.setDate(2, new java.sql.Date(pet.getDataDeNascimento().getTime()));
+            statement.setString(3, pet.getDono().getEmail());
+            statement.setString(4, pet.getRaca().getRaca());
+            statement.setString(5, pet.getImagem());
+            statement.setBoolean(6, true); // Sempre ativo ao inserir
+            statement.setString(7, String.valueOf(pet.getSexo())); // Converte char para String
+            statement.setDouble(8, pet.getPeso());
+            statement.executeUpdate();
 
-            while (resultSet.next()) {
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 
-                pets.add(mapeamento(resultSet));
+    public List<Pet> listarPets(String clienteEmail) {
+        List<Pet> pets = new ArrayList<>();
+        String sql = "SELECT * FROM pet WHERE cliente_usuario_email = ? AND active = 1";
+
+        try (Connection connection = DataBaseConfig.getConnection();
+                PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setString(1, clienteEmail);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                    pets.add(mapeamento(resultSet));
+                }
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -84,67 +99,66 @@ public class PetRepository {
 
     public List<Pet> procurarPorNome(String name) {
         List<Pet> pets = new ArrayList<>();
-        try {
-            Connection connection = DataBaseConfig.getConnection();
-            PreparedStatement statement = connection.prepareStatement("SELECT * FROM pets WHERE nome = ?");
+        String sql = "SELECT * FROM pet WHERE nome = ? AND active = 1";
+
+        try (Connection connection = DataBaseConfig.getConnection();
+                PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, name);
-            ResultSet resultSet = statement.executeQuery();
-
-            while (resultSet.next()) {
-
-                pets.add(mapeamento(resultSet));
+            try (ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                    pets.add(mapeamento(resultSet));
+                }
             }
-            return pets;
         } catch (SQLException e) {
             e.printStackTrace();
-
         }
-        return null;
+        return pets;
     }
 
     public List<Pet> findByUser(String emailUser) {
         List<Pet> pets = new ArrayList<>();
-        try {
-            Connection connection = DataBaseConfig.getConnection();
-            PreparedStatement statement = connection
-                    .prepareStatement("SELECT * FROM pets WHERE cliente_usuario_email = ?");
+        String sql = "SELECT * FROM pet WHERE cliente_usuario_email = ? AND active = 1";
+
+        try (Connection connection = DataBaseConfig.getConnection();
+                PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, emailUser);
-            ResultSet resultSet = statement.executeQuery();
-
-            while (resultSet.next()) {
-                pets.add(mapeamento(resultSet));
-
+            try (ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                    pets.add(mapeamento(resultSet));
+                }
             }
-            return pets;
-        } catch (Exception e) {
+        } catch (SQLException e) {
             e.printStackTrace();
-
         }
-        return null;
+        return pets;
     }
 
     public Pet procurarPorId(Long id) {
-        try (Connection connection = DataBaseConfig.getConnection();
-                PreparedStatement statement = connection.prepareStatement("SELECT * FROM pets WHERE id = ?")) {
+        String sql = "SELECT * FROM pet WHERE id = ? AND active = true";
 
+        try (Connection connection = DataBaseConfig.getConnection();
+                PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setLong(1, id);
-            return mapeamento(statement.executeQuery());
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                return mapeamento(resultSet);
+            }
+
         } catch (SQLException e) {
             e.printStackTrace();
-
         }
         return null;
     }
 
-    public void deletar(Long id) {
+    public void desativarPet(Long id) {
+        String sql = "UPDATE pet SET active = false WHERE id = ?";
+
         try (Connection connection = DataBaseConfig.getConnection();
-                PreparedStatement statement = connection.prepareStatement("DELETE FROM pets WHERE id = ?")) {
+                PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setLong(1, id);
             statement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
-
         }
     }
-
 }

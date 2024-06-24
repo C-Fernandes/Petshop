@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <title>Cadastro de usuário</title>
+    <title>Cadastro de usuário - Funcionário</title>
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <link rel="stylesheet" href="/cadastro.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -9,9 +9,59 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+<style>
+    :root {
+        --peru: #ec9474;
+        --coral: #fba383;
+        --maroon: #742a0f;
+        --rosybrown: #a46c5c;
+        --tan: #cda99d;
+    }
+    nav {
+        font-size: 1.1em;
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-end;
+        height: auto;
+        width: 100%;
+        background-color: var(--maroon);
+        color: white;
+        box-shadow: 0 0 5px black;
+    }
 
+    .navbar {
+        flex-wrap: wrap;
+        padding: 0.5em;
+        margin: 0 0.5em 0 0;
+    }
+
+    a {
+        color: white;
+        text-decoration: none;
+        padding: 0.3em 0.5em;
+    }
+
+    a:hover {
+        background-color: var(--maroon);
+        border: 1px solid var(--maroon);
+        border-radius: 15px;
+        text-decoration: none;
+        color: white;
+    }
+</style>
 </head>
+
 <body>
+<nav>
+    <div class="navbar">
+        <a id="inicio">Inicio</a>
+        <a id="pets">Pets</a>
+        <a id="produtos">Produtos</a>
+        <a id="servicos">Servicos</a>
+        <a id="listagem">Listagem</a>
+        <a id="meu-usuario">Meu Usuario</a>
+    </div>
+</nav>
 <div class="login-container position-relative overflow-hidden">
     <div class="circle">
     </div>
@@ -124,7 +174,7 @@
     <div class="main">
 
         <div class="title d-flex align-items-center justify-content-between">
-            <h1 class="p-2 h1-title">CADASTRO DE USUÁRIO</h1>
+            <h1 class="p-2 h1-title">CADASTRO DE FUNCIONÁRIO</h1>
             <i class="ph ph-dog"></i>
             <i class="ph ph-dog"></i>
             <i class="ph ph-dog"></i>
@@ -209,7 +259,6 @@
                         <option value="" disabled selected>Selecione o cargo</option>
                         <option value="VETERINARIO">Veterinário</option>
                         <option value="RECEPCIONISTA">Recepcionista</option>
-                        <option value="GROOMER">Groomer</option>
                         <option value="GERENTE">Gerente</option>
                     </select>
                     <div id="mensagemErroCargo" class="alerta" role="alert"></div>
@@ -221,7 +270,7 @@
                 <div class="col-6">
                     <div class="row">
                         <div class="text-start col-6">
-                            <button type="button" class="btn-cadastro rounded-pill" id="fazerLogin">
+                            <button type="button" class="btn-cadastro rounded-pill" id="voltarListagem">
                                 <i class="ph ph-arrow-bend-up-left"></i>
                                 <span>Voltar</span>
                             </button>
@@ -376,13 +425,28 @@
                             }
                         });
                     } else {
-                        window.location.href = '/usuario/login';
+                        window.location.href = '/usuario/listagem';
                     }
                 })
         };
-        document.getElementById("fazerLogin").onclick = function () {
-            window.location.href = '/usuario/login';
+        document.getElementById("voltarListagem").onclick = function () {
+            window.location.href = '/usuario/listagem';
         };
+
+        document.getElementById("inicio").addEventListener("click", function () {
+            window.location.href = "/usuario/inicial";
+        });
+
+        document.getElementById("listagem").addEventListener("click", function () {
+            window.location.href = "/usuario/listagem";
+        });
+
+        document.getElementById("cadastrarFuncionario").addEventListener("click", function () {
+            window.location.href = "/usuario/cadastro-funcionario";
+        });
+        document.getElementById("meu-usuario").addEventListener("click", function () {
+            window.location.href = "/usuario/meus-dados";
+        });
     </script>
 </div>
 </body>

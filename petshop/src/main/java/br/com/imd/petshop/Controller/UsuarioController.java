@@ -3,7 +3,6 @@ package br.com.imd.petshop.Controller;
 import br.com.imd.petshop.DTO.ClienteDTO;
 import br.com.imd.petshop.DTO.FuncionarioDTO;
 import br.com.imd.petshop.DTO.UsuarioDTO;
-import br.com.imd.petshop.Entity.Usuario;
 import br.com.imd.petshop.Entity.UsuarioLogado;
 import br.com.imd.petshop.Service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,8 +11,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
 
+import java.sql.SQLException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -43,7 +42,7 @@ public class UsuarioController {
     }
 
     @PostMapping("/cadastro-usuario")
-    public ResponseEntity<Map<String, Object>> cadastrarUsuario(@RequestBody UsuarioDTO usuarioDto) {
+    public ResponseEntity<Map<String, Object>> cadastrarUsuario(@RequestBody UsuarioDTO usuarioDto, Model model) {
         ResponseEntity<Map<String, Object>> validationResponse = usuarioService.validarCamposObrigatorios(usuarioDto);
 
         if (validationResponse.getStatusCode() != HttpStatus.OK) {
@@ -57,7 +56,7 @@ public class UsuarioController {
             response.put("errors", Collections.singletonList(e.getMessage()));
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         }
-
+        model.addAttribute("email", usuarioLogado.getEmail());
         return null;
     }
 
@@ -128,4 +127,30 @@ public class UsuarioController {
         usuarioService.desativarUsuario(usuarioDTO.getEmail());
         return ResponseEntity.ok().build();
     }
+    @GetMapping("/filtrar")
+    public ResponseEntity<?> filtrarUsuarios(@RequestParam String tipo) {
+        if (tipo.equals("cliente")) {
+            List<ClienteDTO> clientes = usuarioService.listarClientesComUsuarios();
+            return ResponseEntity.ok(clientes);
+        } else if (tipo.equals("funcionario")) {
+            List<FuncionarioDTO> funcionarios = usuarioService.listarFuncionariosComUsuarios();
+            return ResponseEntity.ok(funcionarios);
+        } else {
+            List<ClienteDTO> clientes = usuarioService.listarClientesComUsuarios();
+            List<FuncionarioDTO> funcionarios = usuarioService.listarFuncionariosComUsuarios();
+            Map<String, List<?>> todosUsuarios = new HashMap<>();
+            todosUsuarios.put("clientes", clientes);
+            todosUsuarios.put("funcionarios", funcionarios);
+            return ResponseEntity.ok(todosUsuarios);
+        }
+    }
+
+    @GetMapping("/meus-dados")
+    public String meusDados(Model model) throws SQLException {
+        UsuarioDTO usuarioDTO = usuarioService.obterUsuarioDTO(usuarioLogado.getEmail());
+        model.addAttribute("usuario", usuarioDTO);
+        return "meu-usuario";
+    }
+
+
 }

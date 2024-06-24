@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+
+    <link rel="stylesheet" href="/styles/pets.css" />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.bundle.min.js"></script>
+    <script src="/js/pets.js"></script>
+  </head>
+
+  <body>
+    <nav>
+      <p>Bem vindo <span id="usuario-logado" th:text="${usuario}"></span></p>
+      <div class="navbar">
+        <a id="inicio">Inicio</a>
+        <a href="pets/" id="pets">Pets</a>
+        <a id="produtos/">Produtos</a>
+        <a id="servicos">Servicos</a>
+      </div>
+    </nav>
+    <div class="row">
+      <div class="filtro">
+        <input type="text" name="filtro" id="filtroNome" />
+        <img src="/images/lupa.png" alt="Lupa" id="buscar" />
+      </div>
+      <button
+        type="button"
+        class="btn btn-primary"
+        data-toggle="modal"
+        id="abrirModalPet"
+      >
+        Cadastrar Pet
+      </button>
+    </div>
+    <div class="myContainer" id="product-container">
+      <div class="card div-editar" th:each="pet : ${pets}">
+        <img
+          th:src="'/images/uploads/pets/' + ${pet.imagem}"
+          alt="Imagem do pet"
+        />
+        <div class="card-body">
+          <h3 class="card-title" th:text="${pet.nome}">Nome do pet</h3>
+          <div class="card-text">
+            <p>
+              Data de nascimento:
+              <span th:text="${pet.dataDeNascimento}">10</span>
+            </p>
+            <div id="raca">
+              <p><span th:text="${pet.raca.raca}"></span></p>
+              <p>-</p>
+              <p><span th:text="${pet.raca.especie}"></span></p>
+            </div>
+            <p th:if="${pet.idade != null}">
+              Idade:
+              <span th:if="${pet.idade >= 12}">
+                <span th:text="${pet.idade div 12}"></span> ano<span
+                  th:if="${pet.idade >= 24}"
+                  >s</span
+                >
+                <span th:text="${pet.idade % 12}"></span> mês<span
+                  th:if="${pet.idade % 12 > 1}"
+                  >es</span
+                >
+              </span>
+              <span th:if="${pet.idade < 12}">
+                <span th:text="${pet.idade}"></span> mês<span
+                  th:if="${pet.idade > 1}"
+                  >es</span
+                >
+              </span>
+            </p>
+            <p>Peso: <span th:text="${pet.peso}"></span> kg</p>
+            <p>
+              Sexo:
+              <span th:text="${pet.sexo == 'M' ? 'Macho' : 'Fêmea'}"></span>
+            </p>
+          </div>
+        </div>
+        <div class="icons">
+          <i
+            class="fas fa-edit editar"
+            src="/images/editar.jpg"
+            alt="Editar pet"
+            th:data-id="${pet.id}"
+            th:data-nome="${pet.nome}"
+            th:data-dataDeNascimento="${pet.dataDeNascimento}"
+            th:data-idade="${pet.idade}"
+            th:data-raca-raca="${pet.raca.raca}"
+            th:data-raca-especie="${pet.raca.especie}"
+            th:data-imagem="${pet.imagem}"
+            th:data-peso="${pet.peso}"
+            th:data-sexo="${pet.sexo}"
+          ></i>
+          <i
+            class="fas fa-trash-alt"
+            th:data-id="${pet.id}"
+            src="/images/lixeiraDelete.webp"
+            id="deleteButtonModal"
+          ></i>
+        </div>
+      </div>
+    </div>
+
+    <!--------------->
+    <div
+      class="modal fade"
+      id="modalPet"
+      tabindex="-1"
+      role="dialog"
+      aria-labelledby="exampleModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">
+              Atualizar Informações do Pet
+            </h5>
+            <button
+              type="button"
+              class="close"
+              data-dismiss="modal"
+              aria-label="Fechar"
+            >
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form id="edicaoPetForm">
+              <div class="form-group">
+                <label for="imgPet" class="col-form-label">Foto:</label>
+                <input
+                  accept="image/*"
+                  type="file"
+                  class="form-control"
+                  id="imgPet"
+                  name="imgPet"
+                />
+                <div id="mensagemFotoPet"></div>
+              </div>
+              <div class="form-group">
+                <label for="nomePet" class="col-form-label">Nome do Pet:</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="nomePet"
+                  name="nomePet"
+                />
+                <div id="mensagemNomePet"></div>
+              </div>
+              <div class="form-group">
+                <label for="especiePet" class="col-form-label">Espécie:</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="especiePet"
+                  name="especiePet"
+                />
+                <div id="mensagemEspeciePet"></div>
+              </div>
+              <div class="form-group">
+                <label for="racaPet" class="col-form-label">Raça:</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="racaPet"
+                  name="racaPet"
+                />
+                <div id="mensagemRacaPet"></div>
+              </div>
+              <div class="form-group">
+                <label for="sexoPet" class="col-form-label">Sexo:</label>
+                <select class="form-control" id="sexoPet" name="sexoPet">
+                  <option value="M">Macho</option>
+                  <option value="F">Fêmea</option>
+                </select>
+                <div id="mensagemSexoPet"></div>
+              </div>
+              <div class="form-group">
+                <label for="pesoPet" class="col-form-label">Peso (kg):</label>
+                <input
+                  type="number"
+                  step="0.01"
+                  class="form-control"
+                  id="pesoPet"
+                  name="pesoPet"
+                />
+                <div id="mensagemPesoPet"></div>
+              </div>
+              <div class="form-group">
+                <label for="dataNascimentoPet" class="col-form-label">
+                  Data de Nascimento:
+                </label>
+                <input
+                  type="date"
+                  class="form-control"
+                  id="dataNascimentoPet"
+                  name="dataNascimentoPet"
+                />
+                <div id="mensagemDataNascimentoPet"></div>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-dismiss="modal"
+            >
+              Fechar
+            </button>
+            <button
+              type="button"
+              id="atualizarPetButton"
+              class="btn btn-primary"
+            >
+              Atualizar pet
+            </button>
+            <button type="button" id="petButton" class="btn btn-primary">
+              Cadastrar pet
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Confirmação de exclusão -->
+    <div
+      class="modal fade"
+      id="modalDelete"
+      tabindex="-1"
+      role="dialog"
+      aria-labelledby="exampleModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title" id="exampleModalLabel">Deletar produto</h4>
+            <button
+              type="button"
+              class="close"
+              data-dismiss="modal"
+              aria-label="Fechar"
+            >
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <p>
+              Você tem certeza que deseja deletar esse produto? Esta ação é
+              irreversivel.
+            </p>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-dismiss="modal"
+            >
+              Cancelar</button
+            ><button
+              type="button"
+              id="deleteButton"
+              data-dismiss="modal"
+              class="btn btn-primary btn-delete"
+            >
+              Deletar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

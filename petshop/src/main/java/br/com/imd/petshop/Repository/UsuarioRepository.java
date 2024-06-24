@@ -1,5 +1,7 @@
 package br.com.imd.petshop.Repository;
 
+import br.com.imd.petshop.DTO.UsuarioDTO;
+import br.com.imd.petshop.Entity.Cep;
 import br.com.imd.petshop.Entity.Usuario;
 import br.com.imd.petshop.Config.DataBaseConfig;
 import org.springframework.stereotype.Repository;
@@ -146,14 +148,98 @@ public class UsuarioRepository {
             psDesativarPet.setString(1, email);
             psDesativarPet.executeUpdate();
 
-            psDesativarSolicitacao.setString(1, email);
-            psDesativarSolicitacao.executeUpdate();
-
             conn.commit();
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
+
+    public List<UsuarioDTO> listarClientes() {
+        String sql = "SELECT u.*, c.qtd_pontos " +
+                "FROM usuario u " +
+                "INNER JOIN cliente c ON u.email = c.usuario_email " +
+                "WHERE u.active = true";
+        return listarUsuariosPorQuery(sql);
+    }
+
+    public List<UsuarioDTO> listarFuncionarios() {
+        String sql = "SELECT u.*, f.cargo " +
+                "FROM usuario u " +
+                "INNER JOIN funcionario f ON u.email = f.usuario_email " +
+                "WHERE u.active = true";
+        return listarUsuariosPorQuery(sql);
+    }
+
+    private List<UsuarioDTO> listarUsuariosPorQuery(String sql) {
+        List<UsuarioDTO> usuarios = new ArrayList<>();
+        try (Connection conn = DataBaseConfig.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                UsuarioDTO usuario = mapRowToDTO(rs);
+                usuarios.add(usuario);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return usuarios;
+    }
+
+
+    private UsuarioDTO mapRowToDTO(ResultSet rs) throws SQLException {
+        UsuarioDTO usuario = new UsuarioDTO();
+        usuario.setEmail(rs.getString("email"));
+        usuario.setSenha(rs.getString("senha"));
+        usuario.setNome(rs.getString("nome"));
+        usuario.setDataDeNascimento(rs.getDate("data_nascimento"));
+        usuario.setIdade(rs.getInt("idade"));
+        usuario.setTelefone(rs.getString("telefone"));
+        usuario.setLogradouro(rs.getString("logradouro"));
+        usuario.setNumero(rs.getLong("numero"));
+        usuario.setBairro(rs.getString("bairro"));
+        usuario.setCargo(rs.getString("cargo"));
+
+        return usuario;
+    }
+
+
+    public Usuario findByEmailTelaDados(String email) throws SQLException {
+        String sql = "SELECT u.nome, u.email, u.data_nascimento, u.telefone, u.numero, u.logradouro, u.bairro, " +
+                "c.cep AS c_cep, c.cidade, c.estado " +  // Adicionado espaço após estado
+                "FROM usuario u " +
+                "JOIN cep c ON u.cep = c.cep " +
+                "WHERE u.email = ?";
+
+        try (Connection conn = DataBaseConfig.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, email);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                Usuario usuario = new Usuario();
+                usuario.setNome(rs.getString("nome"));
+                usuario.setEmail(rs.getString("email"));
+                usuario.setDataDeNascimento(rs.getDate("data_nascimento"));
+                usuario.setTelefone(rs.getString("telefone"));
+                usuario.setLogradouro(rs.getString("logradouro"));
+                usuario.setNumero(rs.getLong("numero"));
+                usuario.setBairro(rs.getString("bairro"));
+
+                Cep cep = new Cep();
+                cep.setCep(rs.getString("c_cep"));
+                cep.setCidade(rs.getString("cidade"));
+                cep.setEstado(rs.getString("estado"));
+
+                usuario.setCep(cep);
+
+                return usuario;
+            }
+        }
+        return null; // Usuario não encontrado
+    }
+
+
+
 
 }
