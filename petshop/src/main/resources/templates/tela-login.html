@@ -137,7 +137,7 @@
             <i class="ph ph-dog"></i>
         </div>
 
-        <form id="loginForm">
+        <form action="/usuario/logar" method="POST">
             <div class="row">
                 <div class="col-6 p-3">
                     <h2>
@@ -158,27 +158,32 @@
                     <div class="form-group">
                         <label for="senha">Senha:</label>
                         <input type="password" class="form-control rounded-pill px-4" id="senha" name="senha" required>
-                        <div id="mensagemErroSenha" class="alerta" role="alert"></div>
+                        <div th:if="${erro != null}" th:text="${erro}" class="alerta" role="alert">
                     </div>
                     <div class="row buttons-div">
-                        <div class="text-center align-content-end col-6">
-                            <button type="button" class="btn-cadastro rounded-pill" id="fazerLogin">
+                        <div class=" col-6">
+                            <button type="button" class="btn-cadastro rounded-pill" id="voltar">
                                 <i class="ph ph-arrow-bend-up-left"></i>
                                 <span>Voltar</span>
                             </button>
                         </div>
-                        <div class="text-center align-content-end col-6">
-                            <button type="button" id="cadastrarButton" class="btn-cadastro rounded-pill">Entrar</button>
+                        <div class="col-6 d-flex align-items-center justify-content-end">
+                            <button type="submit" id="fazerLogin" class="btn-cadastro rounded-pill">Entrar</button>
                         </div>
 
                     </div>
-                </div>
-            </div>
-            <div class="row">
+                    <div class="subscribe-button">
+                        <span>Ainda não tem cadastro? Faça agora!</span>
 
+                        <button id="subscribe">
+                            Cadastrar
+                        </button>
+                    </div>
+                </div>
 
             </div>
         </form>
+
         <div class="title d-flex align-items-center justify-content-between">
             <i class="ph ph-dog"></i>
             <i class="ph ph-dog"></i>
@@ -195,5 +200,15 @@
         </div>
     </div>
 </div>
+<script>
+    document.getElementById("voltar").addEventListener("click", function() {
+        window.location.href = "/usuario/inicial";
+    });
+
+    document.getElementById("subscribe").addEventListener("click", function() {
+        window.location.href = "/usuario/cadastro";
+    });
+
+</script>
 </body>
 </html>

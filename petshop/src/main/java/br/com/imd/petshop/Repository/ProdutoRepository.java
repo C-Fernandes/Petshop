@@ -20,13 +20,28 @@ public class ProdutoRepository {
         Produto produto = new Produto();
         produto.setId(resultSet.getLong("id"));
         produto.setNome(resultSet.getString("nome"));
-        produto.setQuantidade(Integer.parseInt(resultSet.getString("quantidade")));
-
+        produto.setQuantidade(resultSet.getInt("quantidade"));
+        produto.setAtivo(resultSet.getBoolean("ativo"));
+        produto.setImagem(resultSet.getString("imagem"));
         return produto;
     }
 
+    public void deleteProduto(Long idProduto) {
+        String deleteProdutoSql = "DELETE FROM produto WHERE id = ?";
+        try (Connection conn = DataBaseConfig.getConnection();
+                PreparedStatement ps = conn.prepareStatement(deleteProdutoSql)) {
+            ps.setLong(1, idProduto);
+            int rowsDeleted = ps.executeUpdate();
+            if (rowsDeleted == 0) {
+                throw new SQLException("Nenhum produto foi deletado. Produto não encontrado.");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
     public Produto saveProdutoEPreco(Produto produto) {
-        String sql = "INSERT INTO produto (nome, quantidade, ativo) VALUES (?, ?, ?)";
+        String sql = "INSERT INTO produto (nome, quantidade, ativo, imagem) VALUES (?, ?, ?, ?)";
         try {
             Connection conn = DataBaseConfig.getConnection();
             PreparedStatement ps = conn.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
@@ -34,6 +49,7 @@ public class ProdutoRepository {
             ps.setString(1, produto.getNome());
             ps.setInt(2, produto.getQuantidade());
             ps.setBoolean(3, produto.getAtivo());
+            ps.setString(4, produto.getImagem());
 
             int affectedRows = ps.executeUpdate();
 
@@ -88,8 +104,7 @@ public class ProdutoRepository {
         return null;
     }
 
-    public List<Produto> findbyId(Long id) {
-        List<Produto> produtos = new ArrayList<>();
+    public Produto findbyId(Long id) {
         String sql = "SELECT * FROM produto WHERE id = ?";
         try {
             Connection conn = DataBaseConfig.getConnection();
@@ -97,14 +112,50 @@ public class ProdutoRepository {
             ps.setLong(1, id);
             ResultSet rs = ps.executeQuery();
 
-            while (rs.next()) {
-                produtos.add(mapeamento(rs));
+            if (rs.next()) {
+                return mapeamento(rs);
             }
-
-            return produtos;
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public List<Produto> findByNomeContainingIgnoreCase(String nome) {
+        String sql = "SELECT * FROM produto WHERE LOWER(nome) LIKE LOWER(?)";
+        List<Produto> produtos = new ArrayList<>();
+        try (Connection conn = DataBaseConfig.getConnection();
+                PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, "%" + nome + "%");
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                produtos.add(mapeamento(rs));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return produtos;
+    }
+
+    public void atualizarProduto(Produto produto) {
+        String sql = "UPDATE produto SET nome = ?, quantidade = ?, ativo = ?, imagem = ? WHERE id = ?";
+        try {
+            Connection conn = DataBaseConfig.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+
+            ps.setString(1, produto.getNome());
+            ps.setInt(2, produto.getQuantidade());
+            ps.setBoolean(3, produto.getAtivo());
+            ps.setString(4, produto.getImagem());
+            ps.setLong(5, produto.getId());
+
+            int rowsUpdated = ps.executeUpdate();
+            if (rowsUpdated == 0) {
+                throw new SQLException("Falha ao atualizar o produto. Nenhum registro foi modificado.");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }

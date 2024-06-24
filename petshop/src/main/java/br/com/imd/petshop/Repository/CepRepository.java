@@ -1,7 +1,8 @@
 package br.com.imd.petshop.Repository;
 
-import br.com.imd.petshop.Entity.Cep;
 import br.com.imd.petshop.Config.DataBaseConfig;
+import br.com.imd.petshop.Entity.Cep;
+
 import org.springframework.stereotype.Repository;
 
 import java.sql.Connection;
@@ -16,7 +17,7 @@ public class CepRepository {
     public boolean existsById(String cep) {
         String sql = "SELECT COUNT(*) AS count FROM cep WHERE cep = ?";
         try (Connection conn = DataBaseConfig.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+                PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, cep);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
@@ -32,7 +33,7 @@ public class CepRepository {
     public Optional<Cep> findById(String cep) {
         String sql = "SELECT * FROM cep WHERE cep = ?";
         try (Connection conn = DataBaseConfig.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+                PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, cep);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
@@ -48,7 +49,7 @@ public class CepRepository {
     public void save(Cep cep) {
         String sql = "INSERT INTO cep (cep, cidade, estado) VALUES (?, ?, ?)";
         try (Connection conn = DataBaseConfig.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+                PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, cep.getCep());
             ps.setString(2, cep.getCidade());
             ps.setString(3, cep.getEstado());

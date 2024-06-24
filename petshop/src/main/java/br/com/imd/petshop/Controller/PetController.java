@@ -30,11 +30,9 @@ public class PetController {
     @Autowired
     private UsuarioService usuarioService;
 
-    @GetMapping("/listarPets")
+    @GetMapping("/")
     public String listarPets(Model model) {
-        List<Pet> pets = petService.listarPets();
-        model.addAttribute("pets", pets);
-        return "pets";
+        return "pets-gerenciamento";
     }
 
     @GetMapping("/cadastro")

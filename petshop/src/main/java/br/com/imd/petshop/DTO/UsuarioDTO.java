@@ -1,8 +1,10 @@
-package br.com.imd.petshop.Entity;
+package br.com.imd.petshop.DTO;
 
 import java.util.Date;
 
-public class Usuario {
+import br.com.imd.petshop.Entity.Cep;
+
+public class UsuarioDTO {
     private String email;
     private String senha;
     private String nome;
@@ -13,6 +15,8 @@ public class Usuario {
     private Long numero;
     private String bairro;
     private Cep cep;
+    private Long qtdPontos;
+    private String cargo;
     private Boolean active;
 
     public String getEmail() {
@@ -39,15 +43,15 @@ public class Usuario {
         this.nome = nome;
     }
 
-    public Date getDataDeNascimento() {
-        return dataDeNascimento;
+    public java.sql.Date getDataDeNascimento() {
+        return (java.sql.Date) dataDeNascimento;
     }
 
     public void setDataDeNascimento(Date dataDeNascimento) {
         this.dataDeNascimento = dataDeNascimento;
     }
 
-   public Integer getIdade() {
+    public Integer getIdade() {
         return idade;
     }
 
@@ -72,7 +76,7 @@ public class Usuario {
     }
 
     public Long getNumero() {
-        return this.numero;
+        return numero;
     }
 
     public void setNumero(Long numero) {
@@ -93,6 +97,22 @@ public class Usuario {
 
     public void setCep(Cep cep) {
         this.cep = cep;
+    }
+
+    public Long getQtdPontos() {
+        return qtdPontos;
+    }
+
+    public void setQtdPontos(Long qtdPontos) {
+        this.qtdPontos = qtdPontos;
+    }
+
+    public String getCargo() {
+        return cargo;
+    }
+
+    public void setCargo(String cargo) {
+        this.cargo = cargo;
     }
 
     public Boolean getActive() {

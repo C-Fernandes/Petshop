@@ -110,4 +110,50 @@ public class UsuarioRepository {
         usuario.setBairro(rs.getString("bairro"));
         return usuario;
     }
+
+    public boolean existsByEmail(String email) {
+        String sql = "SELECT COUNT(*) AS count FROM usuario WHERE email = ?";
+        try (Connection conn = DataBaseConfig.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, email);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    int count = rs.getInt("count");
+                    return count > 0;
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public void desativarUsuario(String email) {
+        String sqlDesativarUsuario = "UPDATE usuario SET active = false WHERE email = ?";
+        String sqlDesativarPet = "UPDATE pet SET active = false WHERE cliente_usuario_email = ?";
+        String sqlDesativarSolicitacao = "UPDATE solicita SET active = false WHERE cliente_usuario_email = ?";
+
+        try (Connection conn = DataBaseConfig.getConnection();
+             PreparedStatement psDesativarUsuario = conn.prepareStatement(sqlDesativarUsuario);
+             PreparedStatement psDesativarPet = conn.prepareStatement(sqlDesativarPet);
+             PreparedStatement psDesativarSolicitacao = conn.prepareStatement(sqlDesativarSolicitacao)) {
+
+            conn.setAutoCommit(false);
+
+            psDesativarUsuario.setString(1, email);
+            psDesativarUsuario.executeUpdate();
+
+            psDesativarPet.setString(1, email);
+            psDesativarPet.executeUpdate();
+
+            psDesativarSolicitacao.setString(1, email);
+            psDesativarSolicitacao.executeUpdate();
+
+            conn.commit();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
 }

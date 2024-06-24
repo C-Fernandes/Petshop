@@ -1,20 +1,22 @@
-package br.com.imd.petshop.Entity;
+package br.com.imd.petshop.DTO;
+
+import br.com.imd.petshop.Entity.Cep;
 
 import java.util.Date;
 
-public class Usuario {
+public class FuncionarioDTO {
     private String email;
     private String senha;
     private String nome;
-    private Date dataDeNascimento;
+    private Date dataNascimento;
     private Integer idade;
     private String telefone;
     private String logradouro;
     private Long numero;
     private String bairro;
     private Cep cep;
+    private String cargo;
     private Boolean active;
-
     public String getEmail() {
         return email;
     }
@@ -39,15 +41,8 @@ public class Usuario {
         this.nome = nome;
     }
 
-    public Date getDataDeNascimento() {
-        return dataDeNascimento;
-    }
 
-    public void setDataDeNascimento(Date dataDeNascimento) {
-        this.dataDeNascimento = dataDeNascimento;
-    }
-
-   public Integer getIdade() {
+    public Integer getIdade() {
         return idade;
     }
 
@@ -72,7 +67,7 @@ public class Usuario {
     }
 
     public Long getNumero() {
-        return this.numero;
+        return numero;
     }
 
     public void setNumero(Long numero) {
@@ -93,6 +88,22 @@ public class Usuario {
 
     public void setCep(Cep cep) {
         this.cep = cep;
+    }
+
+    public String getCargo() {
+        return cargo;
+    }
+
+    public void setCargo(String cargo) {
+        this.cargo = cargo;
+    }
+
+    public Date getDataNascimento() {
+        return dataNascimento;
+    }
+
+    public void setDataNascimento(Date dataNascimento) {
+        this.dataNascimento = dataNascimento;
     }
 
     public Boolean getActive() {
