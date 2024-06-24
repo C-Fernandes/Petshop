@@ -146,4 +146,11 @@ public class UsuarioController {
         }
     }
 
+    @GetMapping("/meus-dados")
+    public String meusDados(Model model) {
+        UsuarioDTO usuarioDTO = usuarioService.obterUsuarioDTO(usuarioLogado.getEmail());
+        model.addAttribute("usuario", usuarioDTO);
+        return "meu-usuario";
+    }
+
 }
