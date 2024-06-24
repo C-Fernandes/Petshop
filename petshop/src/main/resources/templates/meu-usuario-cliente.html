@@ -81,7 +81,7 @@
             font-size: 1.1em;
             display: flex;
             flex-direction: row;
-            justify-content: flex-end;
+            justify-content: flex-start;
             height: auto;
             width: 100%;
             background-color: var(--maroon);
@@ -96,11 +96,19 @@
             padding: 0.5em;
             margin: 0 0.5em 0 0;
         }
-        nav p {
-            width: 40%;
-            margin: 1em;
-            justify-content: flex-start;
+
+
+        .circle{
+            position: absolute;
+            height: 60rem;
+            width: 60rem;
+            border-radius: 50%;
+            z-index: -1;
+            background-color:var(--maroon);
+            right:55%;
+            top: 25%;
         }
+
         a {
             color: white;
             text-decoration: none;
@@ -114,6 +122,11 @@
             text-decoration: none;
             color: white;
         }
+        nav p {
+            width: 40%;
+            margin: 1em;
+            justify-content: flex-start;
+        }
     </style>
 </head>
 <body>
@@ -124,7 +137,6 @@
         <a id="pets">Pets</a>
         <a id="produtos">Produtos</a>
         <a id="servicos">Servicos</a>
-        <a id="listagem">Listagem</a>
         <a id="meu-usuario">Meu Usuario</a>
         <a id="inicio">Sair</a>
     </div>
@@ -181,21 +193,20 @@
 </div>
 
 <script>
-    // Event listeners para os links do menu
     document.getElementById("inicio").addEventListener("click", function () {
         window.location.href = "/usuario/inicial";
     });
-
-    document.getElementById("listagem").addEventListener("click", function () {
-        window.location.href = "/usuario/listagem";
-    });
-
-    document.getElementById("cadastrarFuncionario").addEventListener("click", function () {
-        window.location.href = "/usuario/cadastro-funcionario";
-    })
-    document.getElementById("meu-usuario").addEventListener("click", function () {
+    document.getElementById("produtos").addEventListener("click", function () {
+        window.location.href = "";
+    }); document.getElementById("servicos").addEventListener("click", function () {
+        window.location.href = "";
+    }); document.getElementById("meu-usuario").addEventListener("click", function () {
         window.location.href = "/usuario/meus-dados-cliente";
     });
+    document.getElementById("pets").addEventListener("click", function () {
+        window.location.href = "/pets/";
+    });
+
 </script>
 
 </body>
