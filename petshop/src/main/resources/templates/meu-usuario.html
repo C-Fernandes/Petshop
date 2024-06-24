@@ -121,8 +121,7 @@
 <nav>
     <p>Bem vindo <span id="usuario-logado" th:text="${usuario.getNome()}"></span></p>
     <div class="navbar">
-        <a id="pets">Pets</a>
-        <a id="produtos" th:href="@{/pedido/}">Produtos</a>
+        <a id="produtos" th:href="@{/produtos/}">Produtos</a>
         <a id="servicos">Servicos</a>
         <a id="listagem">Listagem</a>
         <a id="meu-usuario">Meu Usuario</a>
@@ -196,6 +195,11 @@
     document.getElementById("meu-usuario").addEventListener("click", function () {
         window.location.href = "/usuario/meus-dados-cliente";
     });
+    document
+        .getElementById("produtos")
+        .addEventListener("click", function () {
+            window.location.href = "/produtos/";
+        });
 </script>
 
 </body>

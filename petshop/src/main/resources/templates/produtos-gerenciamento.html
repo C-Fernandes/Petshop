@@ -14,12 +14,26 @@
     <!-------------------------- Menu -------------------------------->
     <nav>
       <div class="navbar">
-        <a href="">Inicio</a>
-        <a href="">Pets</a>
-        <a th:href="@{/produtos/}">Produtos</a>
-        <a href="">Servicos</a>
+        <a id="produtos">Produtos</a>
+        <a id="servicos">Servicos</a>
+        <a id="listagem">Listagem</a>
+        <a id="meu-usuario">Meu Usuário</a>
+        <a id="inicio">Sair</a>
       </div>
     </nav>
+    <script>
+      document
+              .getElementById("meu-usuario")
+              .addEventListener("click", function () {
+                window.location.href = "/usuario/meus-dados";
+              });
+      document
+              .getElementById("listagem")
+              .addEventListener("click", function () {
+                window.location.href = "/usuario/listagem";
+              });
+
+    </script>
 
     <div class="row">
       <div class="filtro">
@@ -282,4 +296,5 @@
 
     <script src="/js/produtos.js"></script>
   </body>
+
 </html>
