@@ -19,7 +19,7 @@ public class ClienteRepository {
     public void save(Cliente cliente) {
         String sql = "INSERT INTO cliente (usuario_email, qtd_pontos) VALUES (?, ?)";
         try (Connection conn = DataBaseConfig.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+                PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, cliente.getUsuario().getEmail());
             ps.setLong(2, cliente.getQtdPontos());
             ps.executeUpdate();
@@ -31,7 +31,7 @@ public class ClienteRepository {
     public Cliente findByUsuario(String usuario_email) {
         String sql = "SELECT * FROM cliente WHERE usuario_email = ?";
         try (Connection conn = DataBaseConfig.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+                PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, usuario_email);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
@@ -57,8 +57,8 @@ public class ClienteRepository {
         String sql = "SELECT c.usuario_email, c.qtd_pontos, u.nome, u.telefone, u.data_nascimento FROM cliente c INNER JOIN usuario u ON c.usuario_email = u.email";
         List<ClienteDTO> clientes = new ArrayList<>();
         try (Connection conn = DataBaseConfig.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql);
-             ResultSet rs = ps.executeQuery()) {
+                PreparedStatement ps = conn.prepareStatement(sql);
+                ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
                 ClienteDTO clienteDTO = new ClienteDTO();
                 clienteDTO.setEmail(rs.getString("usuario_email"));

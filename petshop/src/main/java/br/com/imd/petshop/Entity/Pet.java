@@ -9,7 +9,19 @@ public class Pet {
     private Date dataDeNascimento;
     private Integer idade;
     private Usuario dono;
+    private String imagem;
     private Raca raca;
+    private Boolean active;
+    private Double peso;
+    private char sexo;
+
+    public String getImagem() {
+        return this.imagem;
+    }
+
+    public void setImagem(String imagem) {
+        this.imagem = imagem;
+    }
 
     public Long getId() {
         return id;
@@ -57,5 +69,33 @@ public class Pet {
 
     public void setRaca(Raca raca) {
         this.raca = raca;
+    }
+
+    public Boolean isActive() {
+        return this.active;
+    }
+
+    public Boolean getActive() {
+        return this.active;
+    }
+
+    public void setActive(Boolean active) {
+        this.active = active;
+    }
+
+    public Double getPeso() {
+        return this.peso;
+    }
+
+    public void setPeso(Double peso) {
+        this.peso = peso;
+    }
+
+    public char getSexo() {
+        return this.sexo;
+    }
+
+    public void setSexo(char sexo) {
+        this.sexo = sexo;
     }
 }

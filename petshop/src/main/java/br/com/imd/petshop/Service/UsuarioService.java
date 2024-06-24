@@ -37,8 +37,10 @@ public class UsuarioService {
     private final UsuarioLogado usuarioLogado;
 
     @Autowired
-    public UsuarioService(UsuarioRepository usuarioRepository, CepRepository cepRepository, BCryptPasswordEncoder passwordEncoder,
-                          ClienteRepository clienteRepository, FuncionarioRepository funcionarioRepository, UsuarioLogado usuarioLogado) {
+    public UsuarioService(UsuarioRepository usuarioRepository, CepRepository cepRepository,
+            BCryptPasswordEncoder passwordEncoder,
+            ClienteRepository clienteRepository, FuncionarioRepository funcionarioRepository,
+            UsuarioLogado usuarioLogado) {
         this.cepRepository = cepRepository;
         this.passwordEncoder = passwordEncoder;
         this.clienteRepository = clienteRepository;
@@ -65,7 +67,8 @@ public class UsuarioService {
         }
 
         LocalDate dataAtual = LocalDate.now();
-        LocalDate dataNascimento = usuario.getDataDeNascimento().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        LocalDate dataNascimento = usuario.getDataDeNascimento().toInstant().atZone(ZoneId.systemDefault())
+                .toLocalDate();
         Period periodo = Period.between(dataNascimento, dataAtual);
         int idade = periodo.getYears();
         usuario.setIdade(idade);
@@ -147,10 +150,8 @@ public class UsuarioService {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         }
 
-
         return ResponseEntity.ok().build();
     }
-
 
     private boolean isValidEmail(String email) {
         return email.matches("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$");
@@ -163,7 +164,7 @@ public class UsuarioService {
             usuarioLogado.setEmail(email);
 
             if (cliente != null) {
-                return "redirect:/pets/cadastro";
+                return "redirect:/pets/";
             } else {
                 Funcionario funcionario = funcionarioRepository.findByUsuario(String.valueOf(usuario.getEmail()));
                 usuarioLogado.setEmail(email);
@@ -171,12 +172,14 @@ public class UsuarioService {
                     return "redirect:/usuario/listagem";
                 }
             }
-        }            return "redirect:/";
+        }
+        return "redirect:/";
     }
 
     public Usuario findUsuario(String email) {
         return usuarioRepository.findByEmail(email);
     }
+
     private UsuarioDTO convertToDTO(Usuario usuario) {
         UsuarioDTO usuarioDTO = new UsuarioDTO();
         usuarioDTO.setEmail(usuario.getEmail());
@@ -189,12 +192,13 @@ public class UsuarioService {
         usuarioDTO.setCep(usuario.getCep());
         return usuarioDTO;
     }
+
     public List<ClienteDTO> listarClientesComUsuarios() {
         return clienteRepository.listarClientesComUsuarios();
     }
+
     public List<FuncionarioDTO> listarFuncionariosComUsuarios() {
         return funcionarioRepository.listarFuncionariosComUsuarios();
     }
-
 
 }
