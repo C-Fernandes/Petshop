@@ -47,16 +47,8 @@ public class PetController {
     public String cadastro(Model model) {
         List<Pet> pets = petService.findAll(usuarioLogado.getEmail());
         model.addAttribute("pets", pets);
+        model.addAttribute("usuario", usuarioLogado.getEmail());
         return "pets";
-    }
-
-    @PostMapping("/{email}")
-    public ResponseEntity<String> salvarEmail(@PathVariable String email) {
-        try {
-            return ResponseEntity.ok().build();
-        } catch (Exception e) {
-            return ResponseEntity.notFound().build();
-        }
     }
 
     @GetMapping("/listar")
