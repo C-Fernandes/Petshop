@@ -92,8 +92,10 @@ public class PetController {
 
             // Obtendo o objeto Pet do PetDTO
             Pet pet = petDTO.getPet();
+            Usuario u = usuarioService.findUsuario(usuarioLogado.getEmail());
+            System.out.println("datanascimento:" + petDTO.getPet().getDataDeNascimento());
             Cliente usuario = new Cliente();
-            usuario.setEmail(usuarioLogado.getEmail());
+            usuario.setEmail(u.getEmail());
             String urlImagem = "padrao.jpg"; // Nome da imagem padrão
 
             if (file != null && !file.isEmpty()) {

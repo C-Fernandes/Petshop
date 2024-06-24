@@ -45,12 +45,17 @@ public class PetService {
 
     public void inserirPet(Pet pet) {
         System.out.println("raca:" + racaRepository.findByRaca(pet.getRaca().getRaca()));
-        if (racaRepository.findByRaca(pet.getRaca().getRaca()) == null) {
-            racaRepository.save(pet.getRaca());
-        }
 
-        System.out.println(pet.getDataDeNascimento());
-        petRepository.inserirPet(pet);
+        try {
+            if (racaRepository.findByRaca(pet.getRaca().getRaca()) == null) {
+                racaRepository.save(pet.getRaca());
+            }
+
+            System.out.println("print: " + pet.getDataDeNascimento());
+            petRepository.inserirPet(pet);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void deletarPet(Long id) {

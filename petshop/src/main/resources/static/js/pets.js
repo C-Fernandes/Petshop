@@ -280,7 +280,15 @@ $(document).ready(function () {
     $("#abrirModalPet").click(function () {
         $("#atualizarPetButton").hide();
 
+        $("#nomePet").val("");
+        $("#especiePet").val("");
+        $("#racaPet").val("");
+        $("#dataNascimentoPet").val("");
+        $("#sexoPet").val("");
+        $("#pesoPet").val("");
+
         $("#petButton").show();
+
         $("#modalPet").modal("show");
 
     })
@@ -317,52 +325,41 @@ $(document).ready(function () {
 
     $("#petButton").click(function () {
 
-        // Modifica o título do modal para "Atualizar Pet"
-        $('#modalPet .modal-title').text('Cadastro Pet');
-
-        // Esconde todos os outros campos exceto o campo de nome
-        $('#modalPet #especiePet').closest('.form-group').show();
-        $('#modalPet #racaPet').closest('.form-group').show();
-        $('#modalPet #dataNascimentoPet').closest('.form-group').show();
-        $('#modalPet #sexoPet').closest('.form-group').show();
-
-        $("#atualizarPetButton").hide();
-        $("#petButton").show();
-        nome = $("#nomePet").val();
-        especie = $("#especiePet").val();
-        raca = $("#racaPet").val();
-        dataNascimento = $("#dataNascimentoPet").val();
-        sexo = $("#sexoPet").val();
-        const peso = parseFloat($("#pesoPet").val());
-        const formData = new FormData();
+        const nomeCad = $("#nomePet").val();
+        const especieCad = $("#especiePet").val();
+        const racaCad = $("#racaPet").val();
+        const dataNascimentoCad = $("#dataNascimentoPet").val();
+        const sexoCad = $("#sexoPet").val();
+        const pesoCad = parseFloat($("#pesoPet").val());
+        const formDatacad = new FormData();
 
         // Verifica se o elemento existe e se foi selecionado um arquivo
         if ($("#imgPet")[0] && $("#imgPet")[0].files[0]) {
-            formData.append("file", $("#imgPet")[0].files[0]);
+            formDatacad.append("file", $("#imgPet")[0].files[0]);
         }
 
         // Montar objeto para envio
         const petDTO = {
             pet: {
 
-                nome: nome,
-                dataDeNascimento: dataNascimento,
-                sexo: sexo,
-                peso: peso
+                nome: nomeCad,
+                dataDeNascimento: dataNascimentoCad,
+                sexo: sexoCad,
+                peso: pesoCad
             },
             raca: {
-                raca: raca,
-                especie: especie
+                raca: racaCad,
+                especie: especieCad
             }
         };
 
         // Adicionar o objeto ao FormData
-        formData.append("petDTO", JSON.stringify(petDTO));
+        formDatacad.append("petDTO", JSON.stringify(petDTO));
 
         // Requisição POST para cadastrar o pet
         fetch("/pets/cadastro-pet", {
             method: "POST",
-            body: formData,
+            body: formDatacad,
         })
             .then(response => {
                 if (!response.ok) {
@@ -389,7 +386,6 @@ $(document).ready(function () {
     });
     $(document).on('click', '.deleteButtonModal', function () {
 
-        $("#modalAtualizacao").modal("hide");
         $("#modalDelete").modal("show");
 
         $("#modalDelete")
@@ -415,7 +411,7 @@ $(document).ready(function () {
             .then((data) => {
                 console.log("Pet deletado com sucesso:", data);
                 // Ocultar o modal ou executar outra ação após a exclusão
-                $("#modalPet").modal("hide");
+                $("#modalDelete").modal("hide");
             })
             .catch((error) => {
                 console.error("Erro ao deletar pet:", error);
