@@ -67,6 +67,37 @@ public class UsuarioRepository {
         }
         return null;
     }
+    public List<Usuario> findAllClientes() {
+        String sql = "SELECT u.*  FROM Usuario u JOIN Cliente c ON u.email = c.usuario_email";
+        List<Usuario> usuarios = new ArrayList<>();
+        try (Connection conn = DataBaseConfig.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                Usuario usuario = mapRow(rs);
+                usuarios.add(usuario);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return usuarios;
+    }
+
+    public List<Usuario> findAllFuncionarios() {
+        String sql = "SELECT u.*  FROM Usuario u JOIN Funcionario f ON u.email = f.usuario_email";
+        List<Usuario> usuarios = new ArrayList<>();
+        try (Connection conn = DataBaseConfig.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                Usuario usuario = mapRow(rs);
+                usuarios.add(usuario);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return usuarios;
+    }
 
     private Usuario mapRow(ResultSet rs) throws SQLException {
         Usuario usuario = new Usuario();
@@ -99,9 +130,9 @@ public class UsuarioRepository {
     }
 
     public void desativarUsuario(String email) {
-        String sqlDesativarUsuario = "UPDATE usuario SET active = false WHERE email = ?";
-        String sqlDesativarPet = "UPDATE pet SET active = false WHERE cliente_usuario_email = ?";
-        String sqlDesativarSolicitacao = "UPDATE solicita SET active = false WHERE cliente_usuario_email = ?";
+        String sqlDesativarUsuario = "UPDATE usuario SET ativo = false WHERE email = ?";
+        String sqlDesativarPet = "UPDATE pet SET ativo = false WHERE cliente_usuario_email = ?";
+        String sqlDesativarSolicitacao = "UPDATE solicita SET ativo = false WHERE cliente_usuario_email = ?";
 
         try (Connection conn = DataBaseConfig.getConnection();
              PreparedStatement psDesativarUsuario = conn.prepareStatement(sqlDesativarUsuario);
@@ -127,7 +158,7 @@ public class UsuarioRepository {
         String sql = "SELECT u.*, c.qtd_pontos " +
                 "FROM usuario u " +
                 "INNER JOIN cliente c ON u.email = c.usuario_email " +
-                "WHERE u.active = true";
+                "WHERE u.ativo = true";
         return listarUsuariosPorQuery(sql);
     }
 
@@ -135,7 +166,7 @@ public class UsuarioRepository {
         String sql = "SELECT u.*, f.cargo " +
                 "FROM usuario u " +
                 "INNER JOIN funcionario f ON u.email = f.usuario_email " +
-                "WHERE u.active = true";
+                "WHERE u.ativo = true";
         return listarUsuariosPorQuery(sql);
     }
 

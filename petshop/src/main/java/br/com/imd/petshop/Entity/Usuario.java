@@ -47,7 +47,7 @@ public class Usuario {
         this.dataDeNascimento = dataDeNascimento;
     }
 
-    public Integer getIdade() {
+   public Integer getIdade() {
         return idade;
     }
 

@@ -26,7 +26,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @Service
 public class UsuarioService {
@@ -160,6 +159,14 @@ public class UsuarioService {
 
     private boolean isValidEmail(String email) {
         return email.matches("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$");
+    }
+
+    public List<Usuario> findAllClientes() {
+        return usuarioRepository.findAllClientes();
+    }
+
+    public List<Usuario> findAllFuncionarios() {
+        return usuarioRepository.findAllFuncionarios();
     }
 
     public String login(String email, String senha) {

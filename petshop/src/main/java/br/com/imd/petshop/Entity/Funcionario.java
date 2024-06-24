@@ -1,6 +1,6 @@
 package br.com.imd.petshop.Entity;
 
-public class Funcionario {
+public class Funcionario extends Usuario {
 
     private Usuario usuario;
 

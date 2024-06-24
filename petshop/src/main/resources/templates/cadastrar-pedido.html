@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Cadastro de pedido</title>
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" rel="stylesheet"/>
+  <link rel="stylesheet" href="/styles/produtos.css" />
+  <link rel="stylesheet" href="/styles/carrinho.css" />
+
+
+</head>
+<body>
+<header>
+  <nav>
+    <div class="navbar">
+      <a href="">Inicio</a>
+      <a href="">Pets</a>
+      <a href="">Produtos</a>
+      <a href="">Servicos</a>
+      <a id="carrinho" style="position: relative; display: inline-block; margin-right: 10px" href="#">
+        <i class="ph ph-shopping-cart" style="font-size: 35px;"></i>
+        <span id="qtd" class="badge badge-pill badge-primary" style="position: absolute; top: -1px; right: -1px; background: #ec9474; margin-right: 5px; margin-top: 4px">0</span>
+      </a>
+    </div>
+  </nav>
+</header>
+<main>
+  <div style="position: relative; text-align: right; margin-top: 20px">
+    <div style="margin-right: 60px;">
+      Total: <span class="total"></span>
+    </div>
+  </div>
+
+  <div class="myContainer" id="product-container">
+    <div class="card"  th:each="produto : ${produtos}">
+      <div class="card-body">
+        <h5 class="card-title" th:text="${produto.nome}">Nome do Produto</h5>
+        <img
+                th:src="'/images/uploads/produtos/' + ${produto.imagem}"
+                alt="Imagem do Produto"
+        />
+        <div class="card-text">
+          <p>
+            Valor: R$ <span th:text="${produto.preco.valor}">100,00</span>
+          </p>
+        </div>
+        <button th:attr="data-nome=${produto.nome}, data-preco=${produto.preco.valor}, data-id=${produto.id}" onclick="addProduto(this.getAttribute('data-nome'), this.getAttribute('data-preco'), this.getAttribute('data-id'))">Adicionar</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="shoppingCart" style="display: none;">
+    <h4>Resumo do pedido</h4>
+    <table id="cartTable" class="table table-bordered table-striped" style="width: 500px;">
+      <thead class="thead">
+      <tr>
+        <th scope="col">ITEM</th>
+        <th scope="col">NOME</th>
+        <th scope="col">PREÇO</th>
+        <th scope="col">QUANTIDADE</th>
+        <th scope="col">AÇÃO</th>
+      </tr>
+      </thead>
+      <tbody id="cartBody">
+      </tbody>
+    </table>
+    <hr>
+    <p>Total: <span class="total"></span></p>
+      <div class="form-group">
+        <label>Funcionário</label>
+        <select id="funcionario" name="funcionario">
+          <option th:each="funcionario : ${funcionarios}" th:value="${funcionario.getEmail()}" th:text="${'funcionario ' + funcionario.email}"></option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Cliente</label>
+        <select id="cliente" name="cliente">
+          <option th:each="cliente : ${clientes}" th:value="${cliente.getEmail()}" th:text="${'cliente ' + cliente.email}"></option>
+        </select>
+      </div>
+    <button id="finalizarCompra" th:if="${pedidoEmEdicao == null}" type="button" class="btn btn-success">Finalizar pedido</button>
+    <button id="atualizarCompra" th:if="${pedidoEmEdicao != null}" type="button" class="btn btn-success">Atualizar pedido</button>
+    <div class="lateral-container">
+      <div id="customMsg" style="display: none; position: fixed; top: 20px; left: 50%; transform: translateX(-50%); font-size: 24px; padding: 15px;" class="alert alert-success" role="alert"></div>
+    </div>
+  </div>
+
+  <script src="/scripts/carrinho.js"></script>
+  <script th:inline="javascript">
+  var pedidoEmEdicao = /*[[${pedidoEmEdicao}]]*/ [];
+
+  if (pedidoEmEdicao.length > 0) {
+    var pedidoId = pedidoEmEdicao[0].pedido_id;
+    console.log('ID do Pedido em Edição:', pedidoId);
+    const produtos = pedidoEmEdicao[0].produtos;
+    produtos.forEach(produto => {
+      addProduto(produto.produto_nome, produto.produto_preco, produto.produto_id, produto.quantidade);
+    });
+  }
+
+  const atualizarCompra = document.getElementById("atualizarCompra");
+
+  atualizarCompra.addEventListener('click', () => {
+    const funcionarioId = document.getElementById("funcionario").value;
+    const clienteId = document.getElementById("cliente").value;
+
+    const carrinhoDTO = carrinho.map(item => ({
+      produto_nome: item.nome,
+      quantidade: item.qtd,
+      produto_id: item.id,
+      produto_preco: item.preco
+    }));
+
+    fetch(`/pedido/update/${funcionarioId}/${clienteId}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        valor: total,
+        data: new Date().toISOString(),
+        status: "ativo",
+        produtos: carrinhoDTO,
+        funcionarioId: funcionarioId,
+        clienteId: clienteId,
+        pedido_id: pedidoId
+      })
+    })
+            .then(response => {
+              if (!response.ok) {
+                return response.json().then(errors => {
+                  errors.forEach(error => {
+                    console.error(error);
+                  });
+                });
+              } else {
+                var msg = document.getElementById('customMsg');
+                msg.textContent = "Pedido editado com sucesso!";
+                msg.style.display = 'block';
+                setTimeout(() => {
+                  msg.style.display = 'none';
+                  window.location.href = '/pedido/list';
+                }, 1500);
+              }
+            })
+            .catch(error => {
+              console.error('Erro na atualização do pedido:', error);
+            });
+  });
+  </script>
+</body>
+</html>

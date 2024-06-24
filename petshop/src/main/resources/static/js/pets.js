@@ -25,51 +25,48 @@ function fetchPets() {
                 var idadeText = "";
                 if (pet.idade != null) {
                     if (pet.idade >= 12) {
-                        idadeText = `${Math.floor(pet.idade / 12)} ano${pet.idade >= 24 ? 's' : ''} ${pet.idade % 12} mês${pet.idade % 12 > 1 ? 'es' : ''}`;
+                        idadeText = `${Math.floor(pet.idade / 12)} ano${pet.idade >= 24 ? 's' : ''} e ${pet.idade % 12} mês${pet.idade % 12 > 1 ? 'es' : ''}`;
                     } else {
                         idadeText = `${pet.idade} mês${pet.idade > 1 ? 'es' : ''}`;
                     }
                 }
-
                 card.innerHTML = `
-                <img src="${imgSrc}" alt="Imagem do Pet" />
-                <div class="card-body">
-                    <h3 class="card-title">${pet.nome}</h3>
-                    <div class="card-text">
-                        <p>Data de nascimento: <span>${pet.dataDeNascimento}</span></p>
-                        <div id="raca">
-                        <p>Raça: <span>${pet.raca.raca}</span></p>
-                        <p>-</p>
-                        <p>Espécie: <span>${pet.raca.especie}</span></p>
-                        </div>
-                        <p>${pet.idade != null ? 'Idade: <span>' + idadeText + '</span>' : ''}</p>
-                        <p>Peso: <span>${pet.peso}</span> kg</p>
-                        <p>Sexo: <span>${pet.sexo === 'M' ? 'Macho' : 'Fêmea'}</span></p>
+                    <img src="${imgSrc}" alt="Imagem do Pet" />
+                    <div class="card-body">
+                        <h3 class="card-title">${pet.nome}</h3>
+                        <div class="card-text">
+                            <p>Data de nascimento: <span>${pet.dataDeNascimento}</span></p>
+                            <div id="raca">
+                                <p><span>${pet.raca.raca}</span></p>
+                                <p>-</p>
+                                <p><span>${pet.raca.especie}</span></p>
+                            </div>
+                             <div id="raca">
+                            <p><span>${pet.sexo === 'M' ? 'Macho' : 'Fêmea'}</span></p>
+                                 <p>-</p> <p> <span>${pet.peso}</span> kg</p></div>
+                              
+                                <p>${pet.idade != null ? '<span>' + idadeText + '</span>' : ''}</p>
+                           
+                           </div>
                     </div>
-                </div>
-                <div class="icons">
-        <i
-          class="fas fa-edit editar"
-          src="/images/editar.jpg"
-          alt="Editar pet"
-          th:data-id="${pet.id}"
-          th:data-nome="${pet.nome}"
-          th:data-dataDeNascimento="${pet.dataDeNascimento}"
-          th:data-idade="${pet.idade}"
-          th:data-raca-raca="${pet.raca.raca}"
-          th:data-raca-especie="${pet.raca.especie}"
-          th:data-imagem="${pet.imagem}"
-          th:data-peso="${pet.peso}"
-          th:data-sexo="${pet.sexo}"
-        ></i>
-          <i
-          class="fas fa-trash-alt"
-          th:data-id="${pet.id}"
-          src="/images/lixeiraDelete.webp"
-          id="deleteButtonModal"
-        ></i></div>
-            `;
-
+                    <div class="icons">
+                        <i class="fas fa-edit editar"
+                            src="/images/editar.jpg"
+                            alt="Editar pet"
+                            data-id="${pet.id}"
+                            data-nome="${pet.nome}"
+                            data-dataDeNascimento="${pet.dataDeNascimento}"
+                            data-idade="${pet.idade}"
+                            data-raca-raca="${pet.raca.raca}"
+                            data-raca-especie="${pet.raca.especie}"
+                            data-imagem="${pet.imagem}"
+                            data-peso="${pet.peso}"
+                            data-sexo="${pet.sexo}"></i>
+                        <i class="fas fa-trash-alt deleteButtonModal"
+                            data-id="${pet.id}"
+                            src="/images/lixeiraDelete.webp"></i>
+                    </div>
+                `;
                 petContainer.appendChild(card);
             });
         })
@@ -91,28 +88,6 @@ function checkImageAvailability(url, callback) {
             console.error('Erro ao verificar disponibilidade da imagem:', error);
             setTimeout(() => checkImageAvailability(url, callback), 1000); // Tenta novamente após 1 segundo
         });
-}
-document.addEventListener("DOMContentLoaded", function () {
-    const emailUsuario = document.getElementById("usuario-logado").textContent.trim();
-    if (emailUsuario) {
-        enviarEmailUsuario(emailUsuario);
-    }
-});
-
-function enviarEmailUsuario(email) {
-    fetch(`/usuario/${email}`, {
-        method: "POST"
-    })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error("Erro ao salvar e-mail do usuário.");
-            }
-            return response.text();
-        })
-        .then(data => {
-            console.log(data);
-        })
-        .catch(error => console.error("Erro ao salvar e-mail do usuário:", error));
 }
 
 $(document).ready(function () {
@@ -303,7 +278,7 @@ $(document).ready(function () {
                 // Aqui você pode exibir uma mensagem de erro na interface, se desejar
             });
     });
-    $("#deleteButtonModal").click(function () {
+    $(".deleteButtonModal").click(function () {
 
         $("#modalAtualizacao").modal("hide");
         $("#modalDelete").modal("show");

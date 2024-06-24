@@ -48,6 +48,25 @@ public class ClienteRepository {
         return null;
     }
 
+    public Cliente findByEmail(String email) {
+        String sql = "SELECT c.*, u.* FROM cliente c " +
+                "INNER JOIN usuario u ON c.usuario_email = u.email " +
+                "WHERE usuario_email = ?";
+        Cliente cliente = new Cliente();
+        try (Connection conn = DataBaseConfig.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, email);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    cliente = mapRowUsuario(rs);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return cliente;
+    }
+
     public Cliente mapRow(ResultSet rs) throws SQLException {
         Cliente cliente = new Cliente();
         Usuario usuario = new Usuario();
@@ -57,8 +76,9 @@ public class ClienteRepository {
         return cliente;
     }
 
+
     public List<ClienteDTO> listarClientesComUsuarios() {
-        String sql = "SELECT c.usuario_email, c.qtd_pontos, u.nome, u.telefone, u.data_nascimento FROM cliente c INNER JOIN usuario u ON c.usuario_email = u.email WHERE u.active = true";
+        String sql = "SELECT c.usuario_email, c.qtd_pontos, u.nome, u.telefone, u.data_nascimento FROM cliente c INNER JOIN usuario u ON c.usuario_email = u.email WHERE u.ativo = true";
         List<ClienteDTO> clientes = new ArrayList<>();
         try (Connection conn = DataBaseConfig.getConnection();
                 PreparedStatement ps = conn.prepareStatement(sql);
@@ -77,7 +97,6 @@ public class ClienteRepository {
         }
         return clientes;
     }
-
 
     public ClienteDTO findClienteDTOByEmail(String email) {
         String sql = "SELECT u.nome, u.telefone, u.data_nascimento, u.logradouro, u.numero, u.bairro, u.cep, c.cidade, c.estado " +
@@ -112,6 +131,34 @@ public class ClienteRepository {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public Cliente mapRowUsuario(ResultSet rs) throws SQLException {
+        Cliente cliente = new Cliente();
+        Usuario usuario = new Usuario();
+        usuario.setEmail(rs.getString("email"));
+        usuario.setNome(rs.getString("nome"));
+        usuario.setTelefone(rs.getString("telefone"));
+        usuario.setBairro(rs.getString("bairro"));
+        usuario.setLogradouro(rs.getString("logradouro"));
+        usuario.setNumero(rs.getLong("numero"));
+        usuario.setDataDeNascimento(rs.getDate("data_nascimento"));
+        usuario.setIdade(rs.getInt("idade"));
+        cliente.setQtdPontos(rs.getLong("qtd_pontos"));
+
+        cliente.setEmail(rs.getString("email"));
+        cliente.setNome(rs.getString("nome"));
+        cliente.setTelefone(rs.getString("telefone"));
+        cliente.setBairro(rs.getString("bairro"));
+        cliente.setLogradouro(rs.getString("logradouro"));
+        cliente.setNumero(rs.getLong("numero"));
+        cliente.setDataDeNascimento(rs.getDate("data_nascimento"));
+        cliente.setIdade(rs.getInt("idade"));
+        cliente.setQtdPontos(rs.getLong("qtd_pontos"));
+
+        cliente.setUsuario(usuario);
+
+        return cliente;
     }
 
     public void atualizarCliente(UsuarioDTO usuarioDTO) {

@@ -18,14 +18,12 @@
 
   <body>
     <nav>
+      <p>Bem vindo <span id="usuario-logado" th:text="${usuario}"></span></p>
       <div class="navbar">
-        <p>Bem vindo <span id="usuario-logado" th:text="${usuario}"></span></p>
         <a id="inicio">Inicio</a>
-        <a id="pets">Pets</a>
-        <a id="produtos">Produtos</a>
+        <a href="pets/" id="pets">Pets</a>
+        <a id="produtos/">Produtos</a>
         <a id="servicos">Servicos</a>
-        <a id="listagem">Listagem</a>
-        <a id="cadastrarFuncionario">Cadastrar funcionário</a>
       </div>
     </nav>
     <div class="row">
@@ -56,9 +54,9 @@
               <span th:text="${pet.dataDeNascimento}">10</span>
             </p>
             <div id="raca">
-              <p>Raça: <span th:text="${pet.raca.raca}"></span></p>
+              <p><span th:text="${pet.raca.raca}"></span></p>
               <p>-</p>
-              <p>Espécie: <span th:text="${pet.raca.especie}"></span></p>
+              <p><span th:text="${pet.raca.especie}"></span></p>
             </div>
             <p th:if="${pet.idade != null}">
               Idade:
