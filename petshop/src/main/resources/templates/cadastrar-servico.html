@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <title>Cadastro de Serviço</title>
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link rel="stylesheet" href="/cadastro.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <style>
+        :root {
+            --peru: #ec9474;
+            --coral: #fba383;
+            --maroon: #742a0f;
+            --rosybrown: #a46c5c;
+            --tan: #cda99d;
+        }
+        nav {
+            font-size: 1.1em;
+            display: flex;
+            flex-direction: row;
+            justify-content: flex-end;
+            height: auto;
+            width: 100%;
+            background-color: var(--maroon);
+            color: white;
+            box-shadow: 0 0 5px black;
+        }
+
+        .navbar {
+            flex-wrap: wrap;
+            padding: 0.5em;
+            margin: 0 0.5em 0 0;
+        }
+
+        a {
+            color: white;
+            text-decoration: none;
+            padding: 0.3em 0.5em;
+        }
+
+        a:hover {
+            background-color: var(--maroon);
+            border: 1px solid var(--maroon);
+            border-radius: 15px;
+            text-decoration: none;
+            color: white;
+        }
+    </style>
+</head>
+
+<body>
+<nav>
+    <div class="navbar">
+        <a id="inicio">Inicio</a>
+        <a id="pets">Pets</a>
+        <a id="produtos">Produtos</a>
+        <a id="servicos">Servicos</a>
+        <a id="listagem">Listagem</a>
+        <a id="meu-usuario">Meu Usuario</a>
+    </div>
+</nav>
+<div class="lateral-container">
+    <div id="customMsg" style="display: none; position: fixed; top: 20px; left: 50%; transform: translateX(-50%); font-size: 24px; padding: 15px;" class="alert alert-success" role="alert"></div>
+</div>
+<div class="login-container position-relative overflow-hidden">
+    <div class="circle">
+    </div>
+
+    <div class="w-100 overflow-hidden d-flex align-items-center justify-content-center">
+        <i class="ph ph-paw-print custom-paw"></i>
+        <i class="ph ph-paw-print custom-paw"></i>
+        <i class="ph ph-paw-print custom-paw"></i>
+        <i class="ph ph-paw-print custom-paw"></i>
+        <i class="ph ph-paw-print custom-paw"></i>
+        <i class="ph ph-paw-print custom-paw"></i>
+        <i class="ph ph-paw-print custom-paw"></i>
+        <i class="ph ph-paw-print custom-paw"></i>
+        <i class="ph ph-paw-print custom-paw"></i>
+        <i class="ph ph-paw-print custom-paw"></i>
+        <i class="ph ph-paw-print custom-paw"></i>
+        <i class="ph ph-paw-print custom-paw"></i>
+        <i class="ph ph-paw-print custom-paw"></i>
+        <i class="ph ph-paw-print custom-paw"></i>
+        <i class="ph ph-paw-print custom-paw"></i>
+        <i class="ph ph-paw-print custom-paw"></i>
+        <i class="ph ph-paw-print custom-paw"></i>
+        <i class="ph ph-paw-print custom-paw"></i>
+        <i class="ph ph-paw-print custom-paw"></i>
+        <i class="ph ph-paw-print custom-paw"></i>
+        <i class="ph ph-paw-print custom-paw"></i>
+        <i class="ph ph-paw-print custom-paw"></i>
+        <i class="ph ph-paw-print custom-paw"></i>
+        <i class="ph ph-paw-print custom-paw"></i>
+    </div>
+    <div class="w-100 overflow-hidden d-flex align-items-center justify-content-center">
+        <i class="ph ph-paw-print custom-paw"></i>
+        <i class="ph ph-paw-print custom-paw"></i>
+        <i class="ph ph-paw-print custom-paw"></i>
+        <i class="ph ph-paw-print custom-paw"></i>
+        <i class="ph ph-paw-print custom-paw"></i>
+        <i class="ph ph-paw-print custom-paw"></i>
+        <i class="ph ph-paw-print custom-paw"></i>
+        <i class="ph ph-paw-print custom-paw"></i>
+        <i class="ph ph-paw-print custom-paw"></i>
+        <i class="ph ph-paw-print custom-paw"></i>
+        <i class="ph ph-paw-print custom-paw"></i>
+        <i class="ph ph-paw-print custom-paw"></i>
+        <i class="ph ph-paw-print custom-paw"></i>
+        <i class="ph ph-paw-print custom-paw"></i>
+        <i class="ph ph-paw-print custom-paw"></i>
+        <i class="ph ph-paw-print custom-paw"></i>
+        <i class="ph ph-paw-print custom-paw"></i>
+        <i class="ph ph-paw-print custom-paw"></i>
+        <i class="ph ph-paw-print custom-paw"></i>
+        <i class="ph ph-paw-print custom-paw"></i>
+        <i class="ph ph-paw-print custom-paw"></i>
+        <i class="ph ph-paw-print custom-paw"></i>
+        <i class="ph ph-paw-print custom-paw"></i>
+        <i class="ph ph-paw-print custom-paw"></i>
+    </div>
+    <div class="w-100 overflow-hidden d-flex align-items-center justify-content-center">
+        <i class="ph ph-paw-print custom-paw"></i>
+        <i class="ph ph-paw-print custom-paw"></i>
+        <i class="ph ph-paw-print custom-paw"></i>
+        <i class="ph ph-paw-print custom-paw"></i>
+        <i class="ph ph-paw-print custom-paw"></i>
+        <i class="ph ph-paw-print custom-paw"></i>
+        <i class="ph ph-paw-print custom-paw"></i>
+        <i class="ph ph-paw-print custom-paw"></i>
+        <i class="ph ph-paw-print custom-paw"></i>
+        <i class="ph ph-paw-print custom-paw"></i>
+        <i class="ph ph-paw-print custom-paw"></i>
+        <i class="ph ph-paw-print custom-paw"></i>
+        <i class="ph ph-paw-print custom-paw"></i>
+        <i class="ph ph-paw-print custom-paw"></i>
+        <i class="ph ph-paw-print custom-paw"></i>
+        <i class="ph ph-paw-print custom-paw"></i>
+        <i class="ph ph-paw-print custom-paw"></i>
+        <i class="ph ph-paw-print custom-paw"></i>
+        <i class="ph ph-paw-print custom-paw"></i>
+        <i class="ph ph-paw-print custom-paw"></i>
+        <i class="ph ph-paw-print custom-paw"></i>
+        <i class="ph ph-paw-print custom-paw"></i>
+        <i class="ph ph-paw-print custom-paw"></i>
+        <i class="ph ph-paw-print custom-paw"></i>
+    </div>
+    <div class="w-100 overflow-hidden d-flex align-items-center justify-content-center">
+        <i class="ph ph-paw-print custom-paw"></i>
+        <i class="ph ph-paw-print custom-paw"></i>
+        <i class="ph ph-paw-print custom-paw"></i>
+        <i class="ph ph-paw-print custom-paw"></i>
+        <i class="ph ph-paw-print custom-paw"></i>
+        <i class="ph ph-paw-print custom-paw"></i>
+        <i class="ph ph-paw-print custom-paw"></i>
+        <i class="ph ph-paw-print custom-paw"></i>
+        <i class="ph ph-paw-print custom-paw"></i>
+        <i class="ph ph-paw-print custom-paw"></i>
+        <i class="ph ph-paw-print custom-paw"></i>
+        <i class="ph ph-paw-print custom-paw"></i>
+        <i class="ph ph-paw-print custom-paw"></i>
+        <i class="ph ph-paw-print custom-paw"></i>
+        <i class="ph ph-paw-print custom-paw"></i>
+        <i class="ph ph-paw-print custom-paw"></i>
+        <i class="ph ph-paw-print custom-paw"></i>
+        <i class="ph ph-paw-print custom-paw"></i>
+        <i class="ph ph-paw-print custom-paw"></i>
+        <i class="ph ph-paw-print custom-paw"></i>
+        <i class="ph ph-paw-print custom-paw"></i>
+        <i class="ph ph-paw-print custom-paw"></i>
+        <i class="ph ph-paw-print custom-paw"></i>
+        <i class="ph ph-paw-print custom-paw"></i>
+    </div>
+
+    <div class="main">
+
+        <div class="title d-flex align-items-center justify-content-between">
+            <h1 class="p-2 h1-title">CADASTRO DE SERVIÇO</h1>
+            <i class="ph ph-dog"></i>
+            <i class="ph ph-dog"></i>
+            <i class="ph ph-dog"></i>
+            <i class="ph ph-dog"></i>
+            <i class="ph ph-dog"></i>
+            <i class="ph ph-dog"></i>
+            <i class="ph ph-dog"></i>
+        </div>
+
+        <form id="cadastroForm">
+            <div class="row">
+                <div class="form-group col-6">
+                    <label for="nome">Nome:</label>
+                    <input type="text" class="form-control rounded-pill px-4" id="nome" name="nome" required>
+                    <div id="mensagemErroNome" class="alerta" role="alert"></div>
+                </div>
+                <div class="form-group col-3">
+                    <label for="preco">Preço:</label>
+                    <input type="number" class="form-control rounded-pill px-4" id="preco" name="preco" required>
+                    <div id="mensagemErroPreco" class="alerta" role="alert"></div>
+                </div>
+                <div class="form-group col-3">
+                    <label for="pontosServico">Pontos serviço:</label>
+                    <input type="number" class="form-control rounded-pill px-4" id="pontosServico" name="pontosServico" required>
+                    <div id="mensagemErroPontosServico" class="alerta" role="alert"></div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-12">
+                    <label for="descricao">Descrição:</label>
+                    <textarea class="form-control px-2" id="descricao" name="descricao" rows="4" required style="border-radius: 20px"></textarea>
+                    <div id="mensagemErroDescricao" class="alerta" role="alert"></div>
+                </div>
+            </div>
+            <div class="text-right">
+                <button type="button" id="cadastrar" class="btn-cadastro rounded-pill">Salvar</button>
+            </div>
+        </form>
+        <div class="title d-flex align-items-center justify-content-between">
+            <i class="ph ph-dog"></i>
+            <i class="ph ph-dog"></i>
+            <i class="ph ph-dog"></i>
+            <i class="ph ph-dog"></i>
+            <i class="ph ph-dog"></i>
+            <i class="ph ph-dog"></i>
+            <i class="ph ph-dog"></i>
+            <i class="ph ph-dog"></i>
+            <i class="ph ph-dog"></i>
+            <i class="ph ph-dog"></i>
+            <i class="ph ph-dog"></i>
+            <i class="ph ph-dog"></i>
+        </div>
+    </div>
+</div>
+</body>
+<script>
+    var cadastrarServico = document.getElementById("cadastrar");
+    cadastrarServico.addEventListener('click', () => {
+        const nome = document.getElementById("nome").value;
+        const descricao = document.getElementById("descricao").value;
+        const qtdPontos = document.getElementById("pontosServico").value;
+        const precoValor = document.getElementById("preco").value;
+        const dataAtual = new Date().toISOString();
+        console.log(nome, descricao, qtdPontos)
+
+        const data = {
+            nome: nome,
+            descricao: descricao,
+            pontosServico: qtdPontos
+        };
+
+        const preco = {
+            valor: precoValor
+        };
+
+        const requestBody = {
+            servico: data,
+            preco: preco
+        };
+
+        fetch('/servico/create', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(requestBody)
+        })
+            .then(response => {
+                if (!response.ok) {
+                    return response.json().then(errors => {
+                        errors.forEach(error => {
+                            console(error);
+                        });
+                    });
+                } else{
+                    var msg = document.getElementById('customMsg');
+                    msg.textContent = "Serviço cadastrado com sucesso!";
+                    msg.style.display = 'block';
+                    setTimeout(() => {
+                        msg.style.display = 'none';
+                        window.location.href = '/servico/';
+                    }, 1500);
+                }
+            })
+    })
+</script>
+</html>
